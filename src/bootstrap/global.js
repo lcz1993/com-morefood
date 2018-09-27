@@ -61,7 +61,7 @@ global._int2iP = function(num) {
 global.encryptPassword = function(password, md5encoded) {
   md5encoded = md5encoded || false;
   password = md5encoded ? password : think.md5(password);
-  return think.md5(think.md5('www.cmswing.com') + password + think.md5('Arterli'));
+  return think.md5(think.md5('sxtssccm') + password + think.md5('ChengzhiLi'));
 };
 
 /**
@@ -512,7 +512,7 @@ global.array_diff = function(arr1, arr2) {
   }
   ;
   // if(think.isEmpty(temparray)){
-  //    return 
+  //    return
   // }
   return temparray;
 };
@@ -1019,9 +1019,9 @@ global.checkMobile = function(agent) {
   agent = agent.toLowerCase();
   const keywords = ['android', 'iphone', 'ipod', 'ipad', 'windows phone', 'mqqbrowser'];
 
-  // 排除 Windows 桌面系统  
+  // 排除 Windows 桌面系统
   if (!(agent.indexOf('windows nt') > -1) || (agent.indexOf('windows nt') > -1 && agent.indexOf('compatible; msie 9.0;') > -1)) {
-    // 排除苹果桌面系统  
+    // 排除苹果桌面系统
     if (!(agent.indexOf('windows nt') > -1) && !agent.indexOf('macintosh') > -1 && !(agent.indexOf('ipad') > -1)) {
       for (const item of keywords) {
         if (agent.indexOf(item) > -1) {

@@ -32,38 +32,6 @@ module.exports = class extends think.Controller {
     // this.http.theme("default);
     // 购物车
     // 关闭商品模型时同时关闭购物车
-
-    if (!think.isEmpty(await this.model('cmswing/model').get_model(4)) && this.ctx.action != 'avatar') {
-      const cartList = await this.shopCart();
-      let cartInfo;
-      if (think.isEmpty(cartList)) {
-        cartInfo = {
-          total: 0,
-          num: 0,
-          data: null
-        };
-      } else {
-        const total = [];
-        const num = [];
-        for (const val of cartList) {
-          total.push(val.price);
-          num.push(val.qty);
-          // 判断是否有库存
-          const stock = await this.model('cmswing/order').getstock(val.product_id, val.type);
-          if (val.qty > stock) {
-            val.stock = 0;
-          } else {
-            val.stock = stock;
-          }
-        }
-        cartInfo = {
-          total: eval(total.join('+')),
-          num: eval(num.join('+')),
-          data: cartList
-        };
-      }
-      this.cart = cartInfo;
-    }
   }
 
   /**
