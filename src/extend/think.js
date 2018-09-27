@@ -9,6 +9,7 @@ module.exports = {
   cmswing: {
     info: require(path.join(think.ROOT_PATH, 'package.json')),
     admin: require(path.join(think.ROOT_PATH, 'src', 'controller', 'cmswing', 'admin')),
+    app: require(path.join(think.ROOT_PATH, 'src', 'controller', 'cmswing', 'app')),
     home: require(path.join(think.ROOT_PATH, 'src', 'controller', 'cmswing', 'home')),
     center: require(path.join(think.ROOT_PATH, 'src', 'controller', 'cmswing', 'center')),
     modIndex: require(path.join(think.ROOT_PATH, 'src', 'controller', 'cmswing', 'modindexbase')),

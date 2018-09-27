@@ -1,6 +1,6 @@
 {
   "apps": [{
-    "name": "CMSWing",
+    "name": "MoreFood",
     "script": "production.js",
     "cwd": "/home/www.cmswing.net",
     "exec_mode": "fork",
@@ -9,7 +9,7 @@
     "node_args": [],
     "args": [],
     "env": {
-      
+
     }
   }]
 }
