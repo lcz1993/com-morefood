@@ -8,40 +8,17 @@ module.exports = class extends think.Model {
      * @return integer           登录成功-用户ID，登录失败-错误编号
      */
   async signin(username, password, ip, type = 1, login = 0) {
-    let map = {};
-    switch (type) {
-      case 1:
-        map.username = username;
-        break;
-      case 2:
-        map.email = username;
-        break;
-      case 3:
-        map.mobile = username;
-        break;
-      case 4:
-        map.id = username;
-        break;
-      case 5:
-        map = {
-          username: username,
-          email: username,
-          mobile: username,
-          _logic: 'OR'
-        };
-        break;
-      default:
-        return 0; // 参数错误
-    }
+    const map = {};
+    map.loginname = username;
     const user = await this.where(map).find();
-    if (!think.isEmpty(user) && user.status == 1) {
+    if (!think.isEmpty(user)) {
       /* 验证用户密码 */
       if (password === user.password) {
-        await this.autoLogin(user, ip);// 更新用户登录信息，自动登陆
+        // await this.autoLogin(user, ip);// 更新用户登录信息，自动登陆
         /* 记录登录SESSION和COOKIES */
         const userInfo = {
-          'uid': user.id,
-          'username': user.username,
+          'mid': user.id,
+          'loginname': user.loginname,
           'last_login_time': user.last_login_time
         };
 

@@ -7,7 +7,5 @@
 // +----------------------------------------------------------------------
 const Home = require('./home');
 module.exports = class extends Home {
-  // async __before(){
-  //      await super.__before();
-  //  }
+
 };

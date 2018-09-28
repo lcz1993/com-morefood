@@ -144,8 +144,8 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       // 会员组
-      const usergroup = await this.model('member_group').select();
-      this.assign('usergroup', usergroup);
+      const restaurant = await this.model('restaurant').select();
+      this.assign('restaurant', restaurant);
       // 获取管理组
       const role = await this.model('auth_role').where({status: 1}).select();
       this.assign('role', role);
@@ -220,8 +220,8 @@ module.exports = class extends think.cmswing.admin {
         this.assign('roleid', roleid);
       }
       // 会员组
-      const usergroup = await this.model('member_group').select();
-      this.assign('usergroup', usergroup);
+      const restaurant = await this.model('restaurant').select();
+      this.assign('restaurant', restaurant);
       // 获取管理组
       const role = await this.model('auth_role').where({status: 1}).select();
       this.assign('role', role);
@@ -246,6 +246,10 @@ module.exports = class extends think.cmswing.admin {
     //
     // }
     this.assign('user', user);
+    if (!think.isEmpty(user.restaurant_id)) {
+      const restaurant = await this.model('restaurant').find(user.restaurant_id);
+      this.assign('restaurant', restaurant);
+    }
     // console.log(user);
     // 所属管理组
     if (user.is_admin == 1) {

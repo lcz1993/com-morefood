@@ -52,11 +52,11 @@
                             <th >uid</th>
                             <th class="">用户名</th>
                             <th class="">邮箱</th>
-                            <th class="">用户组</th>
+                            <!--<th class="">用户组</th>-->
                             <th class="">注册ip</th>
                             <th class="">最后登录</th>
-                            <th class="">金钱总数</th>
-                            <th class="">积分点数</th>
+                            <!--<th class="">金钱总数</th>-->
+                            <!--<th class="">积分点数</th>-->
                             <th class="">状态</th>
                             <th >操作</th>
                         </tr>
@@ -69,11 +69,11 @@
                             <td>{{item.id}}</td>
                             <td><a href="/admin/user/showuser/?id={{item.id}}" class="text-info" data-toggle="ajaxModal">{{item.username}} <i class="fa fa-search-plus"></i> </a> </td>
                             <td>{{item.email}}</td>
-                            <td>{{group.name}}</td>
+                            <!--<td>{{group.name}}</td>-->
                             <td>{{item.reg_ip|int2ip}}</td>
                             <td>{{item.last_login_time | moment('YYYY-MM-DD HH:mm:ss')}}</td>
-                            <td>{{item.amount}}</td>
-                            <td>{{item.score}}</td>
+                            <!--<td>{{item.amount}}</td>-->
+                            <!--<td>{{item.score}}</td>-->
                             <td>
                                 {%if item.id|in_Array(controller.config('user_administrator'))%}{%else%}
                                 <a href="/admin/user/setstatus/?ids={{item.id}}&status={{1-item.status}}&model=member" class="active ajax-get" data-toggle="class">
@@ -85,7 +85,7 @@
 
                             <td>
                                 <a href="/admin/user/edituser/?id={{item.id}}" class="text-info" data-toggle="ajaxModal">编辑</a>
-                                <a href="/admin/user/recharge/?ids={{item.id}}" class="text-info" data-toggle="ajaxModal">充值</a>
+                                <!--<a href="/admin/user/recharge/?ids={{item.id}}" class="text-info" data-toggle="ajaxModal">充值</a>-->
                                 {%if item.id|in_Array(controller.config('user_administrator'))%}{%else%}
                                 <a href="/admin/user/userdel/?ids={{item.id}}" class="confirm ajax-get text-info">删除</a>
                                 {%endif%}

@@ -9,29 +9,10 @@ module.exports = class extends think.Controller {
   async __before() {
     // 当前登录状态
     this.is_login = await this.islogin();
-    // 关闭站点
-    if (this.config('setup.WEB_SITE_CLOSE') == 0) {
-      const isshow = await this.session('userInfo');
-      if (think.isEmpty(isshow)) {
-        const error = this.controller('cmswing/error');
-        return error.noAction('该网站已关闭，只有管理员可以正常访问');
-      }
-    }
     // 用户信息
     this.user = {};
-    this.user.roleid = 8;// 游客
     // 访问控制
-    if (this.is_login) {
-      this.user.roleid = await this.model('member').where({id: this.is_login}).getField('groupid', true);
-    }
     this.user = think.extend(this.user, await this.session('webuser'));
-    // 获取当前分类信息
-    // console.log(action);
-    // this.meta_title = cate.meta_title?cate.meta_title:cate.title;
-    // 设置主题
-    // this.http.theme("default);
-    // 购物车
-    // 关闭商品模型时同时关闭购物车
   }
 
   /**
@@ -41,7 +22,7 @@ module.exports = class extends think.Controller {
   async islogin() {
     // 前台判断是否登录
     const user = await this.session('webuser');
-    const res = think.isEmpty(user) ? false : user.uid;
+    const res = think.isEmpty(user) ? false : user.mid;
     return res;
   }
   async weblogin() {
