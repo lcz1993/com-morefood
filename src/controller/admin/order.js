@@ -32,21 +32,6 @@ module.exports = class extends think.cmswing.admin {
     this.assign('pagerData', html); // 分页展示使用
     // console.log(data.data);
     this.active = 'admin/order/list';
-    for (const val of data.data) {
-      switch (val.payment) {
-        case 100:
-          val.channel = '预付款支付';
-          break;
-        case 1001:
-          val.channel = '货到付款';
-          break;
-        case 1002:
-          val.channel = '银行汇款';
-          break;
-        default:
-          val.channel = await this.model('pingxx').where({id: val.payment}).getField('title', true);
-      }
-    }
     this.assign('list', data.data);
     this.meta_title = '订单管理';
     return this.display();
@@ -177,33 +162,12 @@ module.exports = class extends think.cmswing.admin {
     // 购买人信息
     const user = await this.model('member').find(order.user_id);
     this.assign('user', user);
-    // 订单信息
-    switch (order.payment) {
-      case 100:
-        order.payment = '预付款支付';
-        break;
-      case 1001:
-        order.payment = '货到付款';
-        break;
-      default:
-        order.payment = await this.model('pingxx').where({id: order.payment}).getField('title', true);
-    }
     this.assign('order', order);
-    // 获取 快递公司
-    const express_company = this.model('express_company').order('sort ASC').select();
-    this.assign('express_company', express_company);
-    // 获取省份
     /**
          * 订单原价 = 商品真实价格 + 真实运费
          */
     const olde_order_amount = order.real_amount + order.real_freight;
     this.assign('olde_order_amount', olde_order_amount);
-    const province = await this.model('area').where({parent_id: 0}).select();
-    const city = await this.model('area').where({parent_id: order.province}).select();
-    const county = await this.model('area').where({parent_id: order.city}).select();
-    this.assign('province', province);
-    this.assign('city', city);
-    this.assign('county', county);
     return this.display();
   }
   /**

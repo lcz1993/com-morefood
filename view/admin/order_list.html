@@ -47,7 +47,7 @@
                                         <th>会员账号</th>
                                         <th>收货人</th>
                                         <th>收货人电话</th>
-                                        <th>支付方式</th>
+                                        <!--<th>支付方式</th>-->
                                         <th>支付状态</th>
                                         <th>配送状态</th>
                                         <th>订单状态</th>
@@ -62,10 +62,10 @@
                                          <td>{{item.order_no}}</td>
                                           
                                         <td>￥{{item.order_amount|formatCurrency}}</td>
-                                        <td>{{item.user_id|get_nickname}}</td>
+                                        <td>{{item.user_id|get_wxname}}</td>
                                         <td>{{item.accept_name}}</td>
                                         <td>{{item.mobile}}</td>
-                                        <td>{{item.channel}}</td>
+                                        <!--<td>{{item.channel}}</td>-->
                                         <td > {%if item.pay_status == 0%}<span class="text-muted">未支付</span>{%else%}<span class="text-success">已支付</span>{%endif%}</td>
                                         <td >{%if item.delivery_status == 0%}<span class="text-muted">未发货</span> {%else%}<span class="text-success">已发货</span> {%endif%}</td>
                                         

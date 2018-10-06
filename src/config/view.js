@@ -219,6 +219,13 @@ module.exports = {
         const data = await get_nickname(uid);
         callback(null, data);
       }, true);
+        /**
+         * 获取微信用户名称
+         */
+        env.addFilter('get_wxname', async(uid, callback) => {
+            const data = await get_wxname(uid);
+            callback(null, data);
+        }, true);
       /**
 			 * 获取关联
 			 */
