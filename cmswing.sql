@@ -3,15 +3,15 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 50717
+ Source Server Version : 50721
  Source Host           : localhost
  Source Database       : cmswing
 
  Target Server Type    : MySQL
- Target Server Version : 50717
+ Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 09/29/2018 11:39:57 AM
+ Date: 10/06/2018 23:12:45 PM
 */
 
 SET NAMES utf8;
@@ -766,7 +766,7 @@ CREATE TABLE `cmswing_member` (
 --  Records of `cmswing_member`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_member` VALUES ('1', 'admin', 'f1dfca01a53e59ecb1c220c26f600936', '2364', 'lcz1993@163.com', '1747', '', '1452513965683', '0', '1538191333356', '2130706433', '0', '1', '1', '5', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', null), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, null), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '0', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, null);
+INSERT INTO `cmswing_member` VALUES ('1', 'admin', 'f1dfca01a53e59ecb1c220c26f600936', '2364', 'lcz1993@163.com', '1748', '', '1452513965683', '0', '1538821301727', '2130706433', '0', '1', '1', '5', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', null), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, null), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '0', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, null);
 COMMIT;
 
 -- ----------------------------
@@ -919,17 +919,101 @@ COMMIT;
 DROP TABLE IF EXISTS `cmswing_order`;
 CREATE TABLE `cmswing_order` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `dish_id` bigint(20) DEFAULT NULL COMMENT '菜ID',
-  `deliver_id` bigint(20) DEFAULT NULL COMMENT '送餐员ID',
-  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
-  `order_status` varchar(255) DEFAULT NULL COMMENT '订单状态',
-  `create_date` bigint(20) DEFAULT NULL COMMENT '订单创建时间',
-  `end_date` bigint(20) DEFAULT NULL COMMENT '订单结束时间',
-  `expect_date` bigint(20) DEFAULT NULL COMMENT '预计送达时间',
-  `send_addr` varchar(255) DEFAULT NULL COMMENT '送达地址',
-  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  `order_no` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `pay_code` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `payment` bigint(20) NOT NULL DEFAULT '0',
+  `express` bigint(20) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `pay_status` tinyint(1) DEFAULT '0',
+  `delivery_status` tinyint(1) DEFAULT '0',
+  `accept_name` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `phone` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `mobile` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `province` bigint(20) DEFAULT NULL,
+  `city` bigint(20) DEFAULT NULL,
+  `county` bigint(20) DEFAULT NULL,
+  `addr` varchar(250) CHARACTER SET utf8 DEFAULT NULL,
+  `zip` varchar(6) CHARACTER SET utf8 DEFAULT NULL,
+  `payable_amount` float(10,2) DEFAULT NULL,
+  `real_amount` float(10,2) DEFAULT '0.00',
+  `payable_freight` float(10,2) DEFAULT '0.00',
+  `real_freight` float(10,2) DEFAULT '0.00',
+  `pay_time` bigint(13) DEFAULT NULL,
+  `send_time` bigint(13) DEFAULT NULL,
+  `create_time` bigint(13) DEFAULT NULL,
+  `completion_time` bigint(13) DEFAULT NULL,
+  `user_remark` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `admin_remark` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `handling_fee` float(10,2) DEFAULT '0.00',
+  `is_invoice` tinyint(1) DEFAULT '0',
+  `invoice_title` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `taxes` float(10,2) DEFAULT '0.00',
+  `prom_id` bigint(20) DEFAULT '0',
+  `prom` text CHARACTER SET utf8,
+  `discount_amount` float(10,2) DEFAULT '0.00',
+  `adjust_amount` float(10,2) DEFAULT '0.00',
+  `adjust_note` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `order_amount` float(10,2) DEFAULT '0.00',
+  `is_print` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `accept_time` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
+  `point` int(5) unsigned DEFAULT '0',
+  `voucher_id` bigint(20) DEFAULT '0',
+  `voucher` text CHARACTER SET utf8,
+  `type` int(4) unsigned DEFAULT '0' COMMENT '0-商品订单，1充值订单。',
+  `trading_info` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `is_del` tinyint(1) DEFAULT '0',
+  `pingxx_id` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+--  Records of `cmswing_order`
+-- ----------------------------
+BEGIN;
+INSERT INTO `cmswing_order` VALUES ('1', '200000000081699', '2', null, '1', null, '6', '0', '0', '222333', '', '12345678901', '150000', '150300', '150303', '12321312312312', '11223', null, '6899.01', '0.00', '0.00', null, null, '1504191881714', null, '', '规定时间未付款系统自动作废', '0.00', '0', null, '0.00', '0', null, '0.00', '0.00', null, '6899.01', null, null, '0', '0', null, '0', null, '0', null), ('2', '200000000009741', '2', null, '1', null, '6', '0', '0', '222333', '', '12345678901', '150000', '150300', '150303', '12321312312312', '11223', null, '269.00', '0.00', '0.00', null, null, '1504859309770', null, '', '规定时间未付款系统自动作废', '0.00', '0', null, '0.00', '0', null, '0.00', '0.00', null, '269.00', null, null, '0', '0', null, '0', null, '0', null), ('3', '200000000096540', '2', null, '1', null, '6', '0', '0', 'aaa', '', '11111111111', '110000', '110100', '110101', 'vcxzvcxzvcxzvczx', '10001', null, '5499.00', '0.00', '0.09', null, null, '1511452896562', null, '', '规定时间未付款系统自动作废', '0.00', '0', null, '0.00', '0', null, '0.00', '0.00', null, '5499.09', null, null, '0', '0', null, '0', null, '0', null);
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `cmswing_order_goods`
+-- ----------------------------
+DROP TABLE IF EXISTS `cmswing_order_goods`;
+CREATE TABLE `cmswing_order_goods` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `order_id` bigint(20) DEFAULT NULL,
+  `goods_id` bigint(20) DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
+  `goods_price` float(10,2) DEFAULT '0.00',
+  `real_price` float(10,2) DEFAULT '0.00',
+  `goods_nums` int(11) DEFAULT '1',
+  `goods_weight` float DEFAULT '0',
+  `shipments` int(11) DEFAULT '0',
+  `prom_goods` text CHARACTER SET utf8,
+  `spec` text CHARACTER SET utf8,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+--  Records of `cmswing_order_goods`
+-- ----------------------------
+BEGIN;
+INSERT INTO `cmswing_order_goods` VALUES ('1', '1', '244', null, '6899.01', '0.00', '1', '0', '0', '{\"id\":43,\"uid\":2,\"product_id\":244,\"qty\":1,\"type\":\"i5 4GB 500GB机械 定制版\",\"price\":6899.01,\"title\":\"ThinkPad T460 20FNA01VCD11\",\"unit_price\":6899.01,\"pic\":\"//odhs9iog7.qnssl.com/-Gt309mzF_HwDdxtjxYCdyZ-.jpg?imageView2/1/w/100/h/100\",\"url\":\"/p/244.html\",\"weight\":1000}', null), ('2', '2', '210', null, '269.00', '0.00', '1', '0', '0', '{\"id\":43,\"uid\":2,\"product_id\":210,\"qty\":1,\"type\":\"\",\"price\":269,\"title\":\"ACA/北美电器 AB-3CN03面包机家用全自动多功能智能酸奶蛋糕和面\",\"unit_price\":269,\"pic\":\"//odhs9iog7.qnssl.com/rWsUNonWpkrjtAlCJc3Gdk1O.jpg?imageView2/1/w/100/h/100\",\"url\":\"/p/210.html\",\"weight\":1000}', null), ('3', '3', '243', null, '5499.00', '0.00', '1', '0', '0', '{\"id\":46,\"uid\":2,\"product_id\":243,\"qty\":1,\"type\":\"\",\"price\":5499,\"title\":\"ThinkPad S5 20B3A03VCD\",\"unit_price\":5499,\"pic\":\"https://odhs9iog7.qnssl.com/5snqgB8Gg7IuQdCmfn084GeT.jpg?imageView2/1/w/100/h/100\",\"url\":\"/p/243.html\",\"weight\":1000,\"fare\":\"3\"}', null);
+COMMIT;
+
+-- ----------------------------
+--  Table structure for `cmswing_order_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `cmswing_order_log`;
+CREATE TABLE `cmswing_order_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `user` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `action` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  `result` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `note` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 --  Table structure for `cmswing_region`
