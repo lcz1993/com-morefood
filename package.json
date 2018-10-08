@@ -8,6 +8,7 @@
     "lint-fix": "eslint --fix src/"
   },
   "dependencies": {
+    "jsonwebtoken": "^8.0.0",
     "co-wechat-api": "^3.7.0",
     "gt3-sdk": "^2.0.0",
     "jimp": "^0.2.28",
@@ -31,6 +32,7 @@
     "think-view": "^1.0.11",
     "think-view-nunjucks": "^1.0.7",
     "think-wechat": "^1.1.0",
+    "md5": "^2.2.1",
     "thinkjs": "^3.2.8"
   },
   "devDependencies": {

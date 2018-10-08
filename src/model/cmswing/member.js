@@ -48,7 +48,8 @@ module.exports = class extends think.Model {
         const userInfo = {
           'uid': user.id,
           'username': user.username,
-          'last_login_time': user.last_login_time
+          'last_login_time': user.last_login_time,
+          'restaurant_id': user.restaurant_id
         };
 
         return userInfo; // 登录成功，返回用户信息

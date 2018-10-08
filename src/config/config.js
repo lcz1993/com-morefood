@@ -24,8 +24,8 @@ module.exports = {
   // 以下针对小程序，可以公开的接口与不可以公开的接口既需要登录的接口
   default_module: 'api',
   weixin: {
-    appid: 'wxbdef997dc46ecdfa', // 小程序 appid
-    secret: '61795a170cd7e30ccd16a615c14f9f09', // 小程序密钥
+    appid: 'wx316af34c36f1546e', // 小程序 appid
+    secret: '339501f621c61694e7e18aa9f43fecd6', // 小程序密钥
     mch_id: '1503371891', // 商户帐号ID
     partner_key: 'f13934f7872c049b8006fa8b3620c89a', // 微信支付密钥
     notify_url: '' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
@@ -33,7 +33,8 @@ module.exports = {
   // 可以公开访问的Controller
   publicController: [
     // 格式为controller
-    'api/index'
+    'api/index',
+    'api/address'
   ],
 
   // 可以公开访问的Action

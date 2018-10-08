@@ -152,6 +152,7 @@ module.exports = class extends think.cmswing.admin {
       val.title = JSON.parse(val.prom_goods).title;
       val.pic = JSON.parse(val.prom_goods).pic;
       val.type = JSON.parse(val.prom_goods).type;
+      val.goods_price = JSON.parse(val.prom_goods).unit_price;
       val.sum = JSON.parse(val.prom_goods).price;
       sum.push(val.goods_nums);
     }
@@ -160,13 +161,19 @@ module.exports = class extends think.cmswing.admin {
     this.assign('goods', goods);
     // 获取购买人信息
     // 购买人信息
-    const user = await this.model('member').find(order.user_id);
+    const user = await this.model('wx_user').find(order.user_id);
     this.assign('user', user);
     this.assign('order', order);
     /**
          * 订单原价 = 商品真实价格 + 真实运费
          */
     const olde_order_amount = order.real_amount + order.real_freight;
+    const province = await this.model('area').where({parent_id: 0}).select();
+    const city = await this.model('area').where({parent_id: order.province}).select();
+    const county = await this.model('area').where({parent_id: order.city}).select();
+    this.assign('province', province);
+    this.assign('city', city);
+    this.assign('county', county);
     this.assign('olde_order_amount', olde_order_amount);
     return this.display();
   }
@@ -217,6 +224,7 @@ module.exports = class extends think.cmswing.admin {
         val.title = JSON.parse(val.prom_goods).title;
         val.pic = JSON.parse(val.prom_goods).pic;
         val.type = JSON.parse(val.prom_goods).type;
+        val.goods_price = JSON.parse(val.prom_goods).unit_price;
         val.sum = JSON.parse(val.prom_goods).price;
         sum.push(val.goods_nums);
       }
@@ -225,24 +233,10 @@ module.exports = class extends think.cmswing.admin {
       this.assign('goods', goods);
       // 获取购买人信息
       // 购买人信息
-      const user = await this.model('member').find(order.user_id);
+      const user = await this.model('wx_user').find(order.user_id);
       console.log(user);
       this.assign('user', user);
-      // 订单信息
-      switch (order.payment) {
-        case 100:
-          order.payment = '预付款支付';
-          break;
-        case 1001:
-          order.payment = '货到付款';
-          break;
-        default:
-          order.payment = await this.model('pingxx').where({id: order.payment}).getField('title', true);
-      }
       this.assign('order', order);
-      // 获取 快递公司
-      const express_company = this.model('express_company').order('sort ASC').select();
-      this.assign('express_company', express_company);
       // 获取省份
       /**
              * 订单原价 = 商品真实价格 + 真实运费

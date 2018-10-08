@@ -16,7 +16,7 @@
                     <tr>
                         <th>货号</th>
                         <th>商品名</th>
-                        <th>规格</th>
+                        <!--<th>规格</th>-->
                         <th>价格</th>
                         <th>数量</th>
                         <th>促销</th>
@@ -31,9 +31,9 @@
                             <span class="thumb-sm"><img class="img-responsive img-thumbnail" src="{{v.pic}}" alt="{{v.title}}"></span>
                         </td>
                         <td>{{v.title}}</td>
-                        <td>
-                            {{v.type}}
-                        </td>
+                        <!--<td>-->
+                            <!--{{v.type}}-->
+                        <!--</td>-->
                         <td>
                             {{v.goods_price|formatCurrency}}
                         </td>
@@ -63,10 +63,9 @@
                     </tr>
                     </thead>
                     <tbody>
-
                     <tr>
                         <td>
-                            {{user.username}}
+                            {{user.nickname}}
                         </td>
                         <td>{{user.real_name}}</td>
                         <td>
@@ -77,10 +76,7 @@
                             {{user.email}}
                         </td>
                         <td>{{user.addr}}</td>
-
-
                     </tr>
-
                     </tbody>
                 </table>
             </section>
@@ -104,21 +100,23 @@
                         <td class="active">
                         支付方式
                         </td>
-                        <td>{{order.payment}}</td>
+                        <td>微信
+                            <!--{{order.payment}}-->
+                        </td>
                     </tr>
                     <tr>
-                        <td class="active">
-                            支付手续费
-                        </td>
-                        <td><span class="text-danger">{% if order.shou|formatCurrency %}{{order.shou|formatCurrency}}{% else %} 免费 {% endif%}</span></td>
-                        <td class="active">
-                            配送方式
-                        </td>
-                        <td>物流</td>
-                        <td class="active">
-                            配送费用
-                        </td>
-                        <td><span class="text-danger">{% if order.real_freight|formatCurrency %}{{order.real_freight|formatCurrency}}{% else %} 包邮 {% endif%}</span></td>
+                        <!--<td class="active">-->
+                            <!--支付手续费-->
+                        <!--</td>-->
+                        <!--<td><span class="text-danger">{% if order.shou|formatCurrency %}{{order.shou|formatCurrency}}{% else %} 免费 {% endif%}</span></td>-->
+                        <!--<td class="active">-->
+                            <!--配送方式-->
+                        <!--</td>-->
+                        <!--<td>物流</td>-->
+                        <!--<td class="active">-->
+                            <!--发票税金-->
+                        <!--</td>-->
+                        <!--<td><span class="text-danger">{% if order.taxes|formatCurrency %}{{order.taxes|formatCurrency}}{% else %} 无发票{%endif%}</span> </td>-->
                     </tr>
                     <tr>
                         <td class="active">
@@ -130,9 +128,9 @@
                         </td>
                         <td><span class="text-danger">{{order.real_amount|formatCurrency }}</span> </td>
                         <td class="active">
-                            发票税金
+                            配送费用
                         </td>
-                        <td><span class="text-danger">{% if order.taxes|formatCurrency %}{{order.taxes|formatCurrency}}{% else %} 无发票{%endif%}</span> </td>
+                        <td><span class="text-danger">{% if order.real_freight|formatCurrency %}{{order.real_freight|formatCurrency}}{% else %} 包邮 {% endif%}</span></td>
                     </tr>
                     <tr>
                         <td class="active">
@@ -266,7 +264,7 @@
         $(document).on( "change","#province1",function (e) {
             var pid = $("#province1 option:selected").val();
             $.ajax({
-                url: "/center/address/getarea",
+                url: "/api/address/getarea",
                 data: {"pid":pid},
                 success: function(msg){
                     var province_arr = ['<option value="">--- 市 ---</option>']
@@ -282,7 +280,7 @@
         $(document).on( "change","#city1",function (e) {
             var pid = $("#city1 option:selected").val();
             $.ajax({
-                url: "/center/address/getarea",
+                url: "/api/address/getarea",
                 data: {"pid":pid},
                 success: function(msg){
                     var province_arr = ['<option value="">--- 县/区 ---</option>']
@@ -293,10 +291,11 @@
                     $("#county1").html(province_html);
                 } });
         })
-    
+
         //改价
         $("#adjust_amount").on("change",function (e) {
-            var olde_order_amount = $(".olde_order_amount").text();
+            // var olde_order_amount = $(".olde_order_amount").text();
+            var olde_order_amount = {{olde_order_amount}};
             var adjust_amount = $("#adjust_amount").val();
             var order_amount = Number(olde_order_amount)+Number(adjust_amount);
             $("#order_amount").text(formatCurrency(order_amount));
