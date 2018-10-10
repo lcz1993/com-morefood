@@ -1413,3 +1413,25 @@ global.get_location = (strs) => {
   }
   return '火星人';
 };
+/**
+ * 判断手机号码是否合法
+ * @param tel
+ * @returns {boolean}
+ */
+global.is_phone = (tel) => {
+  var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+  if (!reg.test(tel)) {
+    return false;
+  }
+  return true;
+};
+/**
+ * 产生指定长度的随机数
+ * @param len 指定长度
+ * @returns {string}
+ */
+global.make_code = (len) => {
+  var rnd = '';
+  for (var i = 0; i < len; i++) { rnd += Math.floor(Math.random() * 10) }
+  return rnd;
+};

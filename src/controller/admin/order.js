@@ -381,4 +381,20 @@ module.exports = class extends think.cmswing.admin {
     this.meta_title = '退款单';
     return this.display();
   }
+
+  /**
+     * 异步获取新增订单，在页面提示
+     */
+  async getorderAction() {
+    // 审核提示
+    const notifications = {};
+    notifications.count = 0;
+    notifications.data = [];
+    const approval = await this.model('order').where({status: 2, restaurant_id: this.user.restaurant_id}).count();
+    if (approval > 0) {
+      notifications.count = notifications.count + Number(approval);
+      notifications.data = {type: 'approval', info: `有 ${approval} 条订单待审核`, url: '/admin/order/list/?status=2', ico: 'fa-umbrella'};
+    }
+    return this.success(notifications);
+  }
 };

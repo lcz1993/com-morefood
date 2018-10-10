@@ -68,6 +68,7 @@ module.exports = class extends think.cmswing.admin {
       this.active = '/admin/medu/index';
       this.meta_title = '新增菜单';
       await this.hook('adminUpPic', 'dish_picture', '', {$hook_key: 'dish_picture'});
+      await this.hook('adminUpPic', 'image', '', {$hook_key: 'image'});
       return this.display();
     }
   }
@@ -98,6 +99,7 @@ module.exports = class extends think.cmswing.admin {
       this.active = '/admin/medu/index';
       this.meta_title = '编辑菜单';
       await this.hook('adminUpPic', 'dish_picture', medu.dish_picture, {$hook_key: 'dish_picture'});
+      await this.hook('adminUpPic', 'image', medu.image, {$hook_key: 'image'});
       return this.display();
     }
   }

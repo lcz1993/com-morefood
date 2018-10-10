@@ -33,7 +33,7 @@ module.exports = {
   // 可以公开访问的Controller
   publicController: [
     // 格式为controller
-    'api/index',
+    'api/public',
     'api/address'
   ],
 
@@ -41,5 +41,12 @@ module.exports = {
   publicAction: [
     // 格式为： controller+action
 
-  ]
+  ],
+  // 以下为腾讯云短信服务
+  cloud: {
+    appid: '1400150383', // SDK AppID是短信应用的唯一标识，调用短信API接口时需要提供该参数。
+    appkey: 'acf73736839ff1f0e29837c1854f75ae', // App Key是用来校验短信发送请求合法性的密码，与SDK AppID对应
+    templateId: '207696', // 短信模板ID，需要在短信应用中申请
+    smsSign: '腾盛时创传媒'
+  }
 };

@@ -36,6 +36,8 @@
                         <th>ID</th>
                         <th>所属餐厅</th>
                         <th>名称</th>
+                        <th>排序</th>
+                        <th>简述</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
@@ -47,6 +49,8 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.restaurant_name }}</td>
                         <td>{{ item.name }}</td>
+                        <td>{{ item.sort }}</td>
+                        <td>{{ item.desc }}</td>
                         <td>
                             <a href="/admin/dishclass/edit/?id={{item.id}}" class="text-info" data-toggle="ajaxModal">编辑</a>
                             <a href="/admin/dishclass/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>
