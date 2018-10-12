@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 10/10/2018 17:11:43 PM
+ Date: 10/12/2018 18:08:08 PM
 */
 
 SET NAMES utf8;
@@ -717,6 +717,7 @@ CREATE TABLE `cmswing_medu` (
   `sell_count` varchar(255) DEFAULT NULL COMMENT '月销量',
   `rating` varchar(255) DEFAULT NULL COMMENT '好评',
   `image` varchar(255) DEFAULT NULL,
+  `is_hot` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
@@ -724,7 +725,7 @@ CREATE TABLE `cmswing_medu` (
 --  Records of `cmswing_medu`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_medu` VALUES ('1', '1', null, '尖椒肉丝', null, '18.5', null, '四川尖椒肉丝，美味无穷', '1', '958', null, null, null);
+INSERT INTO `cmswing_medu` VALUES ('1', '1', null, '尖椒肉丝', null, '18.5', null, '四川尖椒肉丝，美味无穷', '1', '958', null, null, null, null);
 COMMIT;
 
 -- ----------------------------
@@ -774,7 +775,7 @@ CREATE TABLE `cmswing_member` (
 --  Records of `cmswing_member`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_member` VALUES ('1', 'admin', 'f1dfca01a53e59ecb1c220c26f600936', '2364', 'lcz1993@163.com', '1751', '', '1452513965683', '0', '1539131775902', '2130706433', '0', '1', '1', '5', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', '1'), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '0', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1');
+INSERT INTO `cmswing_member` VALUES ('1', 'admin', 'f1dfca01a53e59ecb1c220c26f600936', '2364', 'lcz1993@163.com', '1753', '', '1452513965683', '0', '1539312308163', '2130706433', '0', '1', '1', '5', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', '1'), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '0', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1');
 COMMIT;
 
 -- ----------------------------
@@ -1061,7 +1062,7 @@ CREATE TABLE `cmswing_restaurant` (
   `send_money` varchar(255) DEFAULT NULL COMMENT '配送费',
   `send_time` varchar(255) DEFAULT NULL COMMENT '配送时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Records of `cmswing_restaurant`
@@ -1413,14 +1414,17 @@ CREATE TABLE `cmswing_wx_user` (
   `remark` text COMMENT '公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注',
   `groupid` int(11) DEFAULT NULL COMMENT '用户所在的分组ID',
   `uid` int(11) DEFAULT NULL,
+  `tel` varchar(255) DEFAULT NULL,
+  `last_login_ip` varchar(255) DEFAULT NULL,
+  `last_login_time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='微信粉丝表';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='微信粉丝表';
 
 -- ----------------------------
 --  Records of `cmswing_wx_user`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_wx_user` VALUES ('1', '1', 'on47MszZBY86ceDBh1BvZKy-GMSg', '阿特', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/OtL5LWOjeeR0tVRtuB5YxeFGn9pSuYOMPyGSMfKBv4nLaQD4Wx3E8KYGYHJX90xnO7XxSrWCdf2giaMmomJr6dQ/0', '1430914048000', null, '', '0', null), ('2', '1', 'on47MsyvIwoWdKZtmeyOL3mIgyRE', '峰『沃』梅', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckHvzRiaGdibYN1gfKqiblCtfULQo8DbDLO3D3akkJNBrtIcbrXEGL139tQeTOdIEQq0Op56syxD2qf3w/0', '1433764239000', null, '', '0', null), ('3', '1', 'on47Ms-ezNId9soxHAnsAdGHg1Ro', '__依旧', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/FiaIW3HsXzg6kV6eGISn6CiaUiahvBurvibnNnmBbfBu2ogMicWf5pbKbDhB5tfibUC6WdRqB35iahhShHd3Crnavu8kXRBbho367ZB/0', '1432897020000', null, '', '0', null), ('4', '1', 'on47Ms0zyV4qo_D2uHz-rsMSVi-Y', '沃徳甜沃肿么啦嚒帅', '1', 'Weifang', 'China', 'Shandong', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckENspibT7SRMdmVgMoytEI0XgF8YiaUrqvWbnZ0rWkQ6a7zkep33chxibzJPH2LRFTL7icVUEltbEDpKoWM7S7Z6ib47/0', '1455022173000', null, '', '0', null), ('5', '1', 'on47Ms_CFNXOaKQxRPfKqc2NE1iA', 'yukap', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckHGPdCmmgNLcxJibZThFpgJfIo9EWMfU7TluuLibLGJHz1EamLKzM95NtEF00icsOQuT1vC1QcU3N9qvR1ian5tpyKu/0', '1453533291000', null, '', '0', null), ('6', '1', 'on47Ms4t43aQfpsPAQHL5VC2iDaU', 'happy鞠小桔', '2', '', 'Palau', '', 'zh_CN', 'http://wx.qlogo.cn/mmopen/IZ2ljqiaSC1mBickDn0vU4hD49AtIhICvcxXmsic7gLWxfC3cj9MRqsdsZDgBCKajgOQSuzJXbokWkAzsTESbRK7UBMlGSMc7Xh/0', '1455022162000', null, '', '0', null);
+INSERT INTO `cmswing_wx_user` VALUES ('1', '1', 'on47MszZBY86ceDBh1BvZKy-GMSg', '阿特', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/OtL5LWOjeeR0tVRtuB5YxeFGn9pSuYOMPyGSMfKBv4nLaQD4Wx3E8KYGYHJX90xnO7XxSrWCdf2giaMmomJr6dQ/0', '1430914048000', null, '', '0', null, null, null, null), ('2', '1', 'on47MsyvIwoWdKZtmeyOL3mIgyRE', '峰『沃』梅', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckHvzRiaGdibYN1gfKqiblCtfULQo8DbDLO3D3akkJNBrtIcbrXEGL139tQeTOdIEQq0Op56syxD2qf3w/0', '1433764239000', null, '', '0', null, null, null, null), ('3', '1', 'on47Ms-ezNId9soxHAnsAdGHg1Ro', '__依旧', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/FiaIW3HsXzg6kV6eGISn6CiaUiahvBurvibnNnmBbfBu2ogMicWf5pbKbDhB5tfibUC6WdRqB35iahhShHd3Crnavu8kXRBbho367ZB/0', '1432897020000', null, '', '0', null, null, null, null), ('4', '1', 'on47Ms0zyV4qo_D2uHz-rsMSVi-Y', '沃徳甜沃肿么啦嚒帅', '1', 'Weifang', 'China', 'Shandong', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckENspibT7SRMdmVgMoytEI0XgF8YiaUrqvWbnZ0rWkQ6a7zkep33chxibzJPH2LRFTL7icVUEltbEDpKoWM7S7Z6ib47/0', '1455022173000', null, '', '0', null, null, null, null), ('5', '1', 'on47Ms_CFNXOaKQxRPfKqc2NE1iA', 'yukap', '1', 'Xi\'an', 'China', 'Shaanxi', 'zh_CN', 'http://wx.qlogo.cn/mmopen/9M8Q7cBIckHGPdCmmgNLcxJibZThFpgJfIo9EWMfU7TluuLibLGJHz1EamLKzM95NtEF00icsOQuT1vC1QcU3N9qvR1ian5tpyKu/0', '1453533291000', null, '', '0', null, null, null, null), ('6', '1', 'on47Ms4t43aQfpsPAQHL5VC2iDaU', 'happy鞠小桔', '2', '', 'Palau', '', 'zh_CN', 'http://wx.qlogo.cn/mmopen/IZ2ljqiaSC1mBickDn0vU4hD49AtIhICvcxXmsic7gLWxfC3cj9MRqsdsZDgBCKajgOQSuzJXbokWkAzsTESbRK7UBMlGSMc7Xh/0', '1455022162000', null, '', '0', null, null, null, null), ('8', '1', 'oPEF35Id6KVzJakNyfMEd99zNvXU', '攻城狮', '1', 'Taiyuan', 'China', 'Shanxi', 'zh_CN', 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83ertl9yP41licTa3gN4KDuaIicv7xTCrzoIFezc3C7Lial2rGcBKyJUZnWWWgSDUKwbmgWVywrEV4h1jw/132', '1539338839371', null, null, null, null, null, '127.0.0.1', '1539338839');
 COMMIT;
 
 -- ----------------------------

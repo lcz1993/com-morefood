@@ -34,6 +34,7 @@
     "think-view": "^1.0.11",
     "think-view-nunjucks": "^1.0.7",
     "think-wechat": "^1.1.0",
+    "request-promise": "^4.2.1",
     "thinkjs": "^3.2.8"
   },
   "devDependencies": {
