@@ -3,8 +3,8 @@ module.exports = class extends think.cmswing.app {
     super(ctx);
   }
 
-  async index() {
-    const restaurant_id = this.get('restaurant_id');
+  async indexAction() {
+    let restaurant_id = this.get('restaurant_id');
     if (!restaurant_id) {
       restaurant_id = 1;
     }

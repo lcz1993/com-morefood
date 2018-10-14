@@ -72,6 +72,7 @@ module.exports = class extends think.cmswing.app {
     let sessionData = await rp(options);
     sessionData = JSON.parse(sessionData);
     if (!sessionData.openid) {
+      console.log(sessionData.openid);
       return this.fail('登录失败');
     }
 
