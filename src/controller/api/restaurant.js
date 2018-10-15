@@ -26,18 +26,26 @@ module.exports = class extends think.cmswing.app {
       sell: a.sales,
       sendTime: a.send_time,
       desc: a.desc,
-      sendMonkey: a.send_money
+      sendMoney: a.send_money,
+      min_price: a.min_price
     };
     const dishClassArr = await this.model('dish_class').where({restaurant_id: restaurant_id}).select();
-    console.log(dishClassArr);
     const goods = [];
     for (const dishClass of dishClassArr) {
-      console.log(dishClass);
       const dishClassId = dishClass.id;
       const meduArr = await this.model('medu').where({dish_class: dishClassId}).select();
       const foods = [];
       for (const medu of meduArr) {
+        if (medu.dish_picture) {
+          const b = await this.model('ext_attachment_pic').find(medu.dish_picture);
+          medu.dish_picture = b.path;
+        }
+        if (medu.image) {
+          const c = await this.model('ext_attachment_pic').find(medu.image);
+          medu.image = c.path;
+        }
         const f = {
+          id: medu.id,
           name: medu.dish_name,
           price: medu.original_price,
           oldPrice: medu.old_price,
@@ -58,6 +66,12 @@ module.exports = class extends think.cmswing.app {
         desc: dishClass.desc,
         foods: foods
       };
+      goods.push(a);
     }
+    const data = {
+      restaurant: restaurant,
+      goods: goods
+    };
+    return this.success(data);
   }
 };

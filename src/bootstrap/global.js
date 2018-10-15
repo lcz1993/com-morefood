@@ -1435,3 +1435,16 @@ global.make_code = (len) => {
   for (var i = 0; i < len; i++) { rnd += Math.floor(Math.random() * 10) }
   return rnd;
 };
+/**
+ * 删除数组指定元素
+ * @param arr
+ * @param val
+ */
+global.removeByValue = (arr, val) => {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == val) {
+      arr.splice(i, 1);
+      break;
+    }
+  }
+};

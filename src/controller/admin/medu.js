@@ -95,7 +95,7 @@ module.exports = class extends think.cmswing.admin {
       // 分类
       const dishs = await this.model('dish_class').where({restaurant_id: medu.restaurant_id}).select();
       this.assign('dishs', dishs);
-      this.assign('medu', medu);
+      this.assign('data', medu);
       this.active = '/admin/medu/index';
       this.meta_title = '编辑菜单';
       await this.hook('adminUpPic', 'dish_picture', medu.dish_picture, {$hook_key: 'dish_picture'});
