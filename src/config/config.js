@@ -33,13 +33,13 @@ module.exports = {
   // 可以公开访问的Controller
   publicController: [
     // 格式为controller
-    'api/public',
-    'api/address'
+    'api/public'
   ],
 
   // 可以公开访问的Action
   publicAction: [
     // 格式为： controller+action
+    'api/address/getarea'
 
   ],
   // 以下为腾讯云短信服务

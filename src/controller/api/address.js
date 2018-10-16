@@ -28,10 +28,103 @@ module.exports = class extends think.cmswing.app {
         tel: address.mobile,
         sign: address.sign,
         msg: location,
-        is_default: address.is_default
+        is_default: address.is_default,
+        province: address.province,
+        city: address.city,
+        county: address.county
       };
       addressList.push(b);
     }
     return this.success(addressList);
+  }
+  async saveAction() {
+    const address = this.post('address');
+    const userId = this.post('userId');
+    const addressOld = await this.model('address').where({user_id: userId, is_default: 1}).select();
+    if (addressOld.length > 0) {
+      const a = addressOld[0];
+      a.is_default = 0;
+      const b = await this.model('address').update(a);
+    }
+    const data = {
+      user_id: userId,
+      accept_name: address.name,
+      mobile: address.mobile,
+      province: address.province,
+      city: address.city,
+      county: address.county,
+      addr: address.address,
+      is_default: address.is_default,
+      gender: address.gender,
+      sign: address.sign
+    };
+    const res = await this.model('address').add(data);
+    if (res) {
+      return this.success(res);
+    } else {
+      return this.fail();
+    }
+  }
+  async delAction() {
+    const addressId = this.post('addressId');
+    const userId = this.post('userId');
+    if (addressId) {
+      const res = await this.model('address').where({id: addressId}).delete();
+      const addressList = await this.model('address').where({user_id: userId}).select();
+      if (res) {
+        return this.success(addressList);
+      } else {
+        return this.fail();
+      }
+    } else {
+      return this.fail();
+    }
+  }
+  async getAction() {
+    const id = this.get('id');
+    if (!id) {
+      return this.fail();
+    }
+    const address = await this.model('address').find(id);
+    const region = [];
+    let a = await this.model('area').find(address.province);
+    region.push(a.name);
+    a = await this.model('area').find(address.city);
+    region.push(a.name);
+    a = await this.model('area').find(address.county);
+    region.push(a.name);
+    address.region = region;
+    return this.success(address);
+  }
+  async editAction() {
+    const address = this.post('address');
+    console.log(address);
+    const userId = this.post('userId');
+    console.log(userId);
+    const addressOld = await this.model('address').where({user_id: userId, is_default: 1}).select();
+    if (addressOld.length > 0) {
+      const a = addressOld[0];
+      a.is_default = 0;
+      const b = await this.model('address').update(a);
+    }
+    const data = {
+      id: address.id,
+      user_id: userId,
+      accept_name: address.name,
+      mobile: address.mobile,
+      province: address.province,
+      city: address.city,
+      county: address.county,
+      addr: address.address,
+      is_default: address.is_default,
+      gender: address.gender,
+      sign: address.sign
+    };
+    const res = await this.model('address').update(data);
+    if (res) {
+      return this.success(res);
+    } else {
+      return this.fail();
+    }
   }
 };
