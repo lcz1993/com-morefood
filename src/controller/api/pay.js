@@ -183,6 +183,13 @@ module.exports = class extends think.cmswing.app {
         total_fee: parseInt(orderInfo.actual_price * 100),
         spbill_create_ip: ''
       });
+      const order = {
+        id: orderId,
+        pay_status: 1,
+        status: 2,
+        pay_time: new Date().getTime()
+      };
+      await this.model('order').update(order);
       return this.success(returnParams);
     } catch (err) {
       return this.fail('微信支付失败');

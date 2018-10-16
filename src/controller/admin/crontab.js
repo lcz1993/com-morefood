@@ -24,18 +24,11 @@ module.exports = class extends think.Controller {
     }
 
     // 查询未付款，未作废的订单的订单
-    const map = {
-      pay_status: 0,
-      status: 2,
-      create_time: ['<', (new Date().getTime() - (Number(this.config('setup.ORDER_DELAY')) * 60000))],
-      type: 0
-    };
-    const order = await this.model('order').where(map).field('id').select();
-    if (!think.isEmpty(order)) {
-      for (const v of order) {
-        await this.model('order').where({id: v.id}).update({status: 6, admin_remark: '规定时间未付款系统自动作废'});
-        // 释放库存
-        await this.model('cmswing/order').stock(v.id, false);
+    const orderList = await this.model('order').where({status: 0}).select();
+    for (const order of orderList) {
+      const createTime = order.create_time;
+      if ((createTime + 3600000) < (new Date().getTime())) {
+        await this.model('order').delete(order);
       }
     }
 
