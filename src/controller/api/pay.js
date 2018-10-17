@@ -159,7 +159,11 @@ module.exports = class extends think.cmswing.app {
         is_default: address.is_default
       };
     }
+    if (order.pay_status != 0) {
+      order.id = '';
+    }
     return this.success({
+      order: order,
       cartArr: orderList,
       address: address,
       restaurant: restaurant
@@ -177,7 +181,12 @@ module.exports = class extends think.cmswing.app {
     const m = new Date().getTime().toString();
     order.order_no = think._.padEnd(userId, 10, '0') + m.substr(8);
     order.create_time = new Date().getTime();
-    const res = await this.model('order').add(order);
+    let res = '';
+    if (!order.id) {
+      res = await this.model('order').add(order);
+    } else {
+      res = await this.model('order').update(order);
+    }
     if (res) {
       for (const orderFood of orderList) {
         const f = await this.model('medu').find(orderFood.id);
