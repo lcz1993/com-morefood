@@ -16,7 +16,6 @@
                     <tr>
                         <th>货号</th>
                         <th>商品名</th>
-                        <th>规格</th>
                         <th>价格</th>
                         <th>数量</th>
                         <th>促销</th>
@@ -31,9 +30,6 @@
                             <span class="thumb-sm"><img class="img-responsive img-thumbnail" src="{{v.pic}}" alt="{{v.title}}"></span>
                         </td>
                         <td>{{v.title}}</td>
-                        <td>
-                            {{v.type}}
-                        </td>
                         <td>
                             {{v.goods_price|formatCurrency}}
                         </td>
@@ -66,19 +62,13 @@
 
                     <tr>
                         <td>
-                            {{user.username}}
+                            {{user.nickname}}
                         </td>
-                        <td>{{user.real_name}}</td>
-                        <td>
-                            {{user.mobile}}
-                        </td>
+                        <!--<td>{{user.real_name}}</td>-->
+                        <td>{{user.mobile}}</td>
                         <td>{{user.phone}}</td>
-                        <td>
-                            {{user.email}}
-                        </td>
+                        <td>{{user.email}}</td>
                         <td>{{user.addr}}</td>
-
-
                     </tr>
 
                     </tbody>
@@ -107,25 +97,44 @@
                         <td class="active">
                         支付方式
                         </td>
-                        <td>{{order.payment}}</td>
+                        <td>微信支付</td>
                     </tr>
                     <tr>
+                        <td class="active">
+                            代金券
+                        </td>
+                        <td><span class="text-danger">-</span></td>
+                        <td class="active">
+                            商品总金额
+                        </td>
+                        <td><span class="text-danger">{{order.real_amount|formatCurrency }}</span> </td>
                         <td class="active">
                             配送费用
                         </td>
                         <td><span class="text-danger">{% if order.real_freight|formatCurrency %}{{order.real_freight|formatCurrency}}{% else %} 包邮 {% endif%}</span></td>
+
+                    </tr>
+                    <tr>
                         <td class="active">
-                            物流公司
+                            送餐员姓名
                         </td>
-                        <td><select name="express_company_id" class="form-control" data-required="true">
-                          {% for v in express_company %}
-                            <option value="{{v.id}}">{{v.name}}</option>
-                           {% endfor %}
-                        </select></td>
+                        <td>
+                            <select class="form-control pointer " id="deliverList" name="deliver_id" data-required="true" onchange="changeTel">
+                                <option value="">--- 请选择 ---</option>
+                                {% for val in deliverList %}
+                                <option value="{{val.id}}" {% if order.province == val.id %} selected {% endif%}>{{val.deliver_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
                         <td class="active">
-                            物流单号
+                            联系方式
                         </td>
-                        <td><input type="text" data-required="true"  class=" input-sm form-control" name="express_no" ></td>
+                        <td><span class="text-danger" id="deliver_tel"></span> </td>
+                        <td class="active">
+                            预约送餐时间
+                        </td>
+                        <td><span class="text-danger">{{order.sendTime}}</span></td>
+
                     </tr>
                     <tr>
                         <td class="active">
@@ -196,6 +205,7 @@
 
         </div>
         <div class="modal-footer">
+            <input type="hidden" name="id" value="{{order.id}}">
             <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
             <a href="javascript:;" class="btn btn-primary btn-s-md ajax-post" type="submit" target-form="form-horizontal">确定</a>
         </div>
@@ -220,6 +230,17 @@
                 } });
         })
 
+        $(document).on( "change","#deliverList",function (e) {
+            var deliverId = $('#deliverList option:selected').val();
+            $.ajax({
+                url:'/admin/deliver/get?id='+deliverId,
+                type:'get',
+                success:function (res) {
+                    var data = res.data;
+                    $('#deliver_tel').text(data.deliver_tel);
+                },
+            })
+        })
 
         $(document).on( "change","#city1",function (e) {
             var pid = $("#city1 option:selected").val();
@@ -236,6 +257,5 @@
                 } });
         })
     })
-
 
 </script>

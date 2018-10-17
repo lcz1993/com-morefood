@@ -258,32 +258,28 @@ module.exports = class extends think.cmswing.admin {
   async shipAction() {
     if (this.isPost) {
       const data = this.post();
-      data.admin = await get_nickname(this.user.uid);
+      // data.admin = await get_nickname(this.user.uid);
       // 生成快递单编号
-      const kid = ['k', new Date().getTime()];
-      data.invoice_no = kid.join('');
+      // const kid = ['k', new Date().getTime()];
+      // data.invoice_no = kid.join('');
 
-      data.create_time = new Date().getTime();
-      const res = await this.model('doc_invoice').add(data);
-      if (res) {
-        await this.model('order').where({id: data.order_id}).update({delivery_status: 1});
-      }
+      // data.create_time = new Date().getTime();
+      // const res = await this.model('doc_invoice').add(data);
+      // if (res) {
+      const deliver = await this.model('deliver').find(data.deliver_id);
+      data.deliver_name = deliver.deliver_name;
+      data.deliver_tel = deliver.deliver_tel;
+      data.delivery_status = 1;
+      await this.model('order').update(data);
+      // }
       return this.success({'name': '发货成功！', 'url': this.referer()});
     } else {
       const id = this.get('id');
       const order = await this.model('order').find(id);
+      const date = new Date(order.send_time);
+      order.sendTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':00';
       if (order.status != 3) {
         return this.fail('订单还没审核！，请先审核订单。');
-      }
-      switch (order.payment) {
-        case 100:
-          order.payment = '预付款支付';
-          break;
-        case 1001:
-          order.payment = '货到付款';
-          break;
-        default:
-          order.payment = await this.model('pingxx').where({id: order.payment}).getField('title', true);
       }
       // 购物清单
       const goods = await this.model('order_goods').where({order_id: id}).select();
@@ -297,10 +293,11 @@ module.exports = class extends think.cmswing.admin {
       }
 
       // 购买人信息
-      const user = await this.model('member').find(order.user_id);
-      // 获取 快递公司
-      const express_company = await this.model('express_company').order('sort ASC').select();
-      this.assign('express_company', express_company);
+      const user = await this.model('wx_user').find(order.user_id);
+      // 获取送餐员信息
+      const deliverArr = await this.model('deliver').where({restaurant_id: order.restaurant_id}).select();
+      this.assign('deliverList', deliverArr);
+
       // 获取省份
       const province = await this.model('area').where({parent_id: 0}).select();
       const city = await this.model('area').where({parent_id: order.province}).select();

@@ -29,7 +29,7 @@ module.exports = class extends think.cmswing.app {
       sendMoney: a.send_money,
       min_price: a.min_price
     };
-    const dishClassArr = await this.model('dish_class').where({restaurant_id: restaurant_id}).select();
+    const dishClassArr = await this.model('dish_class').order('sort ASC').where({restaurant_id: restaurant_id}).select();
     const goods = [];
     for (const dishClass of dishClassArr) {
       const dishClassId = dishClass.id;

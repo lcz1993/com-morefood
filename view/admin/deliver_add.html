@@ -1,0 +1,55 @@
+<div class="modal-dialog ">
+    <form method="post" class="form-horizontal" action="/admin/deliver/add" data-validate="parsley">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{controller.meta_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <input type="text" name="deliver_name" class="input-sm form-control" placeholder="姓名" data-required="true">
+                            </div>
+                            <div class="col-md-12">
+                                <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 送餐员姓名</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">电话</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <input type="text" name="deliver_tel" class="input-sm form-control number" placeholder="联系方式" data-required="true">
+                            </div>
+                            <div class="col-md-12">
+                                <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 联系方式</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">家庭住址</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <input type="text" name="home_addr" class="input-sm form-control" placeholder="家庭住址" data-required="true" maxlength="15">
+                            </div>
+                            <div class="col-md-12">
+                                <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>家庭住址</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
+                <button class="btn btn-primary btn-s-md ajax-post" type="submit" target-form="form-horizontal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->

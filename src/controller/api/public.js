@@ -117,7 +117,8 @@ module.exports = class extends think.cmswing.app {
     // 更新登录信息
     userId = await this.model('wx_user').where({ id: userId }).update({
       last_login_time: parseInt(new Date().getTime() / 1000),
-      last_login_ip: clientIp
+      last_login_ip: clientIp,
+      tel: tel
     });
 
     const TokenSerivce = this.service('token', 'api');

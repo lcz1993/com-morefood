@@ -91,6 +91,80 @@ module.exports = class extends think.cmswing.app {
       restaurant: restaurant
     });
   }
+  /**
+     * 再次购买
+     * @returns {Promise<*>}
+     */
+  async buyAction() {
+    const orderId = this.get('orderId');
+    const userId = this.getLoginUserId();
+    const order = await this.model('order').find(orderId);
+    const restaurantId = order.restaurant_id;
+    const cartArr = await this.model('order_goods').where({order_id: orderId}).select();
+    const orderList = [];
+    for (const food of cartArr) {
+      const num = food.goods_nums;
+      let f = await this.model('medu').find(food.goods_id);
+      if (!f) {
+        return this.fail('商品已下架！');
+      }
+      if (f.restaurant_id != restaurantId) {
+        global.removeByValue(cartArr, food);
+        break;
+      }
+      if (f.dish_picture) {
+        const b = await this.model('ext_attachment_pic').find(f.dish_picture);
+        f.dish_picture = b.path;
+      }
+      if (f.image) {
+        const b = await this.model('ext_attachment_pic').find(f.image);
+        f.image = b.path;
+      }
+      f = {
+        id: f.id,
+        name: f.dish_name,
+        num: num,
+        image: f.dish_picture,
+        unit_price: f.original_price,
+        total_price: f.original_price * num
+      };
+      orderList.push(f);
+    }
+    const restaurant = await this.model('restaurant').find(restaurantId);
+    const addressArr = await this.model('address').where({user_id: userId, is_default: '1'}).select();
+    let address = {};
+    if (addressArr.length != 0) {
+      address = addressArr[0];
+    }
+    if (JSON.stringify(address) != '{}') {
+      let location = '';
+      let a = await this.model('area').find(address.province);
+      location += a.name;
+      a = await this.model('area').find(address.city);
+      location += a.name;
+      a = await this.model('area').find(address.county);
+      location += a.name;
+      location += address.addr;
+      address = {
+        id: address.id,
+        name: address.accept_name,
+        gender: address.gender,
+        tel: address.mobile,
+        sign: address.sign,
+        province: address.province,
+        city: address.city,
+        county: address.county,
+        addr: address.addr,
+        msg: location,
+        is_default: address.is_default
+      };
+    }
+    return this.success({
+      cartArr: orderList,
+      address: address,
+      restaurant: restaurant
+    });
+  }
   async saveAction() {
     const order = this.post('order');
     const sendTime = order.send_time;
@@ -116,7 +190,7 @@ module.exports = class extends think.cmswing.app {
           price: orderFood.total_price,
           title: f.dish_name,
           unit_price: f.unit_price,
-          pic: f.dish_picture
+          pic: orderFood.image
         };
         prom_goods = JSON.stringify(prom_goods);
         const food = {
