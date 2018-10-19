@@ -183,6 +183,7 @@ module.exports = class extends think.cmswing.app {
     order.create_time = new Date().getTime();
     let res = '';
     if (!order.id) {
+      order.id = null;
       res = await this.model('order').add(order);
     } else {
       res = await this.model('order').update(order);
@@ -261,12 +262,13 @@ module.exports = class extends think.cmswing.app {
     const arr = clientIp.split(':');
     clientIp = arr[arr.length - 1];
     const WeixinSerivce = this.service('weixin', 'api');
+    const amount = parseInt(orderInfo.order_amount * 100);
     // try {
     const returnParams = await WeixinSerivce.createUnifiedOrder({
       openid: openid,
       body: '订单编号：' + orderInfo.order_no,
       out_trade_no: orderInfo.order_no,
-      total_fee: parseInt(orderInfo.order_amount) * 100,
+      total_fee: amount,
       restaurant_id: orderInfo.restaurant_id,
       spbill_create_ip: clientIp
     });

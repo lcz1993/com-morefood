@@ -27,7 +27,7 @@ module.exports = {
     appid: 'wx316af34c36f1546e', // 小程序 appid
     secret: '339501f621c61694e7e18aa9f43fecd6', // 小程序密钥
     mch_id: '1503371891', // 商户帐号ID
-    partner_key: 'f13934f7872c049b8006fa8b3620c89a', // 微信支付密钥
+    partner_key: 'tengshengshichuangchuanmeigongsi', // 微信支付密钥
     notify_url: 'https://jishiyu.sxtssc.com.cn/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
   },
   // 可以公开访问的Controller
