@@ -48,6 +48,12 @@ module.exports = class extends think.Service {
       mch_id: think.config('weixin.mch_id'), // 商户帐号ID
       partner_key: think.config('weixin.partner_key') // 秘钥
     });
+    console.log(payInfo.body);
+    console.log(payInfo.out_trade_no);
+    console.log(payInfo.total_fee);
+    console.log(payInfo.spbill_create_ip);
+    console.log(think.config('weixin.notify_url'));
+    console.log();
     return new Promise((resolve, reject) => {
       weixinpay.createUnifiedOrder({
         body: payInfo.body,
@@ -57,15 +63,21 @@ module.exports = class extends think.Service {
         notify_url: think.config('weixin.notify_url'),
         trade_type: 'JSAPI'
       }, (res) => {
+        console.log(res);
         if (res.return_code === 'SUCCESS' && res.result_code === 'SUCCESS') {
           const returnParams = {
             'appid': res.appid,
-            'timeStamp': parseInt(Date.now() / 1000) + '',
             'nonceStr': res.nonce_str,
             'package': 'prepay_id=' + res.prepay_id,
-            'signType': 'MD5'
+            'signType': 'MD5',
+            'timeStamp': parseInt(Date.now() / 1000) + ''
+
           };
           const paramStr = `appId=${returnParams.appid}&nonceStr=${returnParams.nonceStr}&package=${returnParams.package}&signType=${returnParams.signType}&timeStamp=${returnParams.timeStamp}&key=` + think.config('weixin.partner_key');
+          let sign = md5(paramStr).toUpperCase();
+          console.log(sign);
+          sign = hash_hmac('sha256', paramStr, think.config('weixin.partner_key')).toUpperCase();
+          console.log(sign);
           returnParams.paySign = md5(paramStr).toUpperCase();
           resolve(returnParams);
         } else {

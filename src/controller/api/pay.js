@@ -257,25 +257,49 @@ module.exports = class extends think.cmswing.app {
     if (think.isEmpty(openid)) {
       return this.fail('微信支付失败');
     }
+    let clientIp = this.service('express', 'api').check_document_position(this.ctx.req); // 暂时不记录 ip
+    const arr = clientIp.split(':');
+    clientIp = arr[arr.length - 1];
     const WeixinSerivce = this.service('weixin', 'api');
-    try {
-      const returnParams = await WeixinSerivce.createUnifiedOrder({
-        openid: openid,
-        body: '订单编号：' + orderInfo.order_sn,
-        out_trade_no: orderInfo.order_sn,
-        total_fee: parseInt(orderInfo.actual_price * 100),
-        spbill_create_ip: ''
-      });
-      const order = {
-        id: orderId,
-        pay_status: 1,
-        status: 2,
-        pay_time: new Date().getTime()
-      };
-      await this.model('order').update(order);
-      return this.success(returnParams);
-    } catch (err) {
-      return this.fail('微信支付失败');
+    // try {
+    const returnParams = await WeixinSerivce.createUnifiedOrder({
+      openid: openid,
+      body: '订单编号：' + orderInfo.order_no,
+      out_trade_no: orderInfo.order_no,
+      total_fee: parseInt(orderInfo.order_amount) * 100,
+      restaurant_id: orderInfo.restaurant_id,
+      spbill_create_ip: clientIp
+    });
+    const order = {
+      id: orderId,
+      pay_status: 1,
+      status: 2,
+      pay_time: new Date().getTime()
+    };
+    await this.model('order').update(order);
+    return this.success(returnParams);
+    // } catch (err) {
+    //   return this.fail('微信支付失败');
+    // }
+  }
+  async notifyAction() {
+    const WeixinSerivce = this.service('weixin', 'api');
+    const result = WeixinSerivce.payNotify(this.post('xml'));
+    if (!result) {
+      return `<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付失败]]></return_msg></xml>`;
     }
+
+    const orderModel = this.model('order');
+    const orderInfo = await orderModel.getOrderByOrderSn(result.out_trade_no);
+    if (think.isEmpty(orderInfo)) {
+      return `<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[订单不存在]]></return_msg></xml>`;
+    }
+
+    if (orderModel.updatePayStatus(orderInfo.id, 2)) {
+    } else {
+      return `<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[订单不存在]]></return_msg></xml>`;
+    }
+
+    return `<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>`;
   }
 };

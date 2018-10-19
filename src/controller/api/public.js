@@ -27,7 +27,9 @@ module.exports = class extends think.cmswing.app {
     const params = [];// 数组具体的元素个数和模板中变量个数必须一致，例如事例中templateId:5678对应一个变量，参数数组中元素个数也必须是一个
     params.push(code);
     params.push('10');
-    ssender.sendWithParam(86, tel, params, templateId, smsSign, '', '', function(err, res, resData) {
+    var smsType = 0; // Enum{0: 普通短信, 1: 营销短信}
+    // ssender.send(86, tel, templateId, params, SmsSign, "", "" function(err, res, resData) {
+    ssender.send(smsType, 86, tel, '【腾盛时创传媒】您的验证码是' + code + ',请于10分钟内填写。如非本人操作,请忽略此短信。', '', '', function(err, res, resData) {
       if (err) {
         console.log('err: ', err);
       } else {
