@@ -272,13 +272,6 @@ module.exports = class extends think.cmswing.app {
       restaurant_id: orderInfo.restaurant_id,
       spbill_create_ip: clientIp
     });
-    const order = {
-      id: orderId,
-      pay_status: 1,
-      status: 2,
-      pay_time: new Date().getTime()
-    };
-    await this.model('order').update(order);
     return this.success(returnParams);
     // } catch (err) {
     //   return this.fail('微信支付失败');
@@ -303,5 +296,20 @@ module.exports = class extends think.cmswing.app {
     }
 
     return `<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>`;
+  }
+  async statusAction() {
+    const orderId = this.post('orderId');
+    const order = {
+      id: orderId,
+      pay_status: 1,
+      status: 2,
+      pay_time: new Date().getTime()
+    };
+    const res = await this.model('order').update(order);
+    if (res) {
+      return this.success();
+    } else {
+      return this.fail();
+    }
   }
 };

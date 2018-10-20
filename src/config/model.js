@@ -15,11 +15,12 @@ module.exports = {
   },
   mysql: {
     handle: mysql, // Adapter handle
-    // user: 'root', // 用户名
-    user: 'lcz', // 用户名
-    password: 'TSSC@8888lcz!', // 密码
-    // password: 'root', // 密码
-    database: 'morefood', // 数据库
+    user: 'root', // 用户名
+    // user: 'lcz', // 用户名
+    // password: 'TSSC@8888lcz!', // 密码
+    password: 'root', // 密码
+    // database: 'morefood', // 数据库
+    database: 'cmswing', // 数据库
     host: '127.0.0.1', // host
     port: 3306, // 端口
     connectionLimit: 1, // 连接池的连接个数，默认为 1
