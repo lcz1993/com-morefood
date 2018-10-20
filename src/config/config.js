@@ -1,6 +1,6 @@
 // default config
 module.exports = {
-  port: 8080,
+  port: 8363,
   http_: 1, // 1:http,2:https
   document_model_type: {2: '主题', 1: '目录', 3: '段落'}, // 文档模型配置 (文档模型核心配置，请勿更改)
   user_administrator: [1], // 数组格式，可以配置多个[1,2,3]
@@ -28,7 +28,8 @@ module.exports = {
     secret: '339501f621c61694e7e18aa9f43fecd6', // 小程序密钥
     mch_id: '1503371891', // 商户帐号ID
     partner_key: 'tengshengshichuangchuanmeigongsi', // 微信支付密钥
-    notify_url: 'https://jishiyu.sxtssc.com.cn/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
+    // notify_url: 'https://jishiyu.sxtssc.com.cn/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
+    notify_url: 'http://127.0.0.1:8080/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
   },
   // 可以公开访问的Controller
   publicController: [
