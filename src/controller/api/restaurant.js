@@ -55,7 +55,8 @@ module.exports = class extends think.cmswing.app {
           rating: medu.rating,
           info: medu.dish_desc,
           icon: medu.dish_picture,
-          image: medu.image
+          image: medu.image,
+          desc: medu.dish_desc
         };
         foods.push(f);
       }

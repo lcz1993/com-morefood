@@ -24,10 +24,14 @@ module.exports = {
   // 以下针对小程序，可以公开的接口与不可以公开的接口既需要登录的接口
   default_module: 'api',
   weixin: {
-    appid: 'wx316af34c36f1546e', // 小程序 appid
-    secret: '339501f621c61694e7e18aa9f43fecd6', // 小程序密钥
-    mch_id: '1503371891', // 商户帐号ID
-    partner_key: 'tengshengshichuangchuanmeigongsi', // 微信支付密钥
+    appid: 'wx42779970f7f8fd85', // 小程序 appid
+    secret: '8a057e01243a87757847b8a1b5cf20f9', // 小程序密钥
+    mch_id: '1516921311', // 商户帐号ID
+    partner_key: 'jishiyuxiaoyuancanyinpeisong8888', // 微信支付密钥
+    // appid: 'wx316af34c36f1546e', // 小程序 appid
+    // secret: '339501f621c61694e7e18aa9f43fecd6', // 小程序密钥
+    // mch_id: '1503371891', // 商户帐号ID
+    // partner_key: 'tengshengshichuangchuanmeigongsi', // 微信支付密钥
     // notify_url: 'https://jishiyu.sxtssc.com.cn/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
     notify_url: 'http://127.0.0.1:8080/api/pay/notify' // 微信异步通知，例：https://www.nideshop.com/api/pay/notify
   },
