@@ -1,0 +1,99 @@
+<div class="modal-dialog" style="width: 85mm">
+    <div class="modal-content">
+        <style>
+            h2,h3{
+                margin: 0;
+                line-height: 1.5;
+            }
+            table{
+                text-align: left;
+                width: 100%;
+            }
+        </style>
+        <div class="print-div" id="print" style="width: 85mm;text-align: center;padding: 5mm;color: #000;">
+            <h3 class="print-title">{{data.title}}</h3>
+            <h4 class="print-name">{{data.restaurant_name}}</h4>
+            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
+            <p class="print-create-time" style="text-align: left;">下单时间:{{data.order_time|dateformat('Y-m-d H:i:s')}}</p>
+            <p class="print-create-time" style="text-align: left;">预计送达:{{data.send_time|dateformat('Y-m-d H:i:s')}}</p>
+            <span>****************************************</span>
+            <table>
+                <thead>
+                <tr>
+                    <th>菜名</th>
+                    <th>数量</th>
+                    <th>单价</th>
+                    <th>小计</th>
+                </tr>
+                </thead>
+                <tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;">
+                {%set num = 0%}
+                {%set amount = 0%}
+                {% for item in data.goodsList %}
+                <tr>
+                    <td>{{item.title}}</td>
+                    <td>{{item.num}}
+                    {%set num = item.num + num%}</td>
+                    <td>{{item.unit_price|formatCurrency}}</td>
+                    <td>{{item.total_price|formatCurrency}}
+                        {%set amount = item.total_price + amount%}
+                    </td>
+                </tr>
+                {%endfor%}
+                </tbody>
+                <tfoot>
+                <tr class="plan-border">
+                    <th>小计</th>
+                    <th>{{num}}</th>
+                    <th></th>
+                    <th>{{amount|formatCurrency}}</th>
+                </tr>
+                <tr class="send-border">
+                    <th>配送费</th>
+                    <th></th>
+                    <th></th>
+                    <th>{{data.sendPrice|formatCurrency}}</th>
+                </tr>
+                <tr>
+                    <td colspan="4" style="white-space: nowrap">#######################################</td>
+                </tr>
+                <tr class="amount-border">
+                    <th>合计</th>
+                    <th></th>
+                    <th></th>
+                    <th>{{data.original_amount|formatCurrency}}</th>
+                </tr>
+                </tfoot>
+            </table>
+            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
+            <h4 style="text-align: left">折后合计：￥{{data.amount_price}}</h4>
+            <p style="text-align: left">地址：{{data.address}}</p>
+            <p style="text-align: left">{{data.user_name}} {{data.restaurant_tel}}</p>
+            <h2>#####微信支付#####</h2>
+
+            <div><div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>{{data.restaurant_tel}}</div>
+            <h4>{{data.restaurant_name}}</h4>
+            <h3>{{data.title}}</h3>
+            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
+        </div>
+
+
+        <div class="modal-footer">
+            <input type="hidden" value="{{order.id}}" name="id">
+            <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
+            <a href="javascript:;" class="btn btn-primary btn-s-md ajax-post" onclick="print()" target-form="form-horizontal">打印</a>
+        </div>
+    </div><!-- /.modal-dialog -->
+</div>
+<script src="/static/admin/js/jqprint/jquery-1.4.4.min.js"></script>
+<script src="/static/admin/js/jqprint/jquery.jqprint-0.3.js"></script>
+<script language="javascript">
+    function print(){
+        $("#print").jqprint({
+            debug: false,
+            importCSS: false, //将此属性改为false；直接在style中写入样式即可
+            printContainer: true,
+            operaSupport: false
+        });
+    }
+</script>

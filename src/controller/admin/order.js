@@ -394,4 +394,43 @@ module.exports = class extends think.cmswing.admin {
     }
     return this.success(notifications);
   }
+  async printAction() {
+    const id = this.get('id');
+    const order = await this.model('order').find(id);
+    const goodsList = await this.model('order_goods').where({order_id: id}).select();
+    const foodList = [];
+    let amount = 0;
+    for (const goods of goodsList) {
+      const prom_goods = JSON.parse(goods.prom_goods);
+      const b = {
+        title: prom_goods.title,
+        num: prom_goods.qty,
+        unit_price: prom_goods.unit_price,
+        total_price: prom_goods.price
+      };
+      amount += prom_goods.price;
+      foodList.push(b);
+    }
+    const restaurant = await this.model('restaurant').find(order.restaurant_id);
+    let location = '';
+    const a = await this.model('area').find(order.county);
+    location += a.name;
+    location += order.addr;
+    const data = {
+      title: '及时雨校园餐饮',
+      restaurant_name: restaurant.name,
+      order_time: order.create_time,
+      send_time: order.send_time,
+      goodsList: foodList,
+      sendPrice: restaurant.send_money,
+      amount_price: order.order_amount,
+      address: location,
+      user_name: order.accept_name,
+      user_tel: order.mobile,
+      original_amount: parseFloat(amount) + parseFloat(restaurant.send_money),
+      restaurant_tel: restaurant.contect_tel
+    };
+    this.assign('data', data);
+    return this.display();
+  };
 };

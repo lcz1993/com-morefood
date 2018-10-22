@@ -199,7 +199,7 @@ module.exports = class extends think.cmswing.app {
           type: '',
           price: orderFood.total_price,
           title: f.dish_name,
-          unit_price: f.unit_price,
+          unit_price: f.original_price,
           pic: orderFood.image
         };
         prom_goods = JSON.stringify(prom_goods);
