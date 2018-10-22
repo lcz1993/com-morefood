@@ -16,6 +16,10 @@ module.exports = class extends think.cmswing.app {
     const order = await this.model('order').find(orderGoodsId);
     const valueId = order.restaurant_id;
     const imgList = this.post('imgList');
+    let status = '';
+    if (imgList) {
+      status = 1;
+    }
     const content = this.post('content');
     const buffer = Buffer.from(content);
     const insertId = await this.model('comment').add({
@@ -23,6 +27,7 @@ module.exports = class extends think.cmswing.app {
       value_id: valueId,
       content: buffer.toString('base64'),
       add_time: this.getTime(),
+      status: status,
       user_id: this.getLoginUserId()
     });
     imgList.pop();
@@ -42,5 +47,36 @@ module.exports = class extends think.cmswing.app {
     } else {
       return this.fail('评论保存失败');
     }
+  }
+  async indexAction() {
+    const id = this.get('id');
+    const typeId = this.get('type_id');
+    const map = {};
+    map.value_id = id;
+    if (parseInt(typeId) === 3) {
+      map.status = 1;
+    } else if (typeId) {
+      map.type_id = typeId;
+    }
+    const commentList = await this.model('comment').where(map).order('id DESC').page(1, 10).countSelect();
+    for (let comment of commentList.data) {
+      const comm = {};
+      if (parseInt(comment.status === 1)) {
+        const imgList = await this.model('comment_picture').where({comment_id: comment.id}).select();
+        const picList = [];
+        for (const img of imgList) {
+          const a = await this.model('ext_attachment_pic').field(['path']).find(img.pic_url);
+          picList.push(a);
+        }
+        comm.picList = picList;
+      }
+      const user = await this.model('wx_user').find(comment.user_id);
+      comm.nickname = user.nickname;
+      comm.headimgurl = user.headimgurl;
+      comm.content = comment.content;
+      comm.add_time = global.dateformat('Y-m-d H:i:s', comment.add_time);
+      comment = comm;
+    }
+    return this.success(commentList);
   }
 };

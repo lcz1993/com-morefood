@@ -3,6 +3,10 @@ module.exports = class extends think.cmswing.app {
     super(ctx);
   }
 
+  /**
+     * 小程序店铺详情页面
+     * @returns {Promise<*>}
+     */
   async indexAction() {
     let restaurant_id = this.get('restaurant_id');
     if (!restaurant_id) {
