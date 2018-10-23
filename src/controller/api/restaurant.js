@@ -21,16 +21,30 @@ module.exports = class extends think.cmswing.app {
       const c = await this.model('ext_attachment_pic').find(a.image);
       a.image = c.path;
     }
+    if (a.shop_image) {
+      const imgArr = a.shop_image.split(',');
+      const shopImgArr = [];
+      for (const img of imgArr) {
+        const c = await this.model('ext_attachment_pic').field(['path']).find(img);
+        shopImgArr.push(c);
+      }
+      a.shopImage = shopImgArr;
+    }
     const restaurant = {
       id: a.id,
       name: a.name,
       bgImage: a.bgImage,
       image: a.image,
+      shopImage: a.shopImage,
       assess: a.score,
       sell: a.sales,
       sendTime: a.send_time,
       desc: a.desc,
       sendMoney: a.send_money,
+      workTime: a.work_time,
+      range: a.range,
+      addr: a.addr,
+      contect_tel: a.contect_tel,
       min_price: a.min_price
     };
     const dishClassArr = await this.model('dish_class').order('sort ASC').where({restaurant_id: restaurant_id}).select();

@@ -51,17 +51,28 @@ module.exports = class extends think.cmswing.app {
   async indexAction() {
     const id = this.get('id');
     const typeId = this.get('type_id');
+    let currentPage = this.get('currentPage');
+    let pageSize = this.get('pageSize');
+    if (!pageSize) {
+      pageSize = 10;
+    }
+    if (!currentPage) {
+      currentPage = 1;
+    } else {
+      currentPage++;
+    }
     const map = {};
     map.value_id = id;
     if (parseInt(typeId) === 3) {
       map.status = 1;
-    } else if (typeId) {
+    } else if (parseInt(typeId) === 0 || parseInt(typeId) === 1) {
       map.type_id = typeId;
     }
-    const commentList = await this.model('comment').where(map).order('id DESC').page(1, 10).countSelect();
-    for (let comment of commentList.data) {
+    const commentList = await this.model('comment').where(map).order('id DESC').page(currentPage, pageSize).countSelect();
+    const commList = [];
+    for (const comment of commentList.data) {
       const comm = {};
-      if (parseInt(comment.status === 1)) {
+      if (parseInt(comment.status) === 1) {
         const imgList = await this.model('comment_picture').where({comment_id: comment.id}).select();
         const picList = [];
         for (const img of imgList) {
@@ -75,8 +86,17 @@ module.exports = class extends think.cmswing.app {
       comm.headimgurl = user.headimgurl;
       comm.content = comment.content;
       comm.add_time = global.dateformat('Y-m-d H:i:s', comment.add_time);
-      comment = comm;
+      commList.push(comm);
     }
+    commentList.data = commList;
+    const manyi = await this.model('comment').where({type_id: 0}).count('id');
+    commentList.manyi = manyi;
+    const bumanyi = await this.model('comment').where({type_id: 1}).count('id');
+    commentList.bumanyi = bumanyi;
+    const youtu = await this.model('comment').where({status: 1}).count('id');
+    commentList.youtu = youtu;
+    const quanbu = await this.model('comment').where().count('id');
+    commentList.quanbu = quanbu;
     return this.success(commentList);
   }
 };

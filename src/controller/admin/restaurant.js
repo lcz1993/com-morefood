@@ -48,6 +48,7 @@ module.exports = class extends think.cmswing.admin {
       this.meta_title = '新增菜单';
       await this.hook('adminUpPic', 'image', '', {$hook_key: 'image'});
       await this.hook('adminUpPic', 'bg_image', '', {$hook_key: 'bg_image'});
+      await this.hook('adminUpPics', 'shop_image', '', {$hook_key: 'shop_image'});
       return this.display();
     }
   }
@@ -70,6 +71,7 @@ module.exports = class extends think.cmswing.admin {
       this.meta_title = '编辑菜单';
       await this.hook('adminUpPic', 'image', restaurant.image, {$hook_key: 'image'});
       await this.hook('adminUpPic', 'bg_image', restaurant.bg_image, {$hook_key: 'bg_image'});
+      await this.hook('adminUpPics', 'shop_image', restaurant.shop_image, {$hook_key: 'shop_image'});
       return this.display();
     }
   }
