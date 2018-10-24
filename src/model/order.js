@@ -128,9 +128,13 @@ module.exports = class extends think.Model {
      * 获取订单List
      * @returns {Promise<Object>}
      */
-  async getOrderList(userId) {
-    const orderList = await this.model('order').where({ user_id: userId }).page(1, 10).countSelect();
+  async getOrderList(userId, currentPage) {
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    const orderList = await this.model('order').where({ user_id: userId }).page(currentPage, 5).order('create_time DESC').countSelect();
     const newOrderList = [];
+    const t = new Date(new Date(new Date().toLocaleDateString()).getTime()).getTime();
     for (const item of orderList.data) {
       // 订单的商品
       item.goodsList = await this.model('order_goods').where({ order_id: item.id }).select();
@@ -145,12 +149,22 @@ module.exports = class extends think.Model {
       });
       item.order_sn = item.order_no;
       item.actual_price = item.order_amount;
+      const time = item.create_time;
+      if (time > t) {
+        item.create_time = '今天';
+      } else {
+        item.create_time = global.dateformat('Y-m-d', item.create_time);
+      }
       // 订单状态的处理
       item.order_status_text = await this.getOrderStatusText(item.id);
-
       // 可操作的选项
       item.handleOption = await this.getOrderHandleOption(item.id);
-
+      const restaurant = await this.model('restaurant').find(item.restaurant_id);
+      item.restaurantName = restaurant.name;
+      if (restaurant.image) {
+        const c = await this.model('ext_attachment_pic').field(['path']).find(restaurant.image);
+        item.restaurantLogo = c.path;
+      }
       newOrderList.push(item);
     }
     orderList.data = newOrderList;

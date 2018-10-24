@@ -4,7 +4,8 @@ module.exports = class extends think.cmswing.app {
   }
   async listAction() {
     const userId = this.getLoginUserId();
-    const orderList = await this.model('order').getOrderList(userId);
+    const currentPage = this.get('currentPage');
+    const orderList = await this.model('order').getOrderList(userId, currentPage);
     return this.success(orderList);
   }
   async cancelAction() {

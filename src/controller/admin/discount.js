@@ -2,7 +2,7 @@
 module.exports = class extends think.cmswing.admin {
   constructor(ctx) {
     super(ctx); // 调用父级的 constructor 方法，并把 ctx 传递进去
-    this.tactive = 'manager';
+    this.tactive = 'order';
   }
 
   /**
@@ -49,6 +49,12 @@ module.exports = class extends think.cmswing.admin {
       data.start_time = new Date(time.replace(/-/g, '/')).getTime();
       time = data.end_time;
       data.end_time = new Date(time.replace(/-/g, '/')).getTime();
+      if (data.is_show == 0) {
+        const discountArr = await this.model('discount').where({restaurant_id: user.restaurant_id, is_show: 0}).select();
+        for (const i in discountArr) {
+          await this.model('discount').where({id: discountArr[i].id}).update({is_show: 1});
+        }
+      }
       const res = await this.model('discount').add(data);
       if (res) {
         return this.success({name: '添加成功！'});
@@ -72,6 +78,12 @@ module.exports = class extends think.cmswing.admin {
       data.start_time = new Date(time.replace(/-/g, '/')).getTime();
       time = data.end_time;
       data.end_time = new Date(time.replace(/-/g, '/')).getTime();
+      if (data.is_show == 0) {
+        const discountArr = await this.model('discount').where({restaurant_id: user.restaurant_id, is_show: 0}).select();
+        for (const i in discountArr) {
+          await this.model('discount').where({id: discountArr[i].id}).update({is_show: 1});
+        }
+      }
       const res = await this.model('discount').update(data);
       if (res) {
         return this.success({name: '修改成功！'});

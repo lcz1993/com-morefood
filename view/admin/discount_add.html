@@ -55,6 +55,19 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">默认展示</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <label>是</label>
+                                <input type="radio" name="is_show" value="0"/>
+                                <label>否</label>
+                                <input type="radio" name="is_show" value="1" checked="checked" />    <!--默认选中-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-3 control-label">优惠券种类</label>
                     <div class="col-sm-9">
                         <div class="row">
@@ -62,6 +75,9 @@
                                 <select class="form-control input-sm" name="type" onchange="show()" id="type">
                                     <option value="0" selected>折扣</option>
                                     <option value="1" >满减</option>
+                                    <option value="2" >首单</option>
+                                    <option value="3" >特价</option>
+                                    <option value="4" >满赠</option>
                                 </select>
                             </div>
                         </div>
@@ -98,6 +114,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group hide" id="menu_all">
+                    <label class="col-sm-3 control-label">特价</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <span>特价请编辑菜单指定菜品设置[原价],[价格]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <div class="modal-footer">
@@ -121,11 +147,27 @@
     function show() {
         var type = $('#type option:selected').val();
         if(parseInt(type) === 0){
+            //折扣
             $('#percent').removeClass('hide');
             $('#min_price').addClass('hide');
             $('#cut_price').addClass('hide');
+            $('#menu_all').addClass('hide');
         }else if(parseInt(type) === 1){
+            //满减
             $('#percent').addClass('hide');
+            $('#menu_all').addClass('hide');
+            $('#min_price').removeClass('hide');
+            $('#cut_price').removeClass('hide');
+        }else if(parseInt(type) === 2){
+            //首单
+            $('#percent').addClass('hide');
+            $('#menu_all').addClass('hide');
+            $('#min_price').removeClass('hide');
+            $('#cut_price').removeClass('hide');
+        }else if(parseInt(type) === 3){
+            //特价
+            $('#percent').removeClass('hide');
+            $('#menu_all').addClass('hide');
             $('#min_price').removeClass('hide');
             $('#cut_price').removeClass('hide');
         }

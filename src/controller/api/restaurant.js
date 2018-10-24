@@ -87,9 +87,54 @@ module.exports = class extends think.cmswing.app {
       };
       goods.push(a);
     }
+    // 获取餐厅的
+    const discountList = await this.model('discount').where({restaurant_id: restaurant_id, status: 0}).select();
+    const discountArr = [];
+    let dis = {};
+    const count = discountList.length;
+    for (const discount of discountList) {
+      let type = parseInt(discount.type);
+      let color = '';
+      switch (type) {
+        case 0:
+          type = '折扣';
+          color = 'rgb(60, 199, 145)';
+          break;
+        case 1:
+          type = '满减';
+          color = 'rgb(240, 115, 115)';
+          break;
+        case 2:
+          type = '首单';
+          color = 'rgb(112, 188, 70)';
+          break;
+        case 3:
+          type = '特价';
+          color = 'rgb(241, 136, 79)';
+          break;
+      }
+      const e = {
+        name: discount.name,
+        type: type,
+        color: color,
+        desc: discount.desc
+      };
+      discountArr.push(e);
+      if (parseInt(discount.is_show) == 0) {
+        dis = {
+          name: discount.name,
+          type: type,
+          color: color,
+          desc: discount.desc
+        };
+      }
+    }
     const data = {
+      discountNum: count,
+      discount: dis,
       restaurant: restaurant,
-      goods: goods
+      goods: goods,
+      discountArr: discountArr
     };
     return this.success(data);
   }
