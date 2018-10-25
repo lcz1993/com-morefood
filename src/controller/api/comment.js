@@ -74,18 +74,13 @@ module.exports = class extends think.cmswing.app {
       const comm = {};
       if (parseInt(comment.status) === 1) {
         const imgList = await this.model('comment_picture').where({comment_id: comment.id}).select();
-        const picList = [];
-        for (const img of imgList) {
-          const a = await this.model('ext_attachment_pic').field(['path']).find(img.pic_url);
-          picList.push(a);
-        }
-        comm.picList = picList;
+        comm.picList = imgList;
       }
       const user = await this.model('wx_user').find(comment.user_id);
       comm.nickname = user.nickname;
       comm.headimgurl = user.headimgurl;
-      comm.add_time = global.dateformat('Y-m-d H:i:s', comment.add_time);
-      comm.content = Buffer.from(comment.content, 'base64').toString()
+      comm.add_time = global.dateformat('Y-m-d H:i:s', comment.add_time * 1000);
+      comm.content = Buffer.from(comment.content, 'base64').toString();
       commList.push(comm);
     }
     commentList.data = commList;
