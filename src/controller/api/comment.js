@@ -84,8 +84,8 @@ module.exports = class extends think.cmswing.app {
       const user = await this.model('wx_user').find(comment.user_id);
       comm.nickname = user.nickname;
       comm.headimgurl = user.headimgurl;
-      comm.content = comment.content;
       comm.add_time = global.dateformat('Y-m-d H:i:s', comment.add_time);
+      comm.content = Buffer.from(comment.content, 'base64').toString()
       commList.push(comm);
     }
     commentList.data = commList;

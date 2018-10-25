@@ -181,6 +181,9 @@ module.exports = class extends think.cmswing.app {
     const m = new Date().getTime().toString();
     order.order_no = think._.padEnd(userId, 10, '0') + m.substr(8);
     order.create_time = new Date().getTime();
+    const restaurant = await this.model('restaurant').find(order.restaurant_id);
+    order.patable_freight = restaurant.send_money;
+    order.real_freight = order.sendMoney;
     let res = '';
     if (!order.id) {
       order.id = null;
@@ -246,7 +249,6 @@ module.exports = class extends think.cmswing.app {
   }
   async submitAction() {
     const orderId = this.get('orderId');
-
     const orderInfo = await this.model('order').where({ id: orderId }).find();
     if (think.isEmpty(orderInfo)) {
       return this.fail(400, '订单已取消');
@@ -263,19 +265,19 @@ module.exports = class extends think.cmswing.app {
     clientIp = arr[arr.length - 1];
     const WeixinSerivce = this.service('weixin', 'api');
     const amount = parseInt(orderInfo.order_amount * 100);
-    // try {
-    const returnParams = await WeixinSerivce.createUnifiedOrder({
-      openid: openid,
-      body: '订单编号：' + orderInfo.order_no,
-      out_trade_no: orderInfo.order_no,
-      total_fee: amount,
-      restaurant_id: orderInfo.restaurant_id,
-      spbill_create_ip: clientIp
-    });
-    return this.success(returnParams);
-    // } catch (err) {
-    //   return this.fail('微信支付失败');
-    // }
+    try {
+      const returnParams = await WeixinSerivce.createUnifiedOrder({
+        openid: openid,
+        body: '订单编号：' + orderInfo.order_no,
+        out_trade_no: orderInfo.order_no,
+        total_fee: amount,
+        restaurant_id: orderInfo.restaurant_id,
+        spbill_create_ip: clientIp
+      });
+      return this.success(returnParams);
+    } catch (err) {
+      return this.fail('微信支付失败');
+    }
   }
   async notifyAction() {
     const WeixinSerivce = this.service('weixin', 'api');
@@ -305,6 +307,27 @@ module.exports = class extends think.cmswing.app {
       status: 2,
       pay_time: new Date().getTime()
     };
+    const orderInfo = await this.model('order').find(orderId);
+    const foodList = await this.model('order_goods').where({order_id: orderId}).field('prom_goods').select();
+    const foodArr = [];
+    for (const item in foodList) {
+      const a = JSON.parse(foodList[item].prom_goods);
+      foodArr.push(a);
+    }
+    const node = {
+      orderId: orderId,
+      foodList: foodArr
+    };
+    // 生成财务日志
+    const balance = {
+      restaurant_id: orderInfo.restaurant_id,
+      user_id: orderInfo.user_id,
+      time: new Date().getTime(),
+      amount: orderInfo.order_amount,
+      amount_log: '',
+      note: JSON.stringify(node)
+    };
+    await this.model('balance_log').add(balance);
     const res = await this.model('order').update(order);
     if (res) {
       return this.success();

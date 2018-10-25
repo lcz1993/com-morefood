@@ -39,7 +39,8 @@ module.exports = class extends think.Controller {
       if ((createTime + 3600000) < (new Date().getTime())) {
         await this.model('order').update({
           id: order.id,
-          status: 6
+          status: 6,
+          admin_remark: '系统取消了订单，理由是“超时未支付”'
         });
       }
     }

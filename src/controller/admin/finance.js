@@ -26,12 +26,20 @@ module.exports = class extends think.cmswing.admin {
    */
   async logAction() {
     const list = await this.model('balance_log').order('id DESC').page(this.get('page') || 1, 20).countSelect();
-    // console.log(list);
     const html = this.pagination(list);
     this.assign('pagerData', html);
-    for (const itme of list.data) {
-      itme.user_id = await this.model('cmswing/member').get_nickname(itme.user_id);
-      itme.admin_id = await get_nickname(itme.admin_id);
+    for (const item of list.data) {
+      const restaurant = await this.model('restaurant').field('name').find(item.restaurant_id);
+      item.restaurantName = restaurant.name;
+      const user = await this.model('wx_user').field('nickname').find(item.user_id);
+      item.username = user.nickname;
+      const note = JSON.parse(item.note);
+      const foodArr = note.foodList;
+      let str = '';
+      for (const i in foodArr) {
+        str += foodArr[i].title + '(' + foodArr[i].qty + '份￥' + foodArr[i].price + '),';
+      }
+      item.note = str;
     }
     this.assign('list', list.data);
     this.meta_title = '财务日志';

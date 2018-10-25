@@ -40,7 +40,7 @@
                         <th style="width:80px;">编号</th>
                         <th class="">时间</th>
                         <th class="">金额</th>
-                        <th class="">账户资金</th>
+                        <th class="">单位</th>
                         <th class="">用户</th>
                         <th class="">详细信息</th>
                     </tr>
@@ -51,8 +51,8 @@
                         <td>{{item.id}}</td>
                         <td>{{item.time|moment("YYYY-MM-DD HH:mm")}}</td>
                         <td>{{item.amount|formatCurrency}}</td>
-                        <td>{{item.amount_log|formatCurrency}}</td>
-                        <td >{{item.user_id}}</td>
+                        <td>{{item.restaurantName}}</td>
+                        <td >{{item.username}}</td>
                         <td class="text-sm">
                             {{item.note}}</td>
                     </tr>
