@@ -74,7 +74,7 @@
                     <div class="col-sm-10">
                         <div class="row">
                             <div class="col-md-8 ">
-                                <select class="form-control input-sm" name="groupid">
+                                <select class="form-control input-sm" name="restaurant_id">
                                     {%for v in restaurant%}
                                     <option value="{{v.id}}" {%if v.groupid == 1%} selected{%endif%}>{{v.name}}</option>
                                     {%endfor%}

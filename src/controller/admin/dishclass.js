@@ -25,7 +25,9 @@ module.exports = class extends think.cmswing.admin {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
     const user = await this.session('userInfo');
-    map.restaurant_id = user.restaurant_id;
+    if (parseInt(user.restaurant_id) !== 0) {
+      map.restaurant_id = user.restaurant_id;
+    }
     const list = await this.model('dish_class').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     const html = this.pagination(list);
     this.assign('list', list);

@@ -29,6 +29,7 @@ module.exports = class extends think.cmswing.app {
   async indexAction() {
     const userId = this.get('userId');
     const restaurantId = this.get('restaurantId');
+    const addressId = this.get('addressId');
     const cartArr = await this.model('selection').where({user_id: userId}).select();
     const orderList = [];
     for (const food of cartArr) {
@@ -57,11 +58,16 @@ module.exports = class extends think.cmswing.app {
       orderList.push(f);
     }
     const restaurant = await this.model('restaurant').find(restaurantId);
-    const addressArr = await this.model('address').where({user_id: userId, is_default: '1'}).select();
     let address = {};
-    if (addressArr.length != 0) {
-      address = addressArr[0];
+    if (addressId) {
+      address = await this.model('address').find(addressId);
+    } else {
+      const addressArr = await this.model('address').where({user_id: userId, is_default: '1'}).select();
+      if (addressArr.length != 0) {
+        address = addressArr[0];
+      }
     }
+
     if (JSON.stringify(address) != '{}') {
       let location = '';
       let a = await this.model('area').find(address.province);

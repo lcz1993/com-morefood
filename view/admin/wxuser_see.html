@@ -1,0 +1,83 @@
+<div class="modal-dialog modal-lg add-addr-dialog">
+    <form>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{{controller.meta_title}}</h4>
+        </div>
+        <div class="modal-body">
+            <section class="panel panel-default m-b-xs">
+                <header class="panel-heading">
+                    <span class="label bg-danger pull-right m-t-xs"></span>
+                    用户信息
+                </header>
+                <table class="table m-b-none">
+                    <tbody>
+
+                    <tr>
+                        <td >
+                       用户头像
+                        </td>
+                        <td><img src="{{data.headimgurl}}" height="50">
+                        </td>
+                        <td >
+                       用户昵称
+                        </td>
+                        <td>{{data.nickname}}</td>
+                        <td >
+                        性别
+                        </td>
+                        <td>{%if data.sex == 1%}男{% elif data.sex == 2%}女{% else %}未知{%endif%}</td>
+                    </tr>
+                    <tr>
+                        <td >
+                            关注时间
+                        </td>
+                        <td><span>{{data.subscribe_time|moment('YYYY-MM-DD HH:mm:ss')}}</span></td>
+                        <td >
+                            登录时间
+                        </td>
+                        <td><span>{{(data.last_login_time*1000)|moment('YYYY-MM-DD HH:mm:ss')}}</span> </td>
+                        <td >
+                            登录IP
+                        </td>
+                        <td><span>{{data.last_login_ip}}</span></td>
+
+                    </tr>
+                    <tr>
+                        <td >
+                            国家
+                        </td>
+                        <td><span>{{data.country}}</span></td>
+                        <td >
+                            省
+                        </td>
+                        <td><span>{{data.province}}</span> </td>
+                        <td >
+                            市
+                        </td>
+                        <td><span>{{data.city}}</span></td>
+
+                    </tr>
+                    <tr>
+                        <td >
+                            语言
+                        </td>
+                        <td><span>{{data.language}}</span></td>
+                        <td >
+                            电话
+                        </td>
+                        <td><span>{{data.tel}}</span> </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" value="{{order.id}}" name="id">
+            <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
+
+        </div>
+    </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->

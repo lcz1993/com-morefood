@@ -26,6 +26,10 @@ module.exports = class extends think.cmswing.admin {
     }
     map.is_del = 0;
     map.type = 0;
+    const user = await this.session('userInfo');
+    if (parseInt(user.restaurant_id) !== 0) {
+      map.restaurant_id = user.restaurant_id;
+    }
     // this.config("db.nums_per_page",20)
     const data = await this.model('order').where(map).page(this.get('page') || 1, 20).order('create_time DESC').countSelect();
     const html = this.pagination(data);
@@ -295,7 +299,8 @@ module.exports = class extends think.cmswing.admin {
       // 购买人信息
       const user = await this.model('wx_user').find(order.user_id);
       // 获取送餐员信息
-      const deliverArr = await this.model('deliver').where({restaurant_id: order.restaurant_id}).select();
+      const deliverArr = await this.model('deliver').where().select();
+      // const deliverArr = await this.model('deliver').where({restaurant_id: order.restaurant_id}).select();
       this.assign('deliverList', deliverArr);
 
       // 获取省份
@@ -308,7 +313,6 @@ module.exports = class extends think.cmswing.admin {
       this.assign('user', user);
       sum = eval(sum.join('+'));
       this.assign('sum', sum);
-      console.log(goods);
       this.assign('goods', goods);
       this.assign('order', order);
       this.meta_title = '发货';

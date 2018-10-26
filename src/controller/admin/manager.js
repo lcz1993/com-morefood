@@ -29,10 +29,15 @@ module.exports = class extends think.cmswing.admin {
     if (!think.isEmpty(this.get('username'))) {
       map.username = ['like', '%' + this.get('username') + '%'];
     }
+    const user = await this.session('userInfo');
+    if (parseInt(user.restaurant_id) !== 0) {
+      map.restaurant_id = user.restaurant_id;
+    }
     const data = await this.db.where(map).page(this.get('page') || 1, 20).order('id DESC').countSelect();
-    for (const item in data.data) {
+    for (const i in data.data) {
+      const item = data.data[i];
       if (item.restaurant_id) {
-        item.restaurant = await this.model('restaurant').find(item.restaurant_id);
+        item.restaurant = await this.model('restaurant').field('name').find(item.restaurant_id);
       }
     }
     const html = this.pagination(data);

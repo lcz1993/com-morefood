@@ -49,6 +49,7 @@ module.exports = class extends think.Model {
           'uid': user.id,
           'username': user.username,
           'last_login_time': user.last_login_time,
+          'is_admin': user.is_admin,
           'restaurant_id': user.restaurant_id
         };
 
