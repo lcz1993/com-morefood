@@ -271,19 +271,19 @@ module.exports = class extends think.cmswing.app {
     clientIp = arr[arr.length - 1];
     const WeixinSerivce = this.service('weixin', 'api');
     const amount = parseInt(orderInfo.order_amount * 100);
-    try {
-      const returnParams = await WeixinSerivce.createUnifiedOrder({
-        openid: openid,
-        body: '订单编号：' + orderInfo.order_no,
-        out_trade_no: orderInfo.order_no,
-        total_fee: amount,
-        restaurant_id: orderInfo.restaurant_id,
-        spbill_create_ip: clientIp
-      });
-      return this.success(returnParams);
-    } catch (err) {
-      return this.fail('微信支付失败');
-    }
+    // try {
+    const returnParams = await WeixinSerivce.createUnifiedOrder({
+      openid: openid,
+      body: '订单编号：' + orderInfo.order_no,
+      out_trade_no: orderInfo.order_no,
+      total_fee: amount,
+      restaurant_id: orderInfo.restaurant_id,
+      spbill_create_ip: clientIp
+    });
+    return this.success(returnParams);
+    // } catch (err) {
+    //   return this.fail('微信支付失败');
+    // }
   }
   async notifyAction() {
     const WeixinSerivce = this.service('weixin', 'api');

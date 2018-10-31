@@ -12,9 +12,9 @@ module.exports = class extends think.cmswing.app {
      */
   async getCodeAction() {
     const tel = this.post('tel');
-    if (!global.is_phone(tel)) {
-      return this.fail();
-    }
+    // if (!global.is_phone(tel)) {
+    //   return this.fail();
+    // }
     const code = global.make_code(6);
     const cloud = this.config('cloud');
     const appid = cloud.appid;
@@ -29,7 +29,7 @@ module.exports = class extends think.cmswing.app {
     params.push('10');
     var smsType = 0; // Enum{0: 普通短信, 1: 营销短信}
     // ssender.send(86, tel, templateId, params, SmsSign, "", "" function(err, res, resData) {
-    ssender.send(smsType, 86, tel, '【腾盛时创传媒】您的验证码是' + code + ',请于10分钟内填写。如非本人操作,请忽略此短信。', '', '', function(err, res, resData) {
+    ssender.send(smsType, 86, tel, '【及时雨】您的验证码是' + code + ',请于10分钟内填写。如非本人操作,请忽略此短信。', '', '', function(err, res, resData) {
       if (err) {
         console.log('err: ', err);
       } else {
