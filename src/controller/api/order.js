@@ -75,6 +75,7 @@ module.exports = class extends think.cmswing.app {
     const data = {
       restaurantName: restaurant.name,
       restaurantId: order.restaurant_id,
+      restaurantTel: restaurant.contect_tel,
       restaurantLogo: restaurantLogo,
       order_status_text: order_status_text,
       admin_remark: order.admin_remark,
