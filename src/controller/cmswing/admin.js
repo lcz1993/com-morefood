@@ -21,7 +21,8 @@ module.exports = class extends think.Controller {
     // 网站配置
     // this.setup = await this.model("setup").getset();
     // console.log(this.setup);
-    this.is_admin = await this.isadmin();
+    // this.is_admin = await this.isadmin();
+    this.is_admin = true;
     // 后台菜单
     this.adminmenu = await this.model('cmswing/menu').getallmenu(this.user.uid, this.is_admin);
     const allmenu = this.config('setup.MENU_GROUP');

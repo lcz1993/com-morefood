@@ -105,51 +105,187 @@
         </ul>
     </div>
 </header>
-<script>
-  function localRefresh() {
-      var count = $('#order_count').text();
-      $.ajax({
-          url:'/admin/order/getorder',
-          type:'post',
-          dataType:'json',
-          success:function (res) {
-              if(res.errno === 0){
-                  var data = res.data;
-                  $('#total_count').text(data.count);
-                  $('#order_count').text(data.count);
-                  $('#order_div').empty();
-                  if(data.count > 0){
-                    var a = '';
-                      a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
-                      a+='<span class="pull-left thumb-sm text-center">';
-                      a+='<i class="fa '+data.data.ico+' fa-1x text-success"></i>';
-                      a+='</span>';
-                      a+='<span class="media-body block m-b-none" id="order_info">'+data.data.info;
-                      a+='</span>';
-                      a+='</a>';
-                      var $a = $(a);
-                      $('#order_div').append($a);
-                  }else{
-                      var a = '';
-                      a+='<a href="#" class="media list-group-item" id="no_order">';
-                      a+='<span class="media-body block m-b-none">'+'没有订单';
-                      a+='</span>';
-                      a+='</a>';
-                      var $a = $(a);
-                      $('#order_div').append($a);
-                  }
-                  if(data.count>0){
-                      if(!music.play()){music.play();}//响铃
-                  }
-              }
-          },
-          fail:function () {
+<div class="print-div" id="print" style="width: 50mm;text-align: center;color: #000;margin: 4mm;display: none">
+    <ul id="print-ul">
 
-          }
+    </ul>
+</div>
+<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>
+<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
+<script language="javascript" type="text/javascript">
+    function localRefresh() {
+        var count = $('#order_count').text();
+        $.ajax({
+            url:'/admin/order/getorder',
+            type:'post',
+            dataType:'json',
+            success:function (res) {
+                if(res.errno === 0){
+                    var data = res.data.notifications;
+                    $('#total_count').text(data.count);
+                    $('#order_count').text(data.count);
+                    $('#order_div').empty();
+                    $('#print-ul').empty();
+                    if(data.count > 0){
+                        var a = '';
+                        a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
+                        a+='<span class="pull-left thumb-sm text-center">';
+                        a+='<i class="fa '+data.data.ico+' fa-1x text-success"></i>';
+                        a+='</span>';
+                        a+='<span class="media-body block m-b-none" id="order_info">'+data.data.info;
+                        a+='</span>';
+                        a+='</a>';
+                        var $a = $(a);
+                        $('#order_div').append($a);
+                        var list = res.data.list;
+                        console.log(list);
+                        var number = 0;
+                        for(var i in list){
+                            var b = list[i];
+                            if(b.is_print != 1){
+                                number++;
+                                orderPrint(b);
+                                orderPrint(b);
+                                $.ajax({
+                                    url:'/admin/order/printUp?id='+b.id,
+                                    type:'post',
+                                    dataType:'json',
+                                    success:function () {
+                                        console.log(b.id);
+                                    }
+                                });
+                            }
+                        }
+                        if(number>0){
+                            if(!music.play()){music.play();}//响铃
+                            print();
+                        }
+                    }else{
+                        var a = '';
+                        a+='<a href="#" class="media list-group-item" id="no_order">';
+                        a+='<span class="media-body block m-b-none">'+'没有订单';
+                        a+='</span>';
+                        a+='</a>';
+                        var $a = $(a);
+                        $('#order_div').append($a);
+                    }
+                    // if(data.count>0){
+                    //     if(!music.play()){music.play();}//响铃
+                    // }
+                }
+            },
+            fail:function () {
 
-      })
-  }
-  // TODO
-  // setInterval(localRefresh,3000);
+            }
 
+        })
+    }
+    // TODO
+    setInterval(localRefresh,3000);
+
+    // function print(){
+    //     $("#print").jqprint({
+    //         debug: false,
+    //         importCSS: false, //将此属性改为false；直接在style中写入样式即可
+    //         printContainer: true,
+    //         operaSupport: false
+    //     });
+    // }
+    var LODOP;//声明为全局变量
+    function print(){
+        CreateOneFormPage();
+        LODOP.PRINT();
+
+    };
+    function CreateOneFormPage(){
+        LODOP=getLodop();
+
+        LODOP.SET_PRINT_STYLE("FontSize",12);//打印区域的字体大小
+        LODOP.SET_PRINT_PAGESIZE(5,560,1250,"");//打印区域的整体尺寸
+        LODOP.ADD_PRINT_HTM(5,5,500,1350,document.getElementById("print").innerHTML);
+    };
+
+    //设置打印机的名称
+    // LODOP.SET_PRINTER_INDEX("TSC TTP-342E Pro");
+    //打印内容
+    // LODOP.PRINT_INITA(10,10,762,533,"测试demo");
+    // LODOP.ADD_PRINT_BARCODE(71,103,164,119,"QRCode","123456789012");
+    // LODOP.ADD_PRINT_TEXT(48,127,100,20,"测试demo");
+    //打印预览
+    // LODOP.PREVIEW();
+    //打印
+    // LODOP.PRINT();
+    function orderPrint(data){
+        var li = '';
+        li+='<li>';
+        li+='<h4 className="print-title">'+data.title+'</h4>';
+        li+='<h5 className="print-name">'+data.restaurant_name+'</h5>';
+        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<p className="print-create-time" style="text-align: left;font-size: 1px;">下单时间:'+ data.order_time +'</p>';
+        li+='<p className="print-create-time" style="text-align: left;font-size: 1px;">预计送达:'+data.send_time+'</p>';
+        li+='<span>**************************</span>';
+        li+='<table width="45mm">';
+        li+='<thead>';
+        li+='<tr>';
+        li+='<th>菜名</th>';
+        li+='<th>数量</th>';
+        li+='<th>单价</th>';
+        li+='<th>小计</th>';
+        li+='</tr>';
+        li+='</thead>';
+        li+='<tbody className="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;">';
+                var num = 0;
+                var amount = 0;
+                for(var item in data.goodsList){
+                    li+='<tr>';
+                    li+='<td>'+item.title+'</td>';
+                    li+='<td>'+item.num+'</td>';
+                    num = item.num + num;
+                    li+='<td>'+item.unit_price+'</td>';
+                    li+='<td>'+item.total_price+'</td>'
+                    amount = item.total_price + amount;
+                    li+='</tr>';
+                }
+        li+='</tbody>';
+        li+='<tfoot>';
+        li+='<tr className="plan-border">';
+        li+='<th>小计</th>';
+        li+='<th>+num+</th>';
+        li+='<th></th>';
+        li+='<th>'+amount+'</th>';
+        li+='</tr>';
+        li+='<tr className="send-border">';
+        li+='<th>配送费</th>';
+        li+='<th></th>';
+        li+='<th></th>';
+        li+='<th>'+data.sendPrice+'</th>';
+        li+='</tr>';
+        li+='<tr>';
+        li+='<td colSpan="4" style="white-space: nowrap">##########################</td>';
+        li+='</tr>';
+        li+='<tr className="amount-border">';
+        li+='<th>合计</th>';
+        li+='<th></th>';
+        li+='<th></th>';
+        li+='<th>'+data.original_amount+'</th>';
+        li+='</tr>';
+        li+='</tfoot>';
+        li+='</table>';
+        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<h4 style="text-align: left">折后合计：￥'+data.amount_price+'</h4>';
+        li+='<p style="text-align: left">地址：'+data.address+'</p>';
+        li+='<p style="text-align: left">'+data.user_name+'   '+ data.mobile+'</p>';
+        li+='<h3>##微信支付##</h3>';
+        li+='<div>';
+        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+=data.restaurant_tel+'</div>';
+        li+='<h5>'+data.restaurant_name+'</h5>';
+        li+='<h4>'+data.title+'</h4>';
+        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='</li>';
+        var $li = $(li);
+        $('#print-ul').append($li);
+    }
 </script>

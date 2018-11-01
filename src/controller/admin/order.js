@@ -391,12 +391,60 @@ module.exports = class extends think.cmswing.admin {
     const notifications = {};
     notifications.count = 0;
     notifications.data = [];
-    const approval = await this.model('order').where({status: 2, restaurant_id: this.user.restaurant_id}).count();
+    const a = await this.model('order').where({status: 2, restaurant_id: this.user.restaurant_id}).countSelect();
+    const approval = a.count;
     if (approval > 0) {
       notifications.count = notifications.count + Number(approval);
       notifications.data = {type: 'approval', info: `有 ${approval} 条订单待审核`, url: '/admin/order/list/?status=2', ico: 'fa-umbrella'};
     }
-    return this.success(notifications);
+    const list = a.data;
+    const orderArr = [];
+    for (const i in list) {
+      const b = list[i];
+      const id = b.id;
+      const order = await this.model('order').find(id);
+      const goodsList = await this.model('order_goods').where({order_id: id}).select();
+      const foodList = [];
+      let amount = 0;
+      for (const goods of goodsList) {
+        const prom_goods = JSON.parse(goods.prom_goods);
+        const b = {
+          title: prom_goods.title,
+          num: prom_goods.qty,
+          unit_price: prom_goods.unit_price,
+          total_price: prom_goods.price
+        };
+        amount += prom_goods.price;
+        foodList.push(b);
+      }
+      const restaurant = await this.model('restaurant').find(order.restaurant_id);
+      let location = '';
+      const a = await this.model('area').find(order.county);
+      location += a.name;
+      location += order.addr;
+      const d = {
+        id: order.id,
+        title: '及时雨校园餐饮',
+        restaurant_name: restaurant.name,
+        order_time: global.dateformat('Y-m-d H:i:s', order.create_time),
+        send_time: global.dateformat('Y-m-d H:i:s', order.send_time),
+        goodsList: foodList,
+        sendPrice: global.formatCurrency(restaurant.send_money),
+        amount_price: global.formatCurrency(order.order_amount),
+        address: location,
+        user_name: order.accept_name,
+        user_tel: order.mobile,
+        original_amount: global.formatCurrency(parseFloat(amount) + parseFloat(restaurant.send_money)),
+        restaurant_tel: restaurant.contect_tel,
+        is_print: order.is_print
+      };
+      orderArr.push(d);
+    }
+    const data = {
+      notifications: notifications,
+      list: orderArr
+    };
+    return this.success(data);
   }
   async printAction() {
     const id = this.get('id');
@@ -436,5 +484,15 @@ module.exports = class extends think.cmswing.admin {
     };
     this.assign('data', data);
     return this.display();
+  };
+
+  async printUpAction() {
+    const id = this.get('id');
+    if (id) {
+      await this.model('order').where({id: id}).update({ is_print: 1 });
+      return this.success();
+    } else {
+      return this.fail();
+    }
   };
 };
