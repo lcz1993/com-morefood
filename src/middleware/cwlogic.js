@@ -8,10 +8,10 @@ function invokeLogic(options, app) {
   return (ctx, next) => {
     const isMultiModule = app.modules.length;
     let logics = app.logics;
-
     if (isMultiModule) {
       assert(ctx.module, 'ctx.module required in multi module');
     }
+    ctx.expires('1h');
     assert(ctx.controller, 'ctx.controller required');
     assert(ctx.action, 'ctx.action required');
     // avoid to throw error
