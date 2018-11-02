@@ -105,7 +105,7 @@
         </ul>
     </div>
 </header>
-<div class="print-div" id="print" style="width: 50mm;text-align: center;color: #000;margin: 4mm;display: none">
+<div class="print-div" id="print-div" style="width: 50mm;text-align: center;color: #000;display: none;margin-left: -10mm;">
     <ul id="print-ul">
 
     </ul>
@@ -114,6 +114,10 @@
 <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
     <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
 </object>
+
+<script src="/static/admin/js/jqprint/jquery-1.4.4.min.js"></script>
+<script src="/static/admin/js/jqprint/jquery.jqprint-0.3.js"></script>
+
 <script language="javascript" type="text/javascript">
     function localRefresh() {
         var count = $('#order_count').text();
@@ -140,7 +144,6 @@
                         var $a = $(a);
                         $('#order_div').append($a);
                         var list = res.data.list;
-                        console.log(list);
                         var number = 0;
                         for(var i in list){
                             var b = list[i];
@@ -153,7 +156,6 @@
                                     type:'post',
                                     dataType:'json',
                                     success:function () {
-                                        console.log(b.id);
                                     }
                                 });
                             }
@@ -202,9 +204,9 @@
     function CreateOneFormPage(){
         LODOP=getLodop();
 
-        LODOP.SET_PRINT_STYLE("FontSize",12);//打印区域的字体大小
+        LODOP.SET_PRINT_STYLE("FontSize",10);//打印区域的字体大小
         LODOP.SET_PRINT_PAGESIZE(5,560,1250,"");//打印区域的整体尺寸
-        LODOP.ADD_PRINT_HTM(5,5,500,1350,document.getElementById("print").innerHTML);
+        LODOP.ADD_PRINT_HTM('5mm','-11mm','580mm','2000mm',document.getElementById("print-div").innerHTML);
     };
 
     //设置打印机的名称
@@ -218,13 +220,14 @@
     //打印
     // LODOP.PRINT();
     function orderPrint(data){
+        console.log(data);
         var li = '';
         li+='<li>';
-        li+='<h4 className="print-title">'+data.title+'</h4>';
-        li+='<h5 className="print-name">'+data.restaurant_name+'</h5>';
-        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
-        li+='<p className="print-create-time" style="text-align: left;font-size: 1px;">下单时间:'+ data.order_time +'</p>';
-        li+='<p className="print-create-time" style="text-align: left;font-size: 1px;">预计送达:'+data.send_time+'</p>';
+        li+='<h4 class="print-title">'+data.title+'</h4>';
+        li+='<h5 class="print-name">'+data.restaurant_name+'</h5>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;">下单时间:'+ data.order_time +'</p>';
+        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;">预计送达:'+data.send_time+'</p>';
         li+='<span>**************************</span>';
         li+='<table width="45mm">';
         li+='<thead>';
@@ -235,37 +238,38 @@
         li+='<th>小计</th>';
         li+='</tr>';
         li+='</thead>';
-        li+='<tbody className="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;">';
+        li+='<tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;">';
                 var num = 0;
                 var amount = 0;
                 for(var item in data.goodsList){
+                    var v = data.goodsList[item];
                     li+='<tr>';
-                    li+='<td>'+item.title+'</td>';
-                    li+='<td>'+item.num+'</td>';
-                    num = item.num + num;
-                    li+='<td>'+item.unit_price+'</td>';
-                    li+='<td>'+item.total_price+'</td>'
-                    amount = item.total_price + amount;
+                    li+='<td>'+v.title+'</td>';
+                    li+='<td>'+v.num+'</td>';
+                    num = v.num + num;
+                    li+='<td>'+v.unit_price+'</td>';
+                    li+='<td>'+v.total_price+'</td>'
+                    amount = v.total_price + amount;
                     li+='</tr>';
                 }
         li+='</tbody>';
         li+='<tfoot>';
-        li+='<tr className="plan-border">';
+        li+='<tr class="plan-border">';
         li+='<th>小计</th>';
-        li+='<th>+num+</th>';
+        li+='<th>'+num+'</th>';
         li+='<th></th>';
         li+='<th>'+amount+'</th>';
         li+='</tr>';
-        li+='<tr className="send-border">';
+        li+='<tr class="send-border">';
         li+='<th>配送费</th>';
         li+='<th></th>';
         li+='<th></th>';
         li+='<th>'+data.sendPrice+'</th>';
         li+='</tr>';
         li+='<tr>';
-        li+='<td colSpan="4" style="white-space: nowrap">##########################</td>';
+        li+='<td colSpan="4" style="white-space: nowrap">######################</td>';
         li+='</tr>';
-        li+='<tr className="amount-border">';
+        li+='<tr class="amount-border">';
         li+='<th>合计</th>';
         li+='<th></th>';
         li+='<th></th>';
@@ -273,17 +277,17 @@
         li+='</tr>';
         li+='</tfoot>';
         li+='</table>';
-        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
         li+='<h4 style="text-align: left">折后合计：￥'+data.amount_price+'</h4>';
         li+='<p style="text-align: left">地址：'+data.address+'</p>';
-        li+='<p style="text-align: left">'+data.user_name+'   '+ data.mobile+'</p>';
+        li+='<p style="text-align: left">'+data.user_name+'   '+ data.user_tel+'</p>';
         li+='<h3>##微信支付##</h3>';
         li+='<div>';
-        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
         li+=data.restaurant_tel+'</div>';
         li+='<h5>'+data.restaurant_name+'</h5>';
         li+='<h4>'+data.title+'</h4>';
-        li+='<div className="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
         li+='</li>';
         var $li = $(li);
         $('#print-ul').append($li);
