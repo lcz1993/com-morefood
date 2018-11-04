@@ -33,7 +33,7 @@
     </form>
     #}
     <div class="navbar-right ">
-        <audio src='/static/mp3/order.mp3' preload='auto' id='music'>
+        <audio src='/static/mp3/order.mp3' preload='auto' id='music' muted>
         </audio>
         <ul class="nav navbar-nav m-n hidden-xs nav-user user">
             <li class="hidden-xs">
@@ -105,18 +105,16 @@
         </ul>
     </div>
 </header>
-<div class="print-div" id="print-div" style="width: 50mm;text-align: center;color: #000;display: none;margin-left: -10mm;">
+<div class="print-div" id="print-div" style="width: 50mm;text-align: center;color: #000;margin-left: -10mm;">
     <ul id="print-ul">
 
     </ul>
 </div>
-<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>
-<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
-    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
-</object>
+<!--<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>-->
+<!--<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>-->
+    <!--<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>-->
+<!--</object>-->
 
-<!--<script src="/static/admin/js/jqprint/jquery-1.4.4.min.js"></script>-->
-<!--<script src="/static/admin/js/jqprint/jquery.jqprint-0.3.js"></script>-->
 
 <script language="javascript" type="text/javascript">
     function localRefresh() {
@@ -131,7 +129,6 @@
                     $('#total_count').text(data.count);
                     $('#order_count').text(data.count);
                     $('#order_div').empty();
-                    $('#print-ul').empty();
                     if(data.count > 0){
                         var a = '';
                         a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
@@ -148,6 +145,7 @@
                         for(var i in list){
                             var b = list[i];
                             if(b.is_print != 1){
+                                $('#print-ul').empty();
                                 number++;
                                 orderPrint(b);
                                 orderPrint(b);
@@ -161,8 +159,8 @@
                             }
                         }
                         if(number>0){
-                            if(!music.play()){music.play();}//响铃
                             print();
+                            // if(!music.play()){music.play();}//响铃
                         }
                     }else{
                         var a = '';
@@ -187,38 +185,14 @@
     // TODO
     setInterval(localRefresh,3000);
 
-    // function print(){
-    //     $("#print").jqprint({
-    //         debug: false,
-    //         importCSS: false, //将此属性改为false；直接在style中写入样式即可
-    //         printContainer: true,
-    //         operaSupport: false
-    //     });
-    // }
-    var LODOP;//声明为全局变量
     function print(){
-        CreateOneFormPage();
-        LODOP.PRINT();
-
-    };
-    function CreateOneFormPage(){
-        LODOP=getLodop();
-
-        LODOP.SET_PRINT_STYLE("FontSize",10);//打印区域的字体大小
-        LODOP.SET_PRINT_PAGESIZE(5,560,1250,"");//打印区域的整体尺寸
-        LODOP.ADD_PRINT_HTM('5mm','-11mm','580mm','2000mm',document.getElementById("print-div").innerHTML);
-    };
-
-    //设置打印机的名称
-    // LODOP.SET_PRINTER_INDEX("TSC TTP-342E Pro");
-    //打印内容
-    // LODOP.PRINT_INITA(10,10,762,533,"测试demo");
-    // LODOP.ADD_PRINT_BARCODE(71,103,164,119,"QRCode","123456789012");
-    // LODOP.ADD_PRINT_TEXT(48,127,100,20,"测试demo");
-    //打印预览
-    // LODOP.PREVIEW();
-    //打印
-    // LODOP.PRINT();
+        $("#print-div").jqprint({
+            debug: false,
+            importCSS: false, //将此属性改为false；直接在style中写入样式即可
+            printContainer: true,
+            operaSupport: false
+        });
+    }
     function orderPrint(data){
         console.log(data);
         var li = '';

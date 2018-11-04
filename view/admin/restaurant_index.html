@@ -39,7 +39,7 @@
                         <th>地址</th>
                         <th>店长名称</th>
                         <th>支持支付方式</th>
-                        <th>简介</th>
+                        <th>打烊/接单</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
@@ -56,7 +56,15 @@
                         <td>{{ item.addr }}</td>
                         <td>{{ item.owner_name }}</td>
                         <td>{{ item.support_paytype }}</td>
-                        <td>{{ item.desc }}</td>
+                        <td>
+                            <a href="javascript:void(0);" class="active" data-toggle="class" onclick="upClose({{item.is_close}},{{item.id}})">
+                                {% if item.is_close == 1 %}
+                                <i class="fa fa-check text-success text"></i><i class="fa fa-times text-danger text-active"></i>
+                                {% else %}
+                                <i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i>
+                                {% endif %}
+                            </a>
+                        </td>
                         <td>
                             <a href="/admin/restaurant/edit/?id={{item.id}}" class="text-info" >编辑</a>
                             <a href="/admin/restaurant/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>
@@ -102,5 +110,24 @@
             $("#search").click();
         }
     });
+
+
+    function upClose(close,id){
+
+        $.ajax({
+            url:"/admin/restaurant/upClose",
+            data:{is_close:close,id:id},
+            type:'post',
+            success:function(res){
+                if(res){
+                    oTable.ajax.reload();
+                    toastr.success('状态更新成功！')
+                }else{
+                    toastr.error("状态更新失败！");
+                }
+            }
+        })
+    }
+
 </script>
 {% endblock %}

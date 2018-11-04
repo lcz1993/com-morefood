@@ -131,4 +131,20 @@ module.exports = class extends think.cmswing.admin {
     }
     return this.fail('参数错误');
   }
+
+  /**
+     * 暂停销售
+     * @returns {Promise<*>}
+     */
+  async upStopAction() {
+    const id = this.post('id');
+    let is_stop = this.post('is_stop');
+    is_stop = is_stop == 0 ? 1 : 0;
+    const res = await this.model('medu').where({id: id}).update({is_stop: is_stop});
+    if (res) {
+      return this.success();
+    } else {
+      return this.fail();
+    }
+  }
 };

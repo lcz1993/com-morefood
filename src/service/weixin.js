@@ -134,4 +134,22 @@ module.exports = class extends think.Service {
     }
     return notifyObj;
   }
+  async queryOrder(payInfo) {
+    const WeiXinPay = require('weixinpay');
+    const weixinpay = new WeiXinPay({
+      appid: think.config('weixin.appid'), // 微信小程序appid
+      openid: payInfo.openid, // 用户openid
+      mch_id: think.config('weixin.mch_id'), // 商户帐号ID
+      partner_key: think.config('weixin.partner_key') // 秘钥
+    });
+    return new Promise((resolve, reject) => {
+      weixinpay.queryOrder({
+        // transaction_id: '4200000225201811045424089284',
+        out_trade_no: payInfo.out_trade_no
+      }, (res) => {
+        console.log(res);
+        resolve(res);
+      });
+    });
+  }
 };

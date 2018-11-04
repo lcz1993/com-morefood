@@ -103,4 +103,16 @@ module.exports = class extends think.cmswing.admin {
     }
     return this.fail('参数错误');
   }
+
+  async upCloseAction() {
+    const id = this.post('id');
+    let is_close = this.post('is_close');
+    is_close = is_close == 0 ? 1 : 0;
+    const res = await this.model('restaurant').where({id: id}).update({is_close: is_close});
+    if (res) {
+      return this.success();
+    } else {
+      return this.fail();
+    }
+  }
 };

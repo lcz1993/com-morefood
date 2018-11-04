@@ -50,7 +50,7 @@ module.exports = class extends think.cmswing.admin {
       const admin_remark = this.post('admin_remark');
       const audit = await this.model('order').where({id: id}).update({status: 3, admin_remark: admin_remark});
       if (audit) {
-        return this.success({name: '审核成功！', url: this.referer()});
+        return this.success({name: '审核成功！'});
       } else {
         return this.fail('审核失败！');
       }
@@ -81,13 +81,12 @@ module.exports = class extends think.cmswing.admin {
   async voidAction() {
     if (this.isPost) {
       const id = this.post('id');
-      const admin_remark = this.post('admin_remark');
       // let voids =await this.model("order").where({id:id}).update({status:6,admin_remark:admin_remark});
       const voids = true;
       if (voids) {
         // 释放库存
-        await this.model('cmswing/order').stock(id, false);
-        return this.success({name: '操作成功！', url: this.referer()});
+        await this.model('order').where({id: id}).update({status: 6});
+        return this.success({name: '操作成功！'});
       } else {
         return this.fail('操作失败！');
       }
@@ -107,7 +106,7 @@ module.exports = class extends think.cmswing.admin {
       const admin_remark = this.post('admin_remark');
       const finish = await this.model('order').where({id: id}).update({status: 4, admin_remark: admin_remark});
       if (finish) {
-        return this.success({name: '操作成功！', url: this.referer()});
+        return this.success({name: '操作成功！'});
       } else {
         return this.fail('操作失败！');
       }
@@ -128,7 +127,7 @@ module.exports = class extends think.cmswing.admin {
       const admin_remark = this.post('admin_remark');
       const remark = await this.model('order').where({id: id}).update({admin_remark: admin_remark});
       if (remark) {
-        return this.success({name: '操作成功！', url: this.referer()});
+        return this.success({name: '操作成功！'});
       } else {
         return this.fail('操作失败！');
       }
@@ -274,9 +273,10 @@ module.exports = class extends think.cmswing.admin {
       data.deliver_name = deliver.deliver_name;
       data.deliver_tel = deliver.deliver_tel;
       data.delivery_status = 1;
+      data.status = 5;
       await this.model('order').update(data);
       // }
-      return this.success({'name': '发货成功！', 'url': this.referer()});
+      return this.success({'name': '发货成功！'});
     } else {
       const id = this.get('id');
       const order = await this.model('order').find(id);

@@ -33,12 +33,12 @@
                         <th><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
                         <th>ID</th>
                         <th>所属餐厅</th>
-                        <th>优惠券</th>
                         <th>名称</th>
                         <th>价格</th>
                         <th>简介</th>
                         <th>所属类别</th>
                         <th>图片</th>
+                        <th>暂停出售</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
@@ -49,13 +49,21 @@
                         </td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.restaurant.name }}</td>
-                        <td>{{ item.discount.name }}</td>
                         <td>{{ item.dish_name }}</td>
                         <td>{{ item.original_price }}</td>
                         <td>{{ item.dish_desc }}</td>
                         <td>{{ item.dish_class.name }}</td>
                         <td>
                             <img src="{{ item.dish_picture}}" height="60">
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="active" data-toggle="class" onclick="upClose({{item.is_stop}},{{item.id}})">
+                                {% if item.is_stop == 1 %}
+                                <i class="fa fa-check text-success text"></i><i class="fa fa-times text-danger text-active"></i>
+                                {% else %}
+                                <i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i>
+                                {% endif %}
+                            </a>
                         </td>
                         <td>
                             <a href="/admin/medu/edit/?id={{item.id}}" class="text-info" >编辑</a>
@@ -102,5 +110,21 @@
             $("#search").click();
         }
     });
+    function upClose(close,id){
+
+        $.ajax({
+            url:"/admin/medu/upStop",
+            data:{is_stop:close,id:id},
+            type:'post',
+            success:function(res){
+                if(res){
+                    oTable.ajax.reload();
+                    toastr.success('状态更新成功！')
+                }else{
+                    toastr.error("状态更新失败！");
+                }
+            }
+        })
+    }
 </script>
 {% endblock %}

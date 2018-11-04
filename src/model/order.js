@@ -132,7 +132,7 @@ module.exports = class extends think.Model {
     if (!currentPage) {
       currentPage = 1;
     }
-    const orderList = await this.model('order').where({ user_id: userId }).page(currentPage, 5).order('create_time DESC').countSelect();
+    const orderList = await this.where({ user_id: userId }).page(currentPage, 5).order('create_time DESC').countSelect();
     const newOrderList = [];
     const t = new Date(new Date(new Date().toLocaleDateString()).getTime()).getTime();
     for (const item of orderList.data) {
@@ -169,5 +169,36 @@ module.exports = class extends think.Model {
     }
     orderList.data = newOrderList;
     return orderList;
+  }
+  async updataStatus(orderId) {
+    const order = {
+      id: orderId,
+      pay_status: 1,
+      status: 2,
+      pay_time: new Date().getTime()
+    };
+    const orderInfo = await this.find(orderId);
+    const foodList = await this.model('order_goods').where({order_id: orderId}).field('prom_goods').select();
+    const foodArr = [];
+    for (const item in foodList) {
+      const a = JSON.parse(foodList[item].prom_goods);
+      foodArr.push(a);
+    }
+    const node = {
+      orderId: orderId,
+      foodList: foodArr
+    };
+      // 生成财务日志
+    const balance = {
+      restaurant_id: orderInfo.restaurant_id,
+      user_id: orderInfo.user_id,
+      time: new Date().getTime(),
+      amount: orderInfo.order_amount,
+      amount_log: '',
+      note: JSON.stringify(node)
+    };
+    await this.model('balance_log').add(balance);
+    const res = await this.update(order);
+    return res;
   }
 };

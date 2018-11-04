@@ -8,11 +8,13 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<*>}
      */
   async indexAction() {
-    let restaurant_id = this.get('restaurant_id');
+    let restaurant_id = this.get('id');
     if (!restaurant_id) {
       restaurant_id = 1;
     }
     const a = await this.model('restaurant').find(restaurant_id);
+    const is_close = a.is_close;
+
     if (a.bg_image) {
       const b = await this.model('ext_attachment_pic').find(a.bg_image);
       a.bgImage = b.path;
@@ -45,8 +47,16 @@ module.exports = class extends think.cmswing.app {
       range: a.range,
       addr: a.addr,
       contect_tel: a.contect_tel,
-      min_price: a.min_price
+      min_price: a.min_price,
+      is_close: a.is_close
     };
+    // 店铺已经打烊≈
+    if (is_close == 1) {
+      return this.success({
+        is_close: 1,
+        restaurant: restaurant
+      });
+    }
     const dishClassArr = await this.model('dish_class').order('sort ASC').where({restaurant_id: restaurant_id}).select();
     const goods = [];
     for (const dishClass of dishClassArr) {
@@ -74,7 +84,8 @@ module.exports = class extends think.cmswing.app {
           info: medu.dish_desc,
           icon: medu.dish_picture,
           image: medu.image,
-          desc: medu.dish_desc
+          desc: medu.dish_desc,
+          is_stop: medu.is_stop
         };
         foods.push(f);
       }
@@ -130,6 +141,7 @@ module.exports = class extends think.cmswing.app {
       }
     }
     const data = {
+      is_close: 0,
       discountNum: count,
       discount: dis,
       restaurant: restaurant,

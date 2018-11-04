@@ -75,21 +75,21 @@ module.exports = class extends think.cmswing.app {
     sessionData = JSON.parse(sessionData);
     if (!sessionData.openid) {
       console.log(sessionData.openid);
-      return this.fail('登录失败');
+      return this.fail(1,'登录失败');
     }
 
     // 验证用户信息完整性
     const crypto = require('crypto');
     const sha1 = crypto.createHash('sha1').update(fullUserInfo.rawData + sessionData.session_key).digest('hex');
     if (fullUserInfo.signature !== sha1) {
-      return this.fail('登录失败');
+      return this.fail(2,'登录失败');
     }
 
     // 解释用户数据
     const WeixinSerivce = this.service('weixin', 'api');
     const weixinUserInfo = await WeixinSerivce.decryptUserInfoData(sessionData.session_key, fullUserInfo.encryptedData, fullUserInfo.iv);
     if (think.isEmpty(weixinUserInfo)) {
-      return this.fail('登录失败');
+      return this.fail(3,'登录失败');
     }
 
     // 根据openid查找用户是否已经注册
@@ -127,7 +127,7 @@ module.exports = class extends think.cmswing.app {
     const sessionKey = await TokenSerivce.create(sessionData);
 
     if (think.isEmpty(newUserInfo) || think.isEmpty(sessionKey)) {
-      return this.fail('登录失败');
+      return this.fail(4,'登录失败');
     }
 
     return this.success({ token: sessionKey, userInfo: newUserInfo });
