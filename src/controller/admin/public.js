@@ -31,7 +31,12 @@ module.exports = class extends think.Controller {
         // 记录用户登录行为
         // await this.model("cmswing/action").log("user_login","member",res.uid,res.uid,this.ip,this.ctx.url);
         // console.log(11111111111111);
+        const cookie = this.cookie('thinkjs');
+        const uid = res.uid;
+        await this.service('redis', 'admin').set(`uid-${uid}`, cookie);
+        // await client.set(`uid-${uid}`, cookie, redis.print);
         await this.session('userInfo', res);
+
         // TODO 用户密钥
         // this.redirect('/admin/index');
         return this.success({name: '登陆成功!', url: '/admin/index'});

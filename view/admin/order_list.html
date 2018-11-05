@@ -26,7 +26,14 @@
                                            执行中
                                         </a>
                                     </div>
+                                    {%if status == 2 %}
+                                        <a href="/admin/order/auditArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量审核</a>
+                                    {%endif%}
+                                    {%if status == 3 %}
+                                        <a href="/admin/order/shipArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量发货</a>
+                                    {%endif%}
                                 </div>
+
                                 <div class="col-sm-3">
                                     <div class="input-group pull-right search-form">
                                         <input type="text" class="input-sm form-control" name="q" placeholder="订单号|会员ID|收货人|收货人电话"

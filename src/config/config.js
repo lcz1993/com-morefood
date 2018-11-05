@@ -20,6 +20,11 @@ module.exports = {
   errmsgField: 'errmsg', // errmsg field|
   defaultErrno: 1000, // default errno|
   validateDefaultErrno: 1001, // validate default errno|验证错误
+  redis: {
+    host: '127.0.0.1',
+    port: 6379,
+    password: ''
+  },
 
   // 以下针对小程序，可以公开的接口与不可以公开的接口既需要登录的接口
   default_module: 'api',

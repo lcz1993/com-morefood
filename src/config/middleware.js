@@ -14,7 +14,11 @@ module.exports = [
     enable: true,
     options: {
       root: path.join(think.ROOT_PATH, 'www'),
-      publicPath: /^\/(static|upload|favicon\.ico)/
+      publicPath: /^\/(static|upload|favicon\.ico)/,
+      setHeaders: function(res, path, stats) {
+        res.setHeader('Cache-Control', '1h');
+        return true;
+      }
     }
   },
   {

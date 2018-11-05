@@ -11,7 +11,7 @@ function invokeLogic(options, app) {
     if (isMultiModule) {
       assert(ctx.module, 'ctx.module required in multi module');
     }
-    ctx.expires('1h');
+    // ctx.expires('1h');
     assert(ctx.controller, 'ctx.controller required');
     assert(ctx.action, 'ctx.action required');
     // avoid to throw error

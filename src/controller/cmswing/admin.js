@@ -5,7 +5,6 @@
 // +----------------------------------------------------------------------
 // | Author: arterli <arterli@qq.com>
 // +----------------------------------------------------------------------
-
 module.exports = class extends think.Controller {
   async __before() {
     // 登陆验证
@@ -13,11 +12,21 @@ module.exports = class extends think.Controller {
     if (!is_login) {
       return this.redirect('/admin/public/signin');
     }
-
     // 用户信息
     this.user = await this.session('userInfo');
     this.assign('userinfo', this.user);
     this.roleid = await this.model('auth_user_role').where({user_id: this.user.uid}).getField('role_id', true);
+
+    // 请求时，判断 session cookie 值是否相同
+    const userInfo = await this.session('userInfo');
+    const cookie = this.cookie('thinkjs');
+    const saveCookie = await this.service('redis', 'admin').get(`uid-${userInfo.uid}`);
+    console.log(saveCookie);
+    if (saveCookie && saveCookie !== cookie) {
+      // 不是最近一台登录的设备
+      console.log('不是同一台设备');
+    }
+
     // 网站配置
     // this.setup = await this.model("setup").getset();
     // console.log(this.setup);

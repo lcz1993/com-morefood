@@ -495,4 +495,46 @@ module.exports = class extends think.cmswing.admin {
       return this.fail();
     }
   };
+
+  /**
+     * 批量审核
+   *  逻辑为，更改状态为审核
+     */
+  async auditArrAction() {
+    const ids = this.para('ids');
+    if (think.isEmpty(ids)) {
+      return this.fail('参数不能为空!');
+    }
+    const time = global.dateformat('Y-m-d H:i:s', new Date());
+    await this.model('order').where({id: ['IN', ids]}).update({status: 3, admin_remark: '批量审核,时间' + time});
+    return this.success({name: '审核成功!'});
+  }
+  /**
+     * 批量发货
+   *
+     */
+  async shipArrAction() {
+    const ids = this.para('ids');
+    if (think.isEmpty(ids)) {
+      return this.fail('参数不能为空!');
+    }
+    const user = await this.session('userInfo');
+    let restaurantId = 0;
+    if (parseInt(user.restaurant_id) !== 0) {
+      restaurantId = parseInt(user.restaurant_id);
+    }
+    const deliverArr = await this.model('deliver').where({restaurant_id: restaurantId, is_default: 0}).select();
+    let deliver = {};
+    if (deliverArr.length > 0) {
+      deliver = deliverArr[0];
+    }
+    const time = global.dateformat('Y-m-d H:i:s', new Date());
+    await this.model('order').where({id: ['IN', ids]}).update({
+      deliver_name: deliver.deliver_name,
+      deliver_tel: deliver.deliver_tel,
+      delivery_status: 1,
+      status: 5,
+      admin_remark: '批量发货,发货时间' + time});
+    return this.success({name: '发货成功!'});
+  }
 };
