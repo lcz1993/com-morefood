@@ -1,5 +1,5 @@
 <div class="modal-dialog" style="width: 58mm;">
-    <div class="modal-content">
+    <div class="modal-content" style="padding: 10px;">
         <style>
             h2,h3{
                 margin: 0;
@@ -11,11 +11,60 @@
             }
         </style>
         <div class="print-div" id="print_div" style="width: 50mm;text-align: center;color: #000;">
-            <h4 class="print-title">{{data.title}}</h4>
-            <h5 class="print-name">{{data.restaurant_name}}</h5>
-            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
-            <p class="print-create-time" style="text-align: left;font-size: 1px;">下单时间:{{data.order_time|dateformat('Y-m-d H:i:s')}}</p>
-            <p class="print-create-time" style="text-align: left;font-size: 1px;">预计送达:{{data.send_time|dateformat('Y-m-d H:i:s')}}</p>
+            <h4 class="print-title" style="margin: 0;">{{data.title}}<span style="float: right;font-size: 5px;">存根</span></h4>
+            <p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">下单时间:{{data.order_time|dateformat('Y-m-d H:i:s')}}</p>
+            <table width="45mm" style="width: 100%">
+                <thead >
+                <tr>
+                    <th style="text-align: left;width: 15mm">菜名</th>
+                    <th style="text-align: left;width: 8mm">数量</th>
+                    <th style="text-align: left;width: 8mm">单价</th>
+                    <th style="text-align: left;width: 9mm">小计</th>
+                </tr>
+                </thead>
+                <tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;width: 45mm;">
+                {%set num = 0%}
+                {%set amount = 0%}
+                {% for item in data.goodsList %}
+                <tr>
+                    <td style="text-align: left;width: 15mm">{{item.title}}</td>
+                    <td style="text-align: left;width: 8mm">{{item.num}}
+                        {%set num = item.num + num%}</td>
+                    <td style="text-align: left;width: 8mm">{{item.unit_price|formatCurrency}}</td>
+                    <td style="text-align: left;width: 9mm">{{item.total_price|formatCurrency}}
+                        {%set amount = item.total_price + amount%}
+                    </td>
+                </tr>
+                {%endfor%}
+                </tbody>
+                <tfoot style="width: 45mm;">
+                <tr class="plan-border">
+                    <th style="text-align: left;width: 15mm">小计</th>
+                    <th style="text-align: left;width: 8mm">{{num}}</th>
+                    <th></th>
+                    <th style="text-align: left;width: 9mm">{{amount|formatCurrency}}</th>
+                </tr>
+                <tr class="send-border">
+                    <th style="text-align: left;width: 15mm">配送费</th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: left;width: 9mm">{{data.sendPrice|formatCurrency}}</th>
+                </tr>
+                <tr class="amount-border">
+                    <th style="text-align: left;width: 15mm">合计</th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: left;width: 9mm">{{data.original_amount|formatCurrency}}</th>
+                </tr>
+                </tfoot>
+            </table>
+            <span style="font-size: 1px;">********华丽的分界线********</span>
+            <h4 class="print-title" style="margin: 0;">{{data.title}}</h4>
+            <h5 class="print-name" style="margin: 0;">{{data.restaurant_name}}</h5>
+            <div><div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;;margin: 0;"></div>{{data.restaurant_tel}}</div>
+            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;margin: 0;"></div>
+            <p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">下单时间:{{data.order_time|dateformat('Y-m-d H:i:s')}}</p>
+            <p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">预计送达:{{data.send_time|dateformat('Y-m-d H:i:s')}}</p>
             <span>**************************</span>
             <table width="45mm" style="width: 100%">
                 <thead >
@@ -66,15 +115,10 @@
                 </tfoot>
             </table>
             <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
-            <h4 style="text-align: left">折后合计：￥{{data.amount_price}}</h4>
-            <p style="text-align: left">地址：{{data.address}}</p>
-            <p style="text-align: left">{{data.user_name}} {{data.user_tel}}</p>
-            <h3>##微信支付##</h3>
-
-            <div><div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>{{data.restaurant_tel}}</div>
-            <h5>{{data.restaurant_name}}</h5>
-            <h4>{{data.title}}</h4>
-            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>
+            <h4 style="text-align: left;margin: 0;">折后合计：￥{{data.amount_price}}</h4>
+            <p style="text-align: left;margin: 0;">地址：{{data.address}}</p>
+            <p style="text-align: left;margin: 0;">{{data.user_name}} {{data.user_tel}}</p>
+            <div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;margin: 0;"></div>
         </div>
 
 

@@ -27,7 +27,6 @@ module.exports = class extends think.Controller {
       if (err) throw (err);
       // value is null when the key is missing
       saveCookie = reply;
-      console.log(saveCookie);
       if (saveCookie && saveCookie !== cookie) {
         // 不是最近一台登录的设备
         // console.log('不是同一台设备');

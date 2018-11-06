@@ -52,7 +52,7 @@
                              <span class="pull-left thumb-sm text-center">
                                 <i class="fa {{n.ico}} fa-1x text-success"></i>
                             </span>
-                            <span class="media-body block m-b-none" id="order_info">
+                                <span class="media-body block m-b-none" id="order_info">
                                 {{n.info}}
                             </span>
                             </a>
@@ -112,7 +112,7 @@
 </div>
 <!--<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>-->
 <!--<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>-->
-    <!--<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>-->
+<!--<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>-->
 <!--</object>-->
 
 
@@ -147,7 +147,6 @@
                             if(b.is_print != 1){
                                 $('#print-ul').empty();
                                 number++;
-                                orderPrint(b);
                                 orderPrint(b);
                                 $.ajax({
                                     url:'/admin/order/printUp?id='+b.id,
@@ -196,73 +195,118 @@
     function orderPrint(data){
         console.log(data);
         var li = '';
-        li+='<li>';
-        li+='<h4 class="print-title">'+data.title+'</h4>';
-        li+='<h5 class="print-name">'+data.restaurant_name+'</h5>';
-        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
-        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;">下单时间:'+ data.order_time +'</p>';
-        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;">预计送达:'+data.send_time+'</p>';
-        li+='<span>**************************</span>';
-        li+='<table width="45mm">';
-        li+='<thead>';
+
+        li+='<h4 class="print-title" style="margin: 0;width: 50mm;">'+data.title+'<span style="float: right;font-size: 5px;">存根</span></h4>';
+        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">下单时间:'+ data.order_time +'</p>';
+        li+='<table width="45mm" style="width: 100%">';
+        li+='<thead >';
         li+='<tr>';
-        li+='<th>菜名</th>';
-        li+='<th>数量</th>';
-        li+='<th>单价</th>';
-        li+='<th>小计</th>';
+        li+='<th style="text-align: left;width: 15mm">菜名</th>';
+        li+='<th style="text-align: left;width: 10mm">数量</th>';
+        li+='<th style="text-align: left;width: 10mm">单价</th>';
+        li+='<th style="text-align: left;width: 15mm">小计</th>';
         li+='</tr>';
         li+='</thead>';
-        li+='<tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;">';
-                var num = 0;
-                var amount = 0;
-                for(var item in data.goodsList){
-                    var v = data.goodsList[item];
-                    li+='<tr>';
-                    li+='<td>'+v.title+'</td>';
-                    li+='<td>'+v.num+'</td>';
-                    num = v.num + num;
-                    li+='<td>'+v.unit_price+'</td>';
-                    li+='<td>'+v.total_price+'</td>'
-                    amount = v.total_price + amount;
-                    li+='</tr>';
-                }
+        li+='<tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;width: 45mm;">';
+        var num = 0;
+        var amount = 0;
+        for(var item in data.goodsList){
+            var v = data.goodsList[item];
+            li+='<tr>';
+            li+='<td>'+v.title+'</td>';
+            li+='<td>'+v.num+'</td>';
+            num = v.num + num;
+            li+='<td>'+v.unit_price+'</td>';
+            li+='<td>'+v.total_price+'</td>'
+            amount = v.total_price + amount;
+            li+='</tr>';
+        }
         li+='</tbody>';
-        li+='<tfoot>';
+        li+='<tfoot style="width: 45mm;">';
         li+='<tr class="plan-border">';
-        li+='<th>小计</th>';
-        li+='<th>'+num+'</th>';
-        li+='<th></th>';
-        li+='<th>'+amount+'</th>';
+        li+='  <th style="text-align: left;width: 15mm">小计</th>';
+        li+='  <th style="text-align: left;width: 8mm">'+num+'</th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+amount+'</th>';
         li+='</tr>';
         li+='<tr class="send-border">';
-        li+='<th>配送费</th>';
-        li+='<th></th>';
-        li+='<th></th>';
-        li+='<th>'+data.sendPrice+'</th>';
+        li+='  <th style="text-align: left;width: 15mm">配送费</th>';
+        li+='  <th></th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+data.sendPrice+'</th>';
         li+='</tr>';
         li+='<tr>';
-        li+='<td colSpan="4" style="white-space: nowrap">######################</td>';
+        li+='  <td colspan="4" >####################</td>';
         li+='</tr>';
         li+='<tr class="amount-border">';
-        li+='<th>合计</th>';
-        li+='<th></th>';
-        li+='<th></th>';
-        li+='<th>'+data.original_amount+'</th>';
+        li+='  <th style="text-align: left;width: 15mm">合计</th>';
+        li+='  <th></th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+data.original_amount+'</th>';
+        li+='</tr>';
+        li+='</tfoot>';
+        li+='</table>';
+        li+='<span style="font-size: 1px;">********华丽的分界线********</span>';
+        li+='<h4 class="print-title" style="margin: 0;">'+data.title+'</h4>';
+        li+='<h5 class="print-name" style="margin: 0;">'+data.restaurant_name+'</h5>';
+        li+='<div><div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;;margin: 0;"></div>'+data.restaurant_tel+'</div>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;margin: 0;"></div>';
+        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">下单时间:'+ data.order_time +'</p>';
+        li+='<p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">预计送达:'+data.send_time+'</p>';
+        li+='<span>**************************</span>';
+        li+='<table width="45mm" style="width: 100%">';
+        li+='<thead >';
+        li+='<tr>';
+        li+='  <th style="text-align: left;width: 15mm">菜名</th>';
+        li+='  <th style="text-align: left;width: 8mm">数量</th>';
+        li+='  <th style="text-align: left;width: 8mm">单价</th>';
+        li+='  <th style="text-align: left;width: 9mm">小计</th>';
+        li+='</tr>';
+        li+='</thead>';
+        li+='<tbody class="tbody-border" style="border-top:#000000 2px dashed;border-bottom: #000000 2px dashed;width: 45mm;">';
+        num = 0;
+        amount = 0;
+        for(var item in data.goodsList){
+            var v = data.goodsList[item];
+            li+='<tr>';
+            li+='<td>'+v.title+'</td>';
+            li+='<td>'+v.num+'</td>';
+            num = v.num + num;
+            li+='<td>'+v.unit_price+'</td>';
+            li+='<td>'+v.total_price+'</td>'
+            amount = v.total_price + amount;
+            li+='</tr>';
+        }
+        li+='</tbody>';
+        li+='<tfoot style="width: 45mm;">';
+        li+='<tr class="plan-border">';
+        li+='  <th style="text-align: left;width: 15mm">小计</th>';
+        li+='  <th style="text-align: left;width: 8mm">'+num+'</th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+amount+'</th>';
+        li+='</tr>';
+        li+='<tr class="send-border">';
+        li+='  <th style="text-align: left;width: 15mm">配送费</th>';
+        li+='  <th></th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+data.sendPrice+'</th>';
+        li+='</tr>';
+        li+='<tr>';
+        li+='  <td colspan="4">####################</td>';
+        li+='</tr>';
+        li+='<tr class="amount-border">';
+        li+='  <th style="text-align: left;width: 15mm">合计</th>';
+        li+='  <th></th>';
+        li+='  <th></th>';
+        li+='  <th style="text-align: left;width: 9mm">'+data.original_amount+'</th>';
         li+='</tr>';
         li+='</tfoot>';
         li+='</table>';
         li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
-        li+='<h4 style="text-align: left">折后合计：￥'+data.amount_price+'</h4>';
-        li+='<p style="text-align: left">地址：'+data.address+'</p>';
-        li+='<p style="text-align: left">'+data.user_name+'   '+ data.user_tel+'</p>';
-        li+='<h3>##微信支付##</h3>';
-        li+='<div>';
-        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
-        li+=data.restaurant_tel+'</div>';
-        li+='<h5>'+data.restaurant_name+'</h5>';
-        li+='<h4>'+data.title+'</h4>';
-        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;"></div>';
-        li+='</li>';
+        li+='<h4 style="text-align: left;margin: 0;">折后合计：￥'+data.amount_price+'</h4>';
+        li+='<p style="text-align: left;margin: 0;">地址：'+data.address+'</p>';
+        li+='<p style="text-align: left;margin: 0;">'+data.user_name+'   '+ data.user_tel+'</p>';
+        li+='<div class="print-dotted" style="width:100%;height:0;border-bottom:#000000 2px dashed;margin: 0;"></div>';
         var $li = $(li);
         $('#print-ul').append($li);
     }
