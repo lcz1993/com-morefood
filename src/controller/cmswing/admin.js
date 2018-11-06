@@ -20,12 +20,26 @@ module.exports = class extends think.Controller {
     // 请求时，判断 session cookie 值是否相同
     const userInfo = await this.session('userInfo');
     const cookie = this.cookie('thinkjs');
-    const saveCookie = await this.service('redis', 'admin').get(`uid-${userInfo.uid}`);
-    console.log(saveCookie);
-    if (saveCookie && saveCookie !== cookie) {
-      // 不是最近一台登录的设备
-      console.log('不是同一台设备');
-    }
+    const client = think.config('client');
+    let saveCookie = '';
+    const that = this;
+    await client.get(`uid-${userInfo.uid}`, async function(err, reply) {
+      if (err) throw (err);
+      // value is null when the key is missing
+      saveCookie = reply;
+      console.log(saveCookie);
+      if (saveCookie && saveCookie !== cookie) {
+        // 不是最近一台登录的设备
+        // console.log('不是同一台设备');
+        await that.session('userInfo', null);
+        that.redirect('/admin/public/signin');
+      }
+    });
+    // console.log(saveCookie);
+    // if (saveCookie && saveCookie !== cookie) {
+    //   // 不是最近一台登录的设备
+    //   console.log('不是同一台设备');
+    // }
 
     // 网站配置
     // this.setup = await this.model("setup").getset();

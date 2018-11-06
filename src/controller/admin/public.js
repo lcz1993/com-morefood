@@ -33,7 +33,9 @@ module.exports = class extends think.Controller {
         // console.log(11111111111111);
         const cookie = this.cookie('thinkjs');
         const uid = res.uid;
-        await this.service('redis', 'admin').set(`uid-${uid}`, cookie);
+        const redis = think.config('redis');
+        const client = think.config('client');
+        client.set(`uid-${uid}`, cookie, redis.print);
         // await client.set(`uid-${uid}`, cookie, redis.print);
         await this.session('userInfo', res);
 
