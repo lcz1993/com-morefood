@@ -175,6 +175,11 @@ module.exports = class extends think.cmswing.app {
       restaurant: restaurant
     });
   }
+
+  /**
+     * 保存订单
+     * @returns {Promise<*>}
+     */
   async saveAction() {
     const order = this.post('order');
     const sendTime = order.send_time;
@@ -190,6 +195,9 @@ module.exports = class extends think.cmswing.app {
     const restaurant = await this.model('restaurant').find(order.restaurant_id);
     order.patable_freight = restaurant.send_money;
     order.real_freight = order.sendMoney;
+    // 此处判断用户第一次下单，第一次下单赠送果盘一份
+    const count = await this.model('order').where({user_id: userId, create_time: ['>', 1541433600000]}).count();
+
     let res = '';
     if (!order.id) {
       order.id = null;
@@ -220,6 +228,28 @@ module.exports = class extends think.cmswing.app {
           prom_goods: prom_goods
         };
         await this.model('order_goods').add(food);
+      }
+      if (count == 0) {
+        let send_prom_goods = {
+          id: 0,
+          uid: userId,
+          product_id: '',
+          qty: 1,
+          type: '',
+          price: 0,
+          title: '水果拼盘(首单)',
+          unit_price: 0,
+          pic: 'http://jishiyu.sxtssc.com.cn/upload/picture/2018-10-20/upload_22e62fb4fc0e1ac470f85df4f5833276.png'
+        };
+        send_prom_goods = JSON.stringify(send_prom_goods);
+        const send_food = {
+          order_id: res,
+          goods_id: 0,
+          goods_price: 0,
+          goods_nums: 1,
+          prom_goods: send_prom_goods
+        };
+        await this.model('order_goods').add(send_food);
       }
       return this.success(res);
     } else {

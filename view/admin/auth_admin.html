@@ -5,7 +5,7 @@
 
                 <header class="header bg-light dk">
                     <ul class="nav nav-tabs pull-left">
-                        <li class="{% if ctx.action == 'index'%}active{%endif%}" ><a href="/{{ctx.controller}}/index"><i class="fa fa-user text-muted"></i> 会员组 </a></li>
+                        <!--<li class="{% if ctx.action == 'index'%}active{%endif%}" ><a href="/{{ctx.controller}}/index"><i class="fa fa-user text-muted"></i> 会员组 </a></li>-->
                         <li class="{% if ctx.action == 'admin'%}active{%endif%}" ><a href="/{{ctx.controller}}/admin"><i class="fa fa-user text-muted"></i> 管理员角色</a></li>
                     </ul>
                     {#
@@ -78,7 +78,7 @@
                                     <td>{{item.description}}</td>
                                     <td><div class="btn-group">
                                         <a class="btn btn-default btn-xs" type="button" href="/admin/auth/access/?id={{item.id}}">权限设置</a>
-                                        <a class="btn btn-default btn-xs" type="button" href="/admin/auth/catepriv/?id={{item.id}}">栏目权限</a>
+                                        <!--<a class="btn btn-default btn-xs" type="button" href="/admin/auth/catepriv/?id={{item.id}}">栏目权限</a>-->
                                         <a class="btn btn-default btn-xs" type="button" href="/admin/auth/userlist/?id={{item.id}}">成员管理</a>
                                     </div></td>
                                     <td><a href="/admin/auth/setstatus/?ids={{item.id}}&status={{1-item.status}}&model=auth_role" class="active ajax-get" data-toggle="class">
