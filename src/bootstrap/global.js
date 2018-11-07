@@ -1448,3 +1448,7 @@ global.removeByValue = (arr, val) => {
     }
   }
 };
+global.get_nature_name = async(id) => {
+  const name = await think.model('nature').get_name(id);
+  return name;
+};

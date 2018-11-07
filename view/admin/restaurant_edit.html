@@ -20,7 +20,25 @@
                     <div class="panel-body">
                         <form action="/admin/restaurant/edit" class="form-horizontal" method="post"  data-validate="parsley">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 餐厅名称</label>
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 性质</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-control input-sm" name="nature_id" id="nature_id">
+                                                {%for v in natureList%}
+                                                <option value="{{v.id}}" {%if v.id == data.nature_id %} selected{%endif%}>{{v.name}}</option>
+                                                {%endfor%}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 店铺名称</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -96,34 +114,6 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <input name="support_paytype" type="text" class="form-control" data-required="true" value="{{data.support_paytype}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 评分(分)</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="score" type="text" class="form-control number" data-required="true" value="{{data.score}}">
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 月销量（单）</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="sales" type="text" class="form-control number" data-required="true" value="{{data.sales}}">
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
                                         </div>
                                     </div>
                                 </div>
