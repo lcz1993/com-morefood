@@ -150,4 +150,123 @@ module.exports = class extends think.cmswing.app {
     };
     return this.success(data);
   }
+
+  async listAction() {
+    const sort_rule = this.post('sort_rule');
+    const discountSelect = this.post('discountSelect');
+    const priceSelect = this.post('priceSelect');
+    const currentPage = this.post('currentPage');
+    const groom = this.post('groom');
+    const map = {};
+    let sort = '';
+    switch (parseInt(sort_rule)) {
+      // 综合排序
+      case 1:
+        sort = 'sort ASC';
+        break;
+        // 好评优先
+      case 2:
+        sort = 'score DESC';
+        break;
+        // 销量优先
+      case 3:
+        sort = 'sales DESC';
+        break;
+        // 起送价升序
+      case 4:
+        sort = 'min_price ASC';
+        break;
+        // 配送最快
+      case 5:
+        sort = 'sort ASC';
+        break;
+        // 配送费最低
+      case 6:
+        sort = 'send_money ASC';
+        break;
+        // 人均从低到高
+      case 7:
+        sort = 'fee_standard ASC';
+        break;
+        // 人均从高到低
+      case 8:
+        sort = 'fee_standard DESC';
+        break;
+      default:
+        sort = 'sort ASC';
+    }
+    // 优惠活动
+    const discount = discountSelect.split('_')[1];
+    switch (parseInt(discount)) {
+      // 新用户优惠
+      case 1:
+        map.discount_id = ['like', '%1%'];
+        break;
+        // 特价商品
+      case 2:
+        map.discount_id = ['like', '%2%'];
+        break;
+        // 下单立减
+      case 3:
+        map.discount_id = ['like', '%3%'];
+        break;
+        // 赠品优惠
+      case 4:
+        map.discount_id = ['like', '%4%'];
+        break;
+        // 下单返红包
+      case 5:
+        map.discount_id = ['like', '%5%'];
+        break;
+        // 进店领红包
+      case 6:
+        map.discount_id = ['like', '%6%'];
+        break;
+      default:
+        break;
+    }
+    const price = priceSelect.split('_')[1];
+    switch (parseInt(price)) {
+      // x<20
+      case 1:
+        map.fee_standard = ['<=', '20'];
+        break;
+        // 20<x<40
+      case 2:
+        map.fee_standard = ['>', '20 and fee_standard <= 40'];
+        break;
+        // 40x<60
+      case 3:
+        map.fee_standard = ['>', '40 and fee_standard <= 60'];
+        break;
+        // 60x<80
+      case 4:
+        map.fee_standard = ['>', '60 and fee_standard <= 80'];
+        break;
+        // 80x<100
+      case 5:
+        map.fee_standard = ['>', '80 and fee_standard <= 100'];
+        break;
+        // x>100
+      case 6:
+        map.fee_standard = ['>', '100'];
+        break;
+      default:
+        break;
+    }
+    if (groom) {
+      sort = 'sort ASC';
+    }
+    const list = await this.model('restaurant').where(map).order('sort ASC').page(currentPage || 1, 10).countSelect();
+    const restaurantArr = list.data;
+    const restaurantList = [];
+    for (const i in restaurantArr) {
+      const restaurant = restaurantArr[i];
+      // 组合出返回页面的商店list
+
+
+
+    }
+    return this.success();
+  }
 };
