@@ -196,7 +196,7 @@ module.exports = class extends think.cmswing.app {
     order.patable_freight = restaurant.send_money;
     order.real_freight = order.sendMoney;
     // 此处判断用户第一次下单，第一次下单赠送果盘一份
-    const count = await this.model('order').where({user_id: userId, create_time: ['>', 1541433600000]}).count();
+    const count = await this.model('order').where({user_id: userId, create_time: ['>', 1541520000000]}).count();
 
     let res = '';
     if (!order.id) {

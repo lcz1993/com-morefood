@@ -160,4 +160,14 @@ module.exports = class extends think.cmswing.admin {
       return this.fail();
     }
   }
+
+  /**
+     * 获取当前商户下所有的商品分类
+     * @returns {Promise<*>}
+     */
+  async listAction() {
+    const dishClassId = this.get('dishClassId');
+    const list = await this.model('medu').where({dish_class: dishClassId}).select();
+    return this.success(list);
+  }
 };
