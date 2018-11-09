@@ -158,6 +158,7 @@ module.exports = class extends think.cmswing.app {
     const currentPage = this.post('currentPage');
     const groom = this.post('groom');
     const map = {};
+    map.is_close = 0;
     let sort = '';
     switch (parseInt(sort_rule)) {
       // 综合排序
@@ -229,27 +230,27 @@ module.exports = class extends think.cmswing.app {
     switch (parseInt(price)) {
       // x<20
       case 1:
-        map.fee_standard = ['<=', '20'];
+        map.fee_standard = ['<=', 20];
         break;
         // 20<x<40
       case 2:
-        map.fee_standard = ['>', '20 and fee_standard <= 40'];
+        map.fee_standard = ['between', 20, 40];
         break;
         // 40x<60
       case 3:
-        map.fee_standard = ['>', '40 and fee_standard <= 60'];
+        map.fee_standard = ['between', 40, 60];
         break;
         // 60x<80
       case 4:
-        map.fee_standard = ['>', '60 and fee_standard <= 80'];
+        map.fee_standard = ['between', 60, 80];
         break;
         // 80x<100
       case 5:
-        map.fee_standard = ['>', '80 and fee_standard <= 100'];
+        map.fee_standard = ['between', 80, 100];
         break;
         // x>100
       case 6:
-        map.fee_standard = ['>', '100'];
+        map.fee_standard = ['>', 100];
         break;
       default:
         break;
@@ -257,16 +258,52 @@ module.exports = class extends think.cmswing.app {
     if (groom) {
       sort = 'sort ASC';
     }
-    const list = await this.model('restaurant').where(map).order('sort ASC').page(currentPage || 1, 10).countSelect();
+    const list = await this.model('restaurant').where(map).order(sort).page(currentPage || 1, 10).countSelect();
     const restaurantArr = list.data;
     const restaurantList = [];
+
+    const discountSign = this.config('setupapp.DISCOUNT_TYPE_SIGN');
+    const discountColor = this.config('setupapp.DISCOUNT_TYPE_COLOR');
+    const time = new Date().getTime();
     for (const i in restaurantArr) {
       const restaurant = restaurantArr[i];
       // 组合出返回页面的商店list
-
-
-
+      const discountList = await this.model('discount').where({
+        restaurant_id: restaurant.id,
+        start_time: ['<', time],
+        end_time: ['>', time],
+        is_show: 0
+      }).select();
+      const disArr = [];
+      for (const j in discountList) {
+        const discount = discountList[j];
+        const sign = {
+          color: discountColor[discount.type_id],
+          text: discountSign[discount.type_id]
+        };
+        const dis = {
+          id: discount.id,
+          sign: sign,
+          name: discount.name
+        };
+        disArr.push(dis);
+      }
+      const img = await global.get_pic(restaurant.image);
+      const restau = {
+        id: restaurant.id,
+        name: restaurant.name,
+        img: img,
+        sign: {},
+        score: restaurant.score,
+        sale: restaurant.sale,
+        min_price: restaurant.min_price,
+        send_money: restaurant.send_money,
+        discountNum: discountList.length,
+        nature: restaurant.nature_id,
+        discountList: disArr
+      };
+      restaurantList.push(restau);
     }
-    return this.success();
+    return this.success(restaurantList);
   }
 };

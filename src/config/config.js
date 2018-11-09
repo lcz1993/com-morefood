@@ -50,7 +50,10 @@ module.exports = {
   // 可以公开访问的Action
   publicAction: [
     // 格式为： controller+action
-    'api/address/getarea'
+    'api/address/getarea',
+    'api/restaurant/index',
+    'api/nature/index',
+    'api/restaurant/list'
 
   ],
   // 以下为腾讯云短信服务
