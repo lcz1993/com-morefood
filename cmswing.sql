@@ -3,15 +3,15 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 50717
+ Source Server Version : 50721
  Source Host           : localhost
  Source Database       : cmswing
 
  Target Server Type    : MySQL
- Target Server Version : 50717
+ Target Server Version : 50721
  File Encoding         : utf-8
 
- Date: 11/08/2018 17:59:09 PM
+ Date: 11/08/2018 23:29:09 PM
 */
 
 SET NAMES utf8;
@@ -299,13 +299,13 @@ CREATE TABLE `cmswing_deliver` (
   `home_addr` varchar(255) DEFAULT NULL COMMENT '住址',
   `is_default` varchar(255) DEFAULT '0' COMMENT '0：默认1非默认',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 --  Records of `cmswing_deliver`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_deliver` VALUES ('0', null, '泽', '12312312311', null, null, null, null, '榆次', '0'), ('5', '1', '郝润泽', '13100180505', null, null, null, null, '榆次', '0');
+INSERT INTO `cmswing_deliver` VALUES ('5', '1', '郝润泽', '13100180505', null, null, null, null, '榆次', '0'), ('6', null, '泽', '12312312311', null, null, null, null, '榆次', '0');
 COMMIT;
 
 -- ----------------------------
@@ -851,7 +851,7 @@ CREATE TABLE `cmswing_member` (
 --  Records of `cmswing_member`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_member` VALUES ('1', 'admin', '6a078dec10fcc0198ff501be988a9436', '2364', 'lcz1993@163.com', '1779', '', '1452513965683', '0', '1541574587609', '2130706433', '0', '1', '1', '1', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', '0'), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '-1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('10', 'jsyze', '6a078dec10fcc0198ff501be988a9436', '0', 'jishiyu@163.com', '79', '', '1540047745265', '0', '1541650542097', '2130706433', '0', '1', '1', '1', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1');
+INSERT INTO `cmswing_member` VALUES ('1', 'admin', '6a078dec10fcc0198ff501be988a9436', '2364', 'lcz1993@163.com', '1780', '', '1452513965683', '0', '1541686488119', '2130706433', '0', '1', '1', '1', '10001.00', '0', '0', '0', '0', '0', '0', '120000', '120100', '120102', '', '1', '0', '0', '0', '', '0'), ('6', 'lcz', 'f1dfca01a53e59ecb1c220c26f600936', '0', '123@163.com', '1', '18234164844', '1538123152127', '0', '1538181495557', '2130706433', '0', '1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('7', 'abcde', 'f1dfca01a53e59ecb1c220c26f600936', '0', '111@163.com', '0', '18234164844', '1538130330634', '0', '0', '0', '0', '-1', '1', '2', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1'), ('10', 'jsyze', '6a078dec10fcc0198ff501be988a9436', '0', 'jishiyu@163.com', '79', '', '1540047745265', '0', '1541650542097', '2130706433', '0', '1', '1', '1', '0.00', '0', '0', '0', '0', '0', '0', null, null, null, null, '1', null, '0', '0', null, '1');
 COMMIT;
 
 -- ----------------------------
@@ -1267,13 +1267,13 @@ CREATE TABLE `cmswing_setupapp` (
   UNIQUE KEY `uk_name` (`name`),
   KEY `type` (`type`),
   KEY `group` (`group`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 --  Records of `cmswing_setupapp`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cmswing_setupapp` VALUES ('9', 'CONFIG_TYPE_LIST', '3', '配置类型列表', '4', '', '主要用于数据解析和页面表单的生成', '1378898976', '1379235348', '1', '0:数字\r\n1:字符\r\n2:文本\r\n3:数组\r\n4:枚举\r\n5:单图\r\n6:多图', '2'), ('20', 'CONFIG_GROUP_LIST', '3', '配置分组', '4', '', '配置分组', '1379228036', '1384418383', '1', '1:基本\r\n2:内容\r\n3:用户\r\n4:系统\r\n5:商城\r\n6:微信', '4');
+INSERT INTO `cmswing_setupapp` VALUES ('9', 'CONFIG_TYPE_LIST', '3', '配置类型列表', '4', '', '主要用于数据解析和页面表单的生成', '1378898976', '1379235348', '1', '0:数字\r\n1:字符\r\n2:文本\r\n3:数组\r\n4:枚举\r\n5:单图\r\n6:多图', '2'), ('20', 'CONFIG_GROUP_LIST', '3', '配置分组', '4', '', '配置分组', '1541686780439', '1384418383', '1', '1:基本\r\n2:优惠券', '4'), ('21', 'DISCOUNT_TYPE', '3', '优惠券种类', '2', '', '', '0', '1541686928619', '1', '1:新用户优惠\r\n2:特价商品\r\n3:下单立减\r\n4:赠品优惠\r\n5:下单返红包\r\n6:进店领红包', '0');
 COMMIT;
 
 -- ----------------------------
