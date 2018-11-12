@@ -8,7 +8,7 @@ module.exports = class extends think.cmswing.app {
     const natureArr = [];
     for (const i in natureList) {
       const nature = natureList[i];
-      nature.imgUrl = global.get_pic(nature.icon);
+      nature.imgUrl = await global.get_pic(nature.icon);
       const n = {
         id: nature.id,
         name: nature.name,

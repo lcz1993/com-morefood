@@ -9,7 +9,7 @@ module.exports = class extends think.cmswing.app {
      */
   async cartAction() {
     const cartArr = this.post('carArray');
-    const userId = this.post('userId');
+    const userId = this.getLoginUserId();
     await this.model('selection').where({user_id: userId}).delete();
     for (const cart of cartArr) {
       const res = await this.model('selection').add({

@@ -47,7 +47,7 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.sort }}</td>
                         <td>
-                            <img src="{{ item.dish_picture|get_pic('m=1,w=200,h=200')}}" height="60">
+                            <img src="{{ item.icon|get_pic('m=1,w=200,h=200')}}" height="60">
                         </td>
                         <td>
                             <a href="/admin/nature/edit/?id={{item.id}}" class="text-info" >编辑</a>

@@ -98,45 +98,36 @@ module.exports = class extends think.cmswing.app {
       };
       goods.push(a);
     }
-    // 获取餐厅的
-    const discountList = await this.model('discount').where({restaurant_id: restaurant_id, status: 0}).select();
+    // 获取餐厅的优惠券
+    const discountSign = this.config('setupapp.DISCOUNT_TYPE_SIGN');
+    const discountColor = this.config('setupapp.DISCOUNT_TYPE_COLOR');
+    const time = new Date().getTime();
+    const discountList = await this.model('discount').where({
+      restaurant_id: restaurant.id,
+      start_time: ['<', time],
+      end_time: ['>', time],
+      is_show: 0
+    }).select();
     const discountArr = [];
     let dis = {};
     const count = discountList.length;
-    for (const discount of discountList) {
-      let type = parseInt(discount.type);
-      let color = '';
-      switch (type) {
-        case 0:
-          type = '折扣';
-          color = 'rgb(60, 199, 145)';
-          break;
-        case 1:
-          type = '满减';
-          color = 'rgb(240, 115, 115)';
-          break;
-        case 2:
-          type = '首单';
-          color = 'rgb(112, 188, 70)';
-          break;
-        case 3:
-          type = '特价';
-          color = 'rgb(241, 136, 79)';
-          break;
-      }
+    for (const j in discountList) {
+      const discount = discountList[j];
+      const type = discount.type_id;
       const e = {
         name: discount.name,
         type: type,
-        color: color,
-        desc: discount.desc
+        color: discountColor[discount.type_id],
+        desc: discountSign[discount.type_id]
       };
       discountArr.push(e);
+
       if (parseInt(discount.is_show) == 0) {
         dis = {
           name: discount.name,
           type: type,
-          color: color,
-          desc: discount.desc
+          color: discountColor[discount.type_id],
+          desc: discountSign[discount.type_id]
         };
       }
     }
@@ -156,8 +147,12 @@ module.exports = class extends think.cmswing.app {
     const discountSelect = this.post('discountSelect');
     const priceSelect = this.post('priceSelect');
     const currentPage = this.post('currentPage');
+    const natureId = this.post('natureId');
     const groom = this.post('groom');
     const map = {};
+    if (natureId) {
+      map.nature_id = natureId;
+    }
     map.is_close = 0;
     let sort = '';
     switch (parseInt(sort_rule)) {
@@ -304,6 +299,7 @@ module.exports = class extends think.cmswing.app {
       };
       restaurantList.push(restau);
     }
-    return this.success(restaurantList);
+    list.data = restaurantList;
+    return this.success(list);
   }
 };

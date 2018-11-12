@@ -17,7 +17,7 @@ module.exports = class extends think.cmswing.app {
     const valueId = order.restaurant_id;
     const imgList = this.post('imgList');
     let status = '';
-    if (imgList) {
+    if (imgList.length > 0) {
       status = 1;
     }
     const content = this.post('content');
