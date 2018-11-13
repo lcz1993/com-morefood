@@ -1,0 +1,83 @@
+{% extends "./inc/base.html" %}
+{% block content %}
+<section class="vbox panel panel-default">
+    <header class="header bg-light dk">
+        <ul class="nav nav-tabs pull-left">
+            <li class="active"><a data-toggle="tab" href="#"><i class="fa fa-comments text-muted"></i> {{controller.meta_title}} </a></li>
+            </li>
+        </ul>
+    </header>
+    <section class="scrollable wrapper">
+
+        <section class="panel panel-default">
+            <div class="row wrapper">
+                <div class="col-sm-9 m-b-xs">
+                    <a href="/admin/keywords/add" class="btn  btn-info">新增</a>
+                    <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/keywords/del">删除</a>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group pull-right search-form">
+                        <input type="text" class="input-sm form-control" name="keyword" placeholder="请输入关键字" value="{{controller.get('keyword')}}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/keywords/index">搜索</button>
+                      </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped b-t b-light">
+                    <thead>
+                    <tr>
+                        <th style="width:20px;"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
+                        <th style="">关键词</th>
+                        <th class="">热词</th>
+                        <th class="">默认</th>
+                        <th class="">展示</th>
+                        <th class="">排序</th>
+                        <!--<th class="">链接</th>-->
+                        <th class="">状态</th>
+                        <th >操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in list.data %}
+                    <tr>
+                        <td><label class="checkbox m-n i-checks"><input class="ids" type="checkbox" name="ids" value="{{item.id}}"><i></i></label></td>
+                        <td>{{item.keyword}}</td>
+                        <td>{%if item.is_hot==0%}否{%else%}是{%endif%}</td>
+                        <td>{%if item.is_default==0%}否{%else%}是{%endif%}</td>
+                        <td>{%if item.is_show==0%}隐藏{%else%}显示{%endif%}</td>
+                        <td>{{item.sort_order}}</td>
+                        <!--<td>{{item.scheme_url}}</td>-->
+                        <td>{%if item.type==0%}正常{%else%}待处理{%endif%}</td>
+                        <td>
+                            <a href="/admin/keywords/edit/?id={{item.id}}" class="text-info confirm">编辑</a>
+                            <a href="/admin/keywords/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>
+                        </td>
+
+
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="8"><div class="alert alert-warning alert-block">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <p>This would display if the 'item' collection were empty</p>
+                    </div></td></tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+            </div>
+            <footer class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right text-center-xs">
+                        {{pagerData | safe}}
+                    </div>
+                </div>
+            </footer>
+        </section>
+    </section>
+</section>
+
+{% endblock %}

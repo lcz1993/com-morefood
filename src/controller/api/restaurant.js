@@ -149,9 +149,18 @@ module.exports = class extends think.cmswing.app {
     const currentPage = this.post('currentPage');
     const natureId = this.post('natureId');
     const groom = this.post('groom');
+    const search = this.post('search');
     const map = {};
     if (natureId) {
       map.nature_id = natureId;
+    }
+    if (search) {
+      map.name = ['LIKE', '%' + search + '%'];
+      await this.model('search_history').add({
+        keyword: search,
+        add_time: (new Date().getTime()) / 1000,
+        user_id: this.getLoginUserId()
+      });
     }
     map.is_close = 0;
     let sort = '';
