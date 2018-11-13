@@ -473,7 +473,6 @@ module.exports = {
          */
       env.addFilter('get_nature_name', async(id, callback) => {
         const name = await get_nature_name(id);
-        console.log('view' + name);
         callback(null, name);
       }, true);
     }

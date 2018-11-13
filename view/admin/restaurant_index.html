@@ -12,10 +12,12 @@
 
         <section class="panel panel-default">
             <div class="row wrapper">
-                <div class="col-sm-9 m-b-xs">
-                    <a href="/admin/restaurant/add" class="btn  btn-info" >新增</a>
-                    <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/restaurant/del">删除</a>
-                </div>
+                {% if restaurant_id == 0 %}
+                    <div class="col-sm-9 m-b-xs" >
+                        <a href="/admin/restaurant/add" class="btn  btn-info" >新增</a>
+                        <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/restaurant/del">删除</a>
+                    </div>
+                {% endif %}
                 <div class="col-sm-3">
                     <div class="input-group pull-right search-form">
                         <input type="text" class="input-sm form-control" name="keyword" placeholder="请输入关键字"
