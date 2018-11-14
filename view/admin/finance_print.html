@@ -1,0 +1,68 @@
+<div class="modal-dialog" style="width: 210mm;">
+    <div class="modal-content" style="padding: 10px;">
+        <style>
+            h2,h3{
+                margin: 0;
+                line-height: 1.5;
+            }
+            table{
+                text-align: left;
+                width: 100%;
+            }
+            table,table tr th, table tr td { border:1px solid #0a001f; }
+            table { width: 200px; min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse;}
+        </style>
+        <div class="print-div" id="print_div" style="width: 195mm;text-align: center;color: #000;">
+            <h4 class="print-title" style="margin: 0;">{{data.title}}</h4>
+            <table  style="width: 100%; width: 195mm; min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse;">
+                <thead >
+                <tr>
+                    <td style="border:1px solid #0a001f;">时间</td>
+                    <td style="border:1px solid #0a001f;">用户名</td>
+                    <td style="border:1px solid #0a001f;">店家名</td>
+                    <td style="border:1px solid #0a001f;">商品名</td>
+                    <td style="border:1px solid #0a001f;">购买数量</td>
+                    <td style="border:1px solid #0a001f;">价格</td>
+                    <td style="border:1px solid #0a001f;">总价格</td>
+                </tr>
+                </thead>
+                <tbody class="tbody-border" style="border-top:#000000 2px solid;border-bottom: #000000 2px solid;width: 45mm;">
+                {%set num = 0%}
+                {%set amount = 0%}
+                {% for item in data.goodsList %}
+                <tr>
+                    <td style="border:1px solid #0a001f;">{{item.time|dateformat('Y-m-d H:i:s')}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.username}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.restaurantName}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.title}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.num}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.unit_price}}</td>
+                    <td style="border:1px solid #0a001f;">{{item.total_price}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" value="{{order.id}}" name="id">
+            <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
+            <a href="javascript:;" class="btn btn-primary ajax-post" onclick="print()" target-form="form-horizontal">打印</a>
+        </div>
+    </div><!-- /.modal-dialog -->
+</div>
+<script src="/static/admin/js/jqprint/jquery-1.4.4.min.js"></script>
+<script src="/static/admin/js/jqprint/jquery.jqprint-0.3.js"></script>
+<!--<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>-->
+<!--<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>-->
+<!--<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>-->
+<!--</object>-->
+
+<script language="javascript" type="text/javascript">
+    function print(){
+        $("#print_div").jqprint({
+            debug: false,
+            importCSS: false, //将此属性改为false；直接在style中写入样式即可
+            printContainer: true,
+            operaSupport: false
+        });
+    }
+</script>
