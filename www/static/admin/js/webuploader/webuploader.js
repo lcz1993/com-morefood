@@ -1855,11 +1855,11 @@
              * }
              * ```
              */
-            accept: null/*{
+            accept: {
                 title: 'Images',
                 extensions: 'gif,jpg,jpeg,bmp,png',
                 mimeTypes: 'image/*'
-            }*/
+            }
         });
 
         return Uploader.register({
@@ -2165,12 +2165,13 @@
              * ```
              */
             compress: {
-                width: 1600,
-                height: 1600,
+                width: 200,
+                height: 200,
                 quality: 90,
                 allowMagnify: false,
                 crop: false,
                 preserveHeaders: true,
+                noCompressIfLarger: false,
                 compressSize: 50
             }
         });
