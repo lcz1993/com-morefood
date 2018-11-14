@@ -94,6 +94,7 @@ module.exports = class extends think.cmswing.admin {
         default:
           return this.fail('添加失败!');
       }
+      data.max_count = 9999999;
       const res = await this.model('discount').add(data);
       if (res) {
         return this.success({name: '添加成功！'});

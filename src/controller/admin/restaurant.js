@@ -49,7 +49,7 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       this.active = '/admin/restaurant/index';
-      this.meta_title = '新增菜单';
+      this.meta_title = '新增';
       const natureList = await this.model('nature').select();
       this.assign('natureList', natureList);
       await this.hook('adminUpPic', 'image', '', {$hook_key: 'image'});
@@ -74,7 +74,7 @@ module.exports = class extends think.cmswing.admin {
       const restaurant = await this.model('restaurant').find(id);
       this.assign('data', restaurant);
       this.active = '/admin/restaurant/index';
-      this.meta_title = '编辑菜单';
+      this.meta_title = '编辑';
       const natureList = await this.model('nature').select();
       this.assign('natureList', natureList);
       await this.hook('adminUpPic', 'image', restaurant.image, {$hook_key: 'image'});
