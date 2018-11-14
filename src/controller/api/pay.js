@@ -346,38 +346,10 @@ module.exports = class extends think.cmswing.app {
     const result = await WeixinSerivce.queryOrder(payInfo);
     if (result.trade_state == 'SUCCESS') {
       await await this.model('order').updataStatus(orderId);
+      await this.sendMsgAction();
       return this.success();
     } else {
       return this.fail();
     }
-
-    // const order = {
-    //   id: orderId,
-    //   pay_status: 1,
-    //   status: 2,
-    //   pay_time: new Date().getTime()
-    // };
-    // const orderInfo = await this.model('order').find(orderId);
-    // const foodList = await this.model('order_goods').where({order_id: orderId}).field('prom_goods').select();
-    // const foodArr = [];
-    // for (const item in foodList) {
-    //   const a = JSON.parse(foodList[item].prom_goods);
-    //   foodArr.push(a);
-    // }
-    // const node = {
-    //   orderId: orderId,
-    //   foodList: foodArr
-    // };
-    // // 生成财务日志
-    // const balance = {
-    //   restaurant_id: orderInfo.restaurant_id,
-    //   user_id: orderInfo.user_id,
-    //   time: new Date().getTime(),
-    //   amount: orderInfo.order_amount,
-    //   amount_log: '',
-    //   note: JSON.stringify(node)
-    // };
-    // await this.model('balance_log').add(balance);
-    // const res = await this.model('order').update(order);
   }
 };

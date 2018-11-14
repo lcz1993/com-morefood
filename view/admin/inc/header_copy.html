@@ -110,29 +110,13 @@
 
     </ul>
 </div>
-<script src="http://lib.baomitu.com/socket.io/2.0.1/socket.io.js"></script>
+<!--<script src="/static/admin/js/jqprint/LodopFuncs.js"></script>-->
+<!--<object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>-->
+<!--<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>-->
+<!--</object>-->
+
 
 <script language="javascript" type="text/javascript">
-    const index=0;
-
-    var socket = io('http://127.0.0.1:8080?index=0');
-    socket.on('opend', function (data) {
-        console.log('opend:', data);
-    });
-
-    socket.on('joined', function (data) {
-        console.log('joined:', data);
-    });
-
-    socket.on('add', function (data) {
-        console.log(data)
-        if(data.to==0){
-            let msg=$('.msg').html();
-            msg += '<div style="text-align: left">'+data.username+'：'+data.msg+'</div>';
-            $('.msg').html(msg);
-        }
-    });
-
     function localRefresh() {
         var count = $('#order_count').text();
         $.ajax({
