@@ -24,9 +24,12 @@ module.exports = class extends think.cmswing.admin {
     if (this.get('keyword')) {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
-    const user = await this.session('userInfo');
-    if (parseInt(user.restaurant_id) !== 0) {
-      map.restaurant_id = user.restaurant_id;
+    try {
+      if (parseInt(this.user.restaurant_id) !== 0) {
+        map.restaurant_id = this.user.restaurant_id;
+      }
+    } catch (e) {
+      console.log('error');
     }
     const list = await this.model('medu').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     for (const medu of list.data) {
@@ -63,9 +66,15 @@ module.exports = class extends think.cmswing.admin {
         return this.fail('添加失败！');
       }
     } else {
-      // 餐厅
-      const restaurant = await this.model('restaurant').select();
-      this.assign('restaurant', restaurant);
+      const restaurantId = this.user.restaurant_id;
+      this.assign('restaurantId', restaurantId);
+      if (restaurantId == 0) {
+        const restaurantList = await this.model('restaurant').select();
+        this.assign('restaurantList', restaurantList);
+      } else {
+        const restaurant = await this.model('restaurant').field(['id', 'name']).find(restaurantId);
+        this.assign('restaurant', restaurant);
+      }
       // 优惠券
       const discount = await this.model('discount').select();
       this.assign('discount', discount);
@@ -91,8 +100,15 @@ module.exports = class extends think.cmswing.admin {
       const id = await this.get('id');
       const medu = await this.model('medu').find(id);
       // 餐厅
-      const restaurant = await this.model('restaurant').select();
-      this.assign('restaurant', restaurant);
+      const restaurantId = this.user.restaurant_id;
+      this.assign('restaurantId', restaurantId);
+      if (restaurantId == 0) {
+        const restaurantList = await this.model('restaurant').select();
+        this.assign('restaurantList', restaurantList);
+      } else {
+        const restaurant = await this.model('restaurant').field(['id', 'name']).find(restaurantId);
+        this.assign('restaurant', restaurant);
+      }
       // 优惠券
       const discount = await this.model('discount').select();
       this.assign('discount', discount);
@@ -146,5 +162,15 @@ module.exports = class extends think.cmswing.admin {
     } else {
       return this.fail();
     }
+  }
+
+  /**
+     * 获取当前商户下所有的商品分类
+     * @returns {Promise<*>}
+     */
+  async listAction() {
+    const dishClassId = this.get('dishClassId');
+    const list = await this.model('medu').where({dish_class: dishClassId}).select();
+    return this.success(list);
   }
 };

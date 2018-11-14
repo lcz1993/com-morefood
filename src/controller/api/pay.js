@@ -9,7 +9,7 @@ module.exports = class extends think.cmswing.app {
      */
   async cartAction() {
     const cartArr = this.post('carArray');
-    const userId = this.post('userId');
+    const userId = this.getLoginUserId();
     await this.model('selection').where({user_id: userId}).delete();
     for (const cart of cartArr) {
       const res = await this.model('selection').add({
@@ -175,6 +175,11 @@ module.exports = class extends think.cmswing.app {
       restaurant: restaurant
     });
   }
+
+  /**
+     * 保存订单
+     * @returns {Promise<*>}
+     */
   async saveAction() {
     const order = this.post('order');
     const sendTime = order.send_time;
@@ -190,6 +195,7 @@ module.exports = class extends think.cmswing.app {
     const restaurant = await this.model('restaurant').find(order.restaurant_id);
     order.patable_freight = restaurant.send_money;
     order.real_freight = order.sendMoney;
+    // 此处判断用户第一次下单，第一次下单赠送果盘一份
     let res = '';
     if (!order.id) {
       order.id = null;

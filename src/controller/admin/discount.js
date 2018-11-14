@@ -45,18 +45,56 @@ module.exports = class extends think.cmswing.admin {
     // 搜索
     if (this.isPost) {
       const data = this.post();
-      const user = await this.session('userInfo');
-      data.restaurant_id = user.restaurant_id;
+      data.restaurant_id = this.user.restaurant_id;
       let time = data.start_time;
       data.start_time = new Date(time.replace(/-/g, '/')).getTime();
       time = data.end_time;
       data.end_time = new Date(time.replace(/-/g, '/')).getTime();
-      if (data.is_show == 0) {
-        const discountArr = await this.model('discount').where({restaurant_id: user.restaurant_id, is_show: 0}).select();
-        for (const i in discountArr) {
-          await this.model('discount').where({id: discountArr[i].id}).update({is_show: 1});
-        }
+      const type_id = parseInt(data.type_id);
+      const resta = await this.model('restaurant').where({id: this.user.restaurant_id, discount_id: ['LIKE', '%' + data.type_id + '%']}).find(this.user.restaurant_id);
+      if (!resta) {
+        const v = await this.model('restaurant').field('discount_id', true).find(this.user.restaurant_id);
+        await this.model('restaurant').where({id: this.user.restaurant_id}).update({
+          discount_id: v + type_id
+        });
       }
+      switch (type_id) {
+        // 新用户优惠
+        case 1:
+          data.min_price = data.min_price_1;
+          data.cut_price = data.cut_price_1;
+          break;
+        // 特价商品
+        case 2:
+          const medu = {
+            id: data.medu_id,
+            original_price: data.medu_origin_price
+          };
+          await this.model('medu').update(medu);
+          break;
+        // 下单立减
+        case 3:
+          data.min_price = data.min_price_3;
+          data.cut_price = data.cut_price_3;
+          break;
+        // 赠品优惠
+        case 4:
+          data.min_price = data.min_price_4;
+          break;
+        // 下单返红包
+        case 5:
+          data.min_price = data.min_price_5;
+          data.cut_price = data.cut_price_5;
+          break;
+        // 进店领红包
+        case 6:
+          data.min_price = data.min_price_6;
+          data.cut_price = data.cut_price_6;
+          break;
+        default:
+          return this.fail('添加失败!');
+      }
+      data.max_count = 9999999;
       const res = await this.model('discount').add(data);
       if (res) {
         return this.success({name: '添加成功！'});
@@ -74,17 +112,53 @@ module.exports = class extends think.cmswing.admin {
     // 搜索
     if (this.isPost) {
       const data = this.post();
-      const user = await this.session('userInfo');
-      data.restaurant_id = user.restaurant_id;
       let time = data.start_time;
       data.start_time = new Date(time.replace(/-/g, '/')).getTime();
       time = data.end_time;
       data.end_time = new Date(time.replace(/-/g, '/')).getTime();
-      if (data.is_show == 0) {
-        const discountArr = await this.model('discount').where({restaurant_id: user.restaurant_id, is_show: 0}).select();
-        for (const i in discountArr) {
-          await this.model('discount').where({id: discountArr[i].id}).update({is_show: 1});
-        }
+      const type_id = parseInt(data.type_id);
+      const resta = await this.model('restaurant').where({id: this.user.restaurant_id, discount_id: ['LIKE', '%' + data.type_id + '%']}).find(this.user.restaurant_id);
+      if (!resta) {
+        const v = await this.model('restaurant').field('discount_id', true).find(this.user.restaurant_id);
+        await this.model('restaurant').where({id: this.user.restaurant_id}).update({
+          discount_id: v + type_id
+        });
+      }
+      switch (type_id) {
+        // 新用户优惠
+        case 1:
+          data.min_price = data.min_price_1;
+          data.cut_price = data.cut_price_1;
+          break;
+          // 特价商品
+        case 2:
+          const medu = {
+            id: data.medu_id,
+            original_price: data.medu_origin_price
+          }; 0;
+          await this.model('medu').update(medu);
+          break;
+          // 下单立减
+        case 3:
+          data.min_price = data.min_price_3;
+          data.cut_price = data.cut_price_3;
+          break;
+          // 赠品优惠
+        case 4:
+          data.min_price = data.min_price_4;
+          break;
+          // 下单返红包
+        case 5:
+          data.min_price = data.min_price_5;
+          data.cut_price = data.cut_price_5;
+          break;
+          // 进店领红包
+        case 6:
+          data.min_price = data.min_price_6;
+          data.cut_price = data.cut_price_6;
+          break;
+        default:
+          return this.fail('添加失败!');
       }
       const res = await this.model('discount').update(data);
       if (res) {
@@ -94,10 +168,50 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       const id = await this.get('id');
-      const discount = await this.model('discount').find(id);
-      discount.start_time = global.dateformat('Y-m-d H:i:s', discount.start_time);
-      discount.end_time = global.dateformat('Y-m-d H:i:s', discount.start_time);
-      this.assign('data', discount);
+      const data = await this.model('discount').find(id);
+      data.start_time = global.dateformat('Y-m-d H:i:s', data.start_time);
+      data.end_time = global.dateformat('Y-m-d H:i:s', data.start_time);
+      const type_id = parseInt(data.type_id);
+      data.type_id = type_id;
+      let meduId = '';
+      switch (type_id) {
+        // 新用户优惠
+        case 1:
+          data.min_price_1 = data.min_price;
+          data.cut_price_1 = data.cut_price;
+          break;
+          // 特价商品
+        case 2:
+          meduId = data.medu_id;
+          const a = await this.model('medu').field(['original_price', 'dish_class']).find(meduId);
+          data.medu_origin_price = a.original_price;
+          data.medu_dish_class = a.dish_class;
+          break;
+          // 下单立减
+        case 3:
+          data.min_price_3 = data.min_price;
+          data.cut_price_3 = data.cut_price;
+          break;
+          // 赠品优惠
+        case 4:
+          meduId = data.medu_id;
+          data.medu_dish_class = await this.model('medu').field('dish_class', true).find(meduId);
+          data.min_price_4 = data.min_price;
+          break;
+          // 下单返红包
+        case 5:
+          data.min_price_5 = data.min_price;
+          data.cut_price_5 = data.cut_price;
+          break;
+          // 进店领红包
+        case 6:
+          data.min_price_6 = data.min_price;
+          data.cut_price_6 = data.cut_price;
+          break;
+        default:
+          return this.fail('添加失败!');
+      }
+      this.assign('data', data);
       this.active = '/admin/discount/index';
       this.meta_title = '编辑优惠券';
       return this.display();

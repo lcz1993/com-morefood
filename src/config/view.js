@@ -467,6 +467,14 @@ module.exports = {
       env.addFilter('check_document_position', (pos = 0, contain = 0) => {
         return check_document_position(pos, contain);
       });
+      /**
+         * 获取店铺性质
+         * {{id|get_nature_name(id)}}
+         */
+      env.addFilter('get_nature_name', async(id, callback) => {
+        const name = await get_nature_name(id);
+        callback(null, name);
+      }, true);
     }
   }
 };

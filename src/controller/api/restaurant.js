@@ -98,45 +98,36 @@ module.exports = class extends think.cmswing.app {
       };
       goods.push(a);
     }
-    // 获取餐厅的
-    const discountList = await this.model('discount').where({restaurant_id: restaurant_id, status: 0}).select();
+    // 获取餐厅的优惠券
+    const discountSign = this.config('setupapp.DISCOUNT_TYPE_SIGN');
+    const discountColor = this.config('setupapp.DISCOUNT_TYPE_COLOR');
+    const time = new Date().getTime();
+    const discountList = await this.model('discount').where({
+      restaurant_id: restaurant.id,
+      start_time: ['<', time],
+      end_time: ['>', time],
+      is_show: 0
+    }).select();
     const discountArr = [];
     let dis = {};
     const count = discountList.length;
-    for (const discount of discountList) {
-      let type = parseInt(discount.type);
-      let color = '';
-      switch (type) {
-        case 0:
-          type = '折扣';
-          color = 'rgb(60, 199, 145)';
-          break;
-        case 1:
-          type = '满减';
-          color = 'rgb(240, 115, 115)';
-          break;
-        case 2:
-          type = '首单';
-          color = 'rgb(112, 188, 70)';
-          break;
-        case 3:
-          type = '特价';
-          color = 'rgb(241, 136, 79)';
-          break;
-      }
+    for (const j in discountList) {
+      const discount = discountList[j];
+      const type = discount.type_id;
       const e = {
         name: discount.name,
         type: type,
-        color: color,
-        desc: discount.desc
+        color: discountColor[discount.type_id],
+        desc: discountSign[discount.type_id]
       };
       discountArr.push(e);
+
       if (parseInt(discount.is_show) == 0) {
         dis = {
           name: discount.name,
           type: type,
-          color: color,
-          desc: discount.desc
+          color: discountColor[discount.type_id],
+          desc: discountSign[discount.type_id]
         };
       }
     }
@@ -149,5 +140,175 @@ module.exports = class extends think.cmswing.app {
       discountArr: discountArr
     };
     return this.success(data);
+  }
+
+  async listAction() {
+    const sort_rule = this.post('sort_rule');
+    const discountSelect = this.post('discountSelect');
+    const priceSelect = this.post('priceSelect');
+    const currentPage = this.post('currentPage');
+    const natureId = this.post('natureId');
+    const groom = this.post('groom');
+    const search = this.post('search');
+    const map = {};
+    if (natureId) {
+      map.nature_id = natureId;
+    }
+    if (search) {
+      map.name = ['LIKE', '%' + search + '%'];
+      await this.model('search_history').add({
+        keyword: search,
+        add_time: (new Date().getTime()) / 1000,
+        user_id: this.getLoginUserId()
+      });
+    }
+    map.is_close = 0;
+    let sort = '';
+    switch (parseInt(sort_rule)) {
+      // 综合排序
+      case 1:
+        sort = 'sort ASC';
+        break;
+        // 好评优先
+      case 2:
+        sort = 'score DESC';
+        break;
+        // 销量优先
+      case 3:
+        sort = 'sales DESC';
+        break;
+        // 起送价升序
+      case 4:
+        sort = 'min_price ASC';
+        break;
+        // 配送最快
+      case 5:
+        sort = 'sort ASC';
+        break;
+        // 配送费最低
+      case 6:
+        sort = 'send_money ASC';
+        break;
+        // 人均从低到高
+      case 7:
+        sort = 'fee_standard ASC';
+        break;
+        // 人均从高到低
+      case 8:
+        sort = 'fee_standard DESC';
+        break;
+      default:
+        sort = 'sort ASC';
+    }
+    // 优惠活动
+    const discount = discountSelect.split('_')[1];
+    switch (parseInt(discount)) {
+      // 新用户优惠
+      case 1:
+        map.discount_id = ['like', '%1%'];
+        break;
+        // 特价商品
+      case 2:
+        map.discount_id = ['like', '%2%'];
+        break;
+        // 下单立减
+      case 3:
+        map.discount_id = ['like', '%3%'];
+        break;
+        // 赠品优惠
+      case 4:
+        map.discount_id = ['like', '%4%'];
+        break;
+        // 下单返红包
+      case 5:
+        map.discount_id = ['like', '%5%'];
+        break;
+        // 进店领红包
+      case 6:
+        map.discount_id = ['like', '%6%'];
+        break;
+      default:
+        break;
+    }
+    const price = priceSelect.split('_')[1];
+    switch (parseInt(price)) {
+      // x<20
+      case 1:
+        map.fee_standard = ['<=', 20];
+        break;
+        // 20<x<40
+      case 2:
+        map.fee_standard = ['between', 20, 40];
+        break;
+        // 40x<60
+      case 3:
+        map.fee_standard = ['between', 40, 60];
+        break;
+        // 60x<80
+      case 4:
+        map.fee_standard = ['between', 60, 80];
+        break;
+        // 80x<100
+      case 5:
+        map.fee_standard = ['between', 80, 100];
+        break;
+        // x>100
+      case 6:
+        map.fee_standard = ['>', 100];
+        break;
+      default:
+        break;
+    }
+    if (groom) {
+      sort = 'sort ASC';
+    }
+    const list = await this.model('restaurant').where(map).order(sort).page(currentPage || 1, 10).countSelect();
+    const restaurantArr = list.data;
+    const restaurantList = [];
+
+    const discountSign = this.config('setupapp.DISCOUNT_TYPE_SIGN');
+    const discountColor = this.config('setupapp.DISCOUNT_TYPE_COLOR');
+    const time = new Date().getTime();
+    for (const i in restaurantArr) {
+      const restaurant = restaurantArr[i];
+      // 组合出返回页面的商店list
+      const discountList = await this.model('discount').where({
+        restaurant_id: restaurant.id,
+        start_time: ['<', time],
+        end_time: ['>', time],
+        is_show: 0
+      }).select();
+      const disArr = [];
+      for (const j in discountList) {
+        const discount = discountList[j];
+        const sign = {
+          color: discountColor[discount.type_id],
+          text: discountSign[discount.type_id]
+        };
+        const dis = {
+          id: discount.id,
+          sign: sign,
+          name: discount.name
+        };
+        disArr.push(dis);
+      }
+      const img = await global.get_pic(restaurant.image);
+      const restau = {
+        id: restaurant.id,
+        name: restaurant.name,
+        img: img,
+        sign: {},
+        score: restaurant.score,
+        sale: restaurant.sale,
+        min_price: restaurant.min_price,
+        send_money: restaurant.send_money,
+        discountNum: discountList.length,
+        nature: restaurant.nature_id,
+        discountList: disArr
+      };
+      restaurantList.push(restau);
+    }
+    list.data = restaurantList;
+    return this.success(list);
   }
 };

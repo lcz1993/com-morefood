@@ -25,30 +25,21 @@
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
+                                            {% if restaurantId == 0 %}
                                             <select class="form-control input-sm" name="restaurant_id" id="restaurant_id" onchange="selectClass()">
                                                 <option>-=-请选择-=-</option>
-                                                {%for v in restaurant%}
+                                                {%for v in restaurantList%}
                                                 <option value="{{v.id}}" {%if v.id == data.restaurant_id %} selected{%endif%}>{{v.name}}</option>
                                                 {%endfor%}
                                             </select>
+                                            {% else %}
+                                            <span>{{restaurant.name}}</span>
+                                            <input type="hidden" value="{{restaurant.id}}" name="restaurant_id">
+                                            {%endif%}
+
                                         </div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 优惠券</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <select class="form-control input-sm" name="discount_id">
-                                                {%for v in discount%}
-                                                <option value="{{v.id}}" {%if v.id == data.discount_id %} selected{%endif%}>{{v.name}}</option>
-                                                {%endfor%}
-                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -84,22 +75,10 @@
                             </div>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 原价</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12"><input name="old_price" value="{{data.old_price}}" type="text" class="form-control number" data-required="true"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
                                 <div class="col-sm-10">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="original_price" value="{{data.original_price}}" type="text" class="form-control number" data-required="true"></div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 价格不能为空.</span>
-                                        </div>
+                                        <div class="col-md-12"><input name="old_price" value="{{data.old_price}}" type="text" class="form-control number" data-required="true"></div>
                                     </div>
                                 </div>
                             </div>
@@ -111,30 +90,6 @@
                                         <div class="col-md-12"><input name="description" value="{{data.description}}" type="text" class="form-control number" data-required="true"></div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 描述不能为空.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 月销量</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12"><input name="sell_count" value="{{data.sell_count}}" type="text" class="form-control number" data-required="true"></div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请输入数字.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 好评量</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12"><input name="rating" value="{{data.rating}}" type="text" class="form-control number" data-required="true"></div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请输入数字.</span>
                                         </div>
                                     </div>
                                 </div>

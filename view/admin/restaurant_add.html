@@ -20,7 +20,23 @@
                     <div class="panel-body">
                         <form action="/admin/restaurant/add" class="form-horizontal" method="post"  data-validate="parsley">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 餐厅名称</label>
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 性质</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-control input-sm" name="nature_id" id="nature_id" onchange="natureUp()">
+                                                <option value="" selected>-=-请选择-=-</option>
+                                                {%for v in natureList%}
+                                                <option value="{{v.id}}">{{v.name}}</option>
+                                                {%endfor%}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 店铺名称</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -100,55 +116,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 评分(分)</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="score" type="text" class="form-control number" data-required="true" >
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 月销量（单）</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="sales" type="text" class="form-control number" data-required="true">
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="min_price_div">
+                                <div class="line line-dashed b-b line-lg pull-in"></div>
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 起送价格(元)</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input name="min_price" type="text" class="form-control number" data-required="true" >
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
+                                            <input name="min_price" type="text" class="form-control number" >
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="send_price_div">
+                                <div class="line line-dashed b-b line-lg pull-in"></div>
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 配送费(元)</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input name="send_money" type="text" class="form-control number" data-required="true" >
+                                            <input name="send_money" type="text" class="form-control number">
                                         </div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 请填写纯数字.</span>
@@ -156,13 +141,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="send_time_div">
+                                <div class="line line-dashed b-b line-lg pull-in"></div>
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 配送时长</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input name="send_time" type="text" class="form-control" data-required="true" >
+                                            <input name="send_time" type="text" class="form-control" >
                                         </div>
                                     </div>
                                 </div>
@@ -297,4 +282,49 @@
 <script src="/static/admin/js/parsley/parsley.extend.js"></script>
 <script src="/static/admin/js/datepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="/static/admin/js/datepicker/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript"></script>
+<script>
+    function natureUp(){
+        var nature_id = $('#nature_id option:selected').val();
+        if(nature_id == 1){
+            $('#min_price_div').removeClass('hide');
+            $('#send_price_div').removeClass('hide');
+            $('#send_time_div').removeClass('hide');
+        }else if(nature_id == 2){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 3){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 4){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 5){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 6){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 7){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else if(nature_id == 8){
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }else{
+            $('#min_price_div').addClass('hide');
+            $('#send_price_div').addClass('hide');
+            $('#send_time_div').addClass('hide');
+        }
+
+    }
+
+
+</script>
 {% endblock %}

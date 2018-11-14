@@ -67,7 +67,7 @@ module.exports = class extends think.cmswing.app {
       const d = {
         id: prom.id,
         name: prom.title,
-        num: prom.pty,
+        num: prom.qty,
         price: prom.price
       };
       foodArr.push(d);

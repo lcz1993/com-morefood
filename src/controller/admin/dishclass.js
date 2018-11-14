@@ -93,4 +93,14 @@ module.exports = class extends think.cmswing.admin {
     await this.model('dish_class').where({id: ['IN', ids]}).delete();
     return this.success({name: '删除成功!'});
   }
+
+  /**
+     * 获取当前商户下所有的商品分类
+     * @returns {Promise<*>}
+     */
+  async listAction() {
+    const restaurantId = this.user.restaurant_id;
+    const list = await this.model('dish_class').where({restaurant_id: restaurantId}).select();
+    return this.success(list);
+  }
 };

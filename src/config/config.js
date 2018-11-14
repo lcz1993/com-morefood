@@ -5,7 +5,7 @@ module.exports = {
   document_model_type: {2: '主题', 1: '目录', 3: '段落'}, // 文档模型配置 (文档模型核心配置，请勿更改)
   user_administrator: [1], // 数组格式，可以配置多个[1,2,3]
 
-  host: '127.0.0.1', // server host
+  host: '0.0.0.0', // server host
   workers: 0, // server workers num, if value is 0 then get cpus num | 服务器工作者号，如果值为0，则得到CPU 。
   createServer: undefined, // create server function | 创建服务器函数
   startServerTimeout: 3000, // before start server time | 在启动服务器时间之前
@@ -43,13 +43,17 @@ module.exports = {
   // 可以公开访问的Controller
   publicController: [
     // 格式为controller
-    'api/public'
+    'api/public',
+    'api/index'
   ],
 
   // 可以公开访问的Action
   publicAction: [
     // 格式为： controller+action
-    'api/address/getarea'
+    'api/address/getarea',
+    'api/restaurant/index',
+    'api/nature/index',
+    'api/restaurant/list'
 
   ],
   // 以下为腾讯云短信服务
