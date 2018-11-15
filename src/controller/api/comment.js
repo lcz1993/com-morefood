@@ -7,7 +7,7 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise.<*|PreventPromise|void|Promise>}
      */
   async postAction() {
-    let typeId = this.post('typeId');
+    let typeId = this.post('type_id');
     if (!typeId) {
       typeId = 0;
     }

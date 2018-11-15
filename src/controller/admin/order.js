@@ -26,9 +26,12 @@ module.exports = class extends think.cmswing.admin {
     }
     map.is_del = 0;
     map.type = 0;
-    const user = await this.session('userInfo');
-    if (parseInt(user.restaurant_id) !== 0) {
-      map.restaurant_id = user.restaurant_id;
+    try {
+      if (parseInt(this.user.restaurant_id) !== 0) {
+        map.restaurant_id = this.user.restaurant_id;
+      }
+    } catch (e) {
+      console.log(e);
     }
     // this.config("db.nums_per_page",20)
     const data = await this.model('order').where(map).page(this.get('page') || 1, 20).order('create_time DESC').countSelect();
@@ -425,6 +428,7 @@ module.exports = class extends think.cmswing.admin {
       const d = {
         id: order.id,
         title: '及时雨校园餐饮',
+        restaurant_id: restaurant.id,
         restaurant_name: restaurant.name,
         order_time: global.dateformat('Y-m-d H:i:s', order.create_time),
         send_time: global.dateformat('Y-m-d H:i:s', order.send_time),
@@ -436,7 +440,8 @@ module.exports = class extends think.cmswing.admin {
         user_tel: order.mobile,
         original_amount: global.formatCurrency(parseFloat(amount) + parseFloat(restaurant.send_money)),
         restaurant_tel: restaurant.contect_tel,
-        is_print: order.is_print
+        is_print: order.is_print,
+        print_no: order.print_no
       };
       orderArr.push(d);
     }

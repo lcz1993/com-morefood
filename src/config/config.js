@@ -54,7 +54,9 @@ module.exports = {
     'api/address/getarea',
     'api/restaurant/index',
     'api/nature/index',
-    'api/restaurant/list'
+    'api/restaurant/list',
+    'api/websocket/sendMsg',
+    'api/websocket/open'
 
   ],
   // 以下为腾讯云短信服务

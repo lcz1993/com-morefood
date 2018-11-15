@@ -12,6 +12,9 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     await this.model('selection').where({user_id: userId}).delete();
     for (const cart of cartArr) {
+      if (think.isEmpty(cart.id)) {
+        return this.fail('选择商品不能为空！');
+      }
       const res = await this.model('selection').add({
         user_id: userId,
         dish_id: cart.id,
@@ -31,6 +34,9 @@ module.exports = class extends think.cmswing.app {
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
     const cartArr = await this.model('selection').where({user_id: userId}).select();
+    if (cartArr.length == 0) {
+      return fail();
+    }
     const orderList = [];
     for (const food of cartArr) {
       const num = food.cnt_dish;
@@ -47,13 +53,14 @@ module.exports = class extends think.cmswing.app {
         const b = await this.model('ext_attachment_pic').find(f.image);
         f.image = b.path;
       }
+      const price = f.original_price == 0 ? f.old_price : f.original_price;
       f = {
         id: f.id,
         name: f.dish_name,
         num: num,
         image: f.dish_picture,
-        unit_price: f.original_price,
-        total_price: f.original_price * num
+        unit_price: price,
+        total_price: price * num
       };
       orderList.push(f);
     }
@@ -195,7 +202,6 @@ module.exports = class extends think.cmswing.app {
     const restaurant = await this.model('restaurant').find(order.restaurant_id);
     order.patable_freight = restaurant.send_money;
     order.real_freight = order.sendMoney;
-    // 此处判断用户第一次下单，第一次下单赠送果盘一份
     let res = '';
     if (!order.id) {
       order.id = null;
@@ -318,7 +324,6 @@ module.exports = class extends think.cmswing.app {
     if (!result) {
       return `<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付失败]]></return_msg></xml>`;
     }
-
     const orderModel = this.model('order');
     const orderInfo = await orderModel.getOrderByOrderSn(result.out_trade_no);
     if (think.isEmpty(orderInfo)) {
@@ -346,7 +351,7 @@ module.exports = class extends think.cmswing.app {
     const result = await WeixinSerivce.queryOrder(payInfo);
     if (result.trade_state == 'SUCCESS') {
       await await this.model('order').updataStatus(orderId);
-      await this.sendMsgAction();
+
       return this.success();
     } else {
       return this.fail();
