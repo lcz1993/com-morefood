@@ -6,7 +6,8 @@ module.exports = {
   common: {
     viewPath: path.join(think.ROOT_PATH, 'view'),
     sep: '_',
-    extname: '.html'
+    extname: '.html',
+    logger: msg => think.logger.info(msg)
   },
   nunjucks: {
     handle: nunjucks,

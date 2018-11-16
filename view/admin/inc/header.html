@@ -110,7 +110,7 @@
 
     </ul>
 </div>
-<script src="http://lib.baomitu.com/socket.io/2.0.1/socket.io.js"></script>
+<script src="/static/admin/js/socket/websocket.js"></script>
 
 <script language="javascript" type="text/javascript">
     const index=0;
@@ -296,10 +296,9 @@
             operaSupport: false
         });
     }
-    $(function () {
+    window.onload=function (){
         localRefresh();
-    })
-
+    }
     function localRefresh() {
         var count = $('#order_count').text();
         $.ajax({

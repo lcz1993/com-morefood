@@ -2,7 +2,7 @@
   "apps": [{
     "name": "MoreFood",
     "script": "production.js",
-    "cwd": "/Users/a1/Desktop/项目/及时雨/单店版功能完/MoreFood",
+    "cwd": "/Users/lcz/Desktop/项目/及时雨多店版小程序/单店版功能完/MoreFood",
     "exec_mode": "fork",
     "max_memory_restart": "1G",
     "autorestart": true,

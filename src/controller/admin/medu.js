@@ -74,6 +74,9 @@ module.exports = class extends think.cmswing.admin {
       } else {
         const restaurant = await this.model('restaurant').field(['id', 'name']).find(restaurantId);
         this.assign('restaurant', restaurant);
+        // 类别
+        const dishClassList = await this.model('dish_class').where({restaurant_id: restaurant.id}).select();
+        this.assign('dishClassList', dishClassList);
       }
       // 优惠券
       const discount = await this.model('discount').select();

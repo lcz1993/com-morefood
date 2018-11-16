@@ -163,6 +163,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group "  id="discount_2_max_count">
+                        <label class="col-sm-3 control-label">发放数量</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="max_count_2" value="{{data.max_count_2}}" class="input-sm form-control number" placeholder="发放数量">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group {%if data.type_id != 2 %}hide{%endif%}" id="discount_orgin_price">
                         <label class="col-sm-3 control-label">单品特价</label>
                         <div class="col-sm-9">
@@ -224,7 +234,7 @@
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col-md-8 ">
-                                    <input type="text" name="max_count" value="{{data.max_count}}" class="input-sm form-control number" placeholder="发放数量">
+                                    <input type="text" name="max_count" value="99999" value="{{data.max_count}}" class="input-sm form-control number" placeholder="发放数量">
                                 </div>
                             </div>
                         </div>
@@ -275,6 +285,8 @@
             $("#discount_orgin_price").removeClass('hide');
             $("#discount_5").addClass('hide');
             $("#discount_6").addClass('hide');
+            $("#discount_2_max_count").removeClass('hide');
+            $("#min_price_4").addClass('hide');
         }else if(parseInt(type) === 3){
             //下单立减
             $("#discount_1").addClass('hide');
@@ -290,6 +302,7 @@
             $("#discount_2").removeClass('hide');
             $("#discount_3").addClass('hide');
             $("#discount_orgin_price").addClass('hide');
+            $("#discount_2_max_count").addClass('hide');
             $("#min_price_4").removeClass('hide');
             $("#discount_5").addClass('hide');
             $("#discount_6").addClass('hide');
@@ -314,6 +327,7 @@
     function getDishClass() {
         $('dish_class_list').empty();
         var id = '{{data.medu_dish_class}}'
+        console.log(id);
         $.ajax({
             url:'/admin/dishclass/list',
             type:'get',
@@ -323,7 +337,7 @@
                     var dish = '';
                     for(var i in dishClassList){
                         var dishClass = dishClassList[i];
-                        if(id = dishClass.id){
+                        if(id == dishClass.id){
                             dish += '<option value="'+dishClass.id+'" selected>'+dishClass.name+'</option>';
                         }else{
                             dish += '<option value="'+dishClass.id+'">'+dishClass.name+'</option>';

@@ -212,6 +212,11 @@ module.exports = class extends think.cmswing.app {
     if (res) {
       for (const orderFood of orderList) {
         const f = await this.model('medu').find(orderFood.id);
+        if (f.num != null) {
+          await this.model('medu').where({id: f.id}).update({
+            num: f.num - orderFood.num
+          });
+        }
         let prom_goods = {
           id: orderFood.id,
           uid: userId,
@@ -232,6 +237,7 @@ module.exports = class extends think.cmswing.app {
           prom_goods: prom_goods
         };
         await this.model('order_goods').add(food);
+        this.model('discount').useCount(orderFood.id, order.restaurant_id, orderFood.num);
       }
       return this.success(res);
     } else {
@@ -342,16 +348,13 @@ module.exports = class extends think.cmswing.app {
     const WeixinSerivce = this.service('weixin', 'api');
     const orderInfo = await this.model('order').find(orderId);
     const openid = await this.model('wx_user').where({ id: orderInfo.user_id }).getField('openid', true);
-
     const payInfo = {
       openid: openid,
       out_trade_no: orderInfo.order_no
     };
-
     const result = await WeixinSerivce.queryOrder(payInfo);
     if (result.trade_state == 'SUCCESS') {
       await await this.model('order').updataStatus(orderId);
-
       return this.success();
     } else {
       return this.fail();

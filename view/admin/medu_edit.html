@@ -87,9 +87,24 @@
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 描述</label>
                                 <div class="col-sm-10">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="description" value="{{data.description}}" type="text" class="form-control number" data-required="true"></div>
+                                        <div class="col-md-12"><input name="description" value="{{data.description}}" type="text" class="form-control"></div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 描述不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 剩余数量</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="description" value="{{data.num}}" type="text" class="form-control number" >
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>不输入剩余数量则视为不限数量.</span>
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +114,7 @@
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 标识</label>
                                 <div class="col-sm-10">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="is_hot" value="{{data.is_hot}}" type="text" class="form-control" data-required="true"></div>
+                                        <div class="col-md-12"><input name="is_hot" value="{{data.is_hot}}" type="text" class="form-control"></div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>招牌菜请输入'招牌'，推荐菜请输入'推荐'.</span>
                                         </div>
@@ -112,7 +127,7 @@
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <textarea name="dish_desc" type="text" class="form-control" data-required="true">{{data.dish_desc}}</textarea>
+                                            <textarea name="dish_desc" type="text" class="form-control">{{data.dish_desc}}</textarea>
                                         </div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 简介不能为空.</span>

@@ -73,8 +73,10 @@ exports.logger = {
     level: 'ALL',
     absolute: true,
     pattern: '-yyyy-MM-dd',
+    maxLogSize: 50 * 1024, // 50M
     alwaysIncludePattern: true,
-    filename: path.join(think.ROOT_PATH, 'logs/app.log')
+    filename: path.join(think.ROOT_PATH, 'logs/app.log'),
+    logout: {}
   }
 };
 /**

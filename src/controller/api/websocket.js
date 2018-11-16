@@ -1,4 +1,4 @@
-module.exports = class extends think.cmswing.app {
+module.exports = class extends think.Controller {
   constructor(...arg) {
     console.log('constructor');
     super(...arg);

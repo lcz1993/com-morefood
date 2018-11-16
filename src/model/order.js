@@ -178,12 +178,18 @@ module.exports = class extends think.Model {
       pay_time: new Date().getTime()
     };
     const orderInfo = await this.find(orderId);
-    const foodList = await this.model('order_goods').where({order_id: orderId}).field('prom_goods').select();
+    const foodList = await this.model('order_goods').where({order_id: orderId}).select();
+    // 计算总销量
+    let count = 0;
     const foodArr = [];
     for (const item in foodList) {
-      const a = JSON.parse(foodList[item].prom_goods);
+      const food = foodList[item];
+      const a = JSON.parse(food.prom_goods);
+      count += a.qty;
+      await this.model('medu').where({id: food.goods_id}).increment({sell_count: a.qty});
       foodArr.push(a);
     }
+    await this.model('restaurant').where({id: orderInfo.restaurant_id}).increment({sales: count});
     const node = {
       orderId: orderId,
       foodList: foodArr
@@ -206,7 +212,7 @@ module.exports = class extends think.Model {
     start.setMilliseconds(0);
     const todayStartTime = Date.parse(start) / 1;
     console.log(todayStartTime); // Mon Dec 04 2017 00:00:00 GMT+0800 (中国标准时间)
-    const max_no = await this.model('order').where({
+    const max_no = await this.where({
       restaurant_id: orderInfo.restaurant_id,
       create_time: ['>', todayStartTime]
     }).max('print_no');
