@@ -7,7 +7,7 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise.<*|PreventPromise|void|Promise>}
      */
   async postAction() {
-    let typeId = this.post('typeId');
+    let typeId = this.post('type_id');
     if (!typeId) {
       typeId = 0;
     }
@@ -41,6 +41,12 @@ module.exports = class extends think.cmswing.app {
     }
     await this.model('order').where({id: orderGoodsId}).update({
       status: 5
+    });
+    const yes = await this.model('comment').where({value_id: valueId, type_id: 0}).count();
+    const count = await this.model('comment').where({value_id: valueId}).count();
+    const score = yes / count / 2 * 10;
+    await this.model('restaurant').where({id: valueId}).update({
+      score: score
     });
     if (insertId) {
       return this.success('评论添加成功');

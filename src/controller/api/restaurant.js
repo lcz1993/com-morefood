@@ -59,11 +59,28 @@ module.exports = class extends think.cmswing.app {
     }
     const dishClassArr = await this.model('dish_class').order('sort ASC').where({restaurant_id: restaurant_id}).select();
     const goods = [];
-    for (const dishClass of dishClassArr) {
-      const dishClassId = dishClass.id;
-      const meduArr = await this.model('medu').where({dish_class: dishClassId}).select();
-      const foods = [];
-      for (const medu of meduArr) {
+    // 先添加单品特价商品
+    const meduIds = await this.model('discount').where({
+      restaurant_id: restaurant_id,
+      is_show: 0,
+      status: 0,
+      type_id: 2,
+      start_time: ['<', new Date().getTime()],
+      end_time: ['>', new Date().getTime()]
+    }).select();
+    console.log(meduIds);
+    if (meduIds.length > 0) {
+      for (const i in meduIds) {
+        const med = meduIds[i];
+        if (med.max_count <= med.use_count) {
+          global.removeByValue(meduIds, med);
+        }
+      }
+      console.log(meduIds);
+      const fs = [];
+      for (const i in meduIds) {
+        const med = meduIds[i];
+        const medu = await this.model('medu').find(med.medu_id);
         if (medu.dish_picture) {
           const b = await this.model('ext_attachment_pic').find(medu.dish_picture);
           medu.dish_picture = b.path;
@@ -86,6 +103,62 @@ module.exports = class extends think.cmswing.app {
           image: medu.image,
           desc: medu.dish_desc,
           is_stop: medu.is_stop
+        };
+        fs.push(f);
+      }
+      const ag = {
+        id: 0,
+        name: '今日特价',
+        type: -1,
+        desc: '今日特价商品',
+        foods: fs
+      };
+      goods.push(ag);
+    }
+    // 再添加正常分类
+    for (const dishClass of dishClassArr) {
+      const dishClassId = dishClass.id;
+      const meduArr = await this.model('medu').where({dish_class: dishClassId}).select();
+      const foods = [];
+      for (const medu of meduArr) {
+        if (medu.dish_picture) {
+          const b = await this.model('ext_attachment_pic').find(medu.dish_picture);
+          medu.dish_picture = b.path;
+        }
+        if (medu.image) {
+          const c = await this.model('ext_attachment_pic').find(medu.image);
+          medu.image = c.path;
+        }
+        let num = '';
+        if (medu.is_stop == 0) {
+          if (medu.num == null) {
+            num = '该商品不限量';
+          } else {
+            if (medu.num > 0) {
+              num = '剩余' + medu.num;
+            } else {
+              medu.is_stop == 1;
+            }
+          }
+        } else {
+          num = '该商品已下架';
+        }
+        const f = {
+          id: medu.id,
+          name: medu.dish_name,
+          price: medu.original_price,
+          oldPrice: medu.old_price,
+          description: medu.description,
+          sellCount: medu.sell_count,
+          Count: 0,
+          rating: medu.rating,
+          info: medu.dish_desc,
+          icon: medu.dish_picture,
+          image: medu.image,
+          desc: medu.dish_desc,
+          is_stop: medu.is_stop,
+          is_hot: medu.is_hot,
+          num: num
         };
         foods.push(f);
       }

@@ -24,9 +24,12 @@ module.exports = class extends think.cmswing.admin {
     if (this.get('keyword')) {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
-    const user = await this.session('userInfo');
-    if (parseInt(user.restaurant_id) !== 0) {
-      map.restaurant_id = user.restaurant_id;
+    try {
+      if (parseInt(this.user.restaurant_id) !== 0) {
+        map.restaurant_id = this.user.restaurant_id;
+      }
+    } catch (e) {
+      console.log('请登录');
     }
     const list = await this.model('discount').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     for (const discount of list.data) {
@@ -71,6 +74,8 @@ module.exports = class extends think.cmswing.admin {
             original_price: data.medu_origin_price
           };
           await this.model('medu').update(medu);
+          data.max_count = data.max_count_2;
+
           break;
         // 下单立减
         case 3:
@@ -94,7 +99,6 @@ module.exports = class extends think.cmswing.admin {
         default:
           return this.fail('添加失败!');
       }
-      data.max_count = 9999999;
       const res = await this.model('discount').add(data);
       if (res) {
         return this.success({name: '添加成功！'});
@@ -135,8 +139,9 @@ module.exports = class extends think.cmswing.admin {
           const medu = {
             id: data.medu_id,
             original_price: data.medu_origin_price
-          }; 0;
+          };
           await this.model('medu').update(medu);
+          data.max_count = data.max_count_2;
           break;
           // 下单立减
         case 3:
@@ -170,7 +175,7 @@ module.exports = class extends think.cmswing.admin {
       const id = await this.get('id');
       const data = await this.model('discount').find(id);
       data.start_time = global.dateformat('Y-m-d H:i:s', data.start_time);
-      data.end_time = global.dateformat('Y-m-d H:i:s', data.start_time);
+      data.end_time = global.dateformat('Y-m-d H:i:s', data.end_time);
       const type_id = parseInt(data.type_id);
       data.type_id = type_id;
       let meduId = '';
@@ -186,6 +191,7 @@ module.exports = class extends think.cmswing.admin {
           const a = await this.model('medu').field(['original_price', 'dish_class']).find(meduId);
           data.medu_origin_price = a.original_price;
           data.medu_dish_class = a.dish_class;
+          data.max_count_2 = data.max_count;
           break;
           // 下单立减
         case 3:

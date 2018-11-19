@@ -73,8 +73,10 @@ exports.logger = {
     level: 'ALL',
     absolute: true,
     pattern: '-yyyy-MM-dd',
+    maxLogSize: 50 * 1024, // 50M
     alwaysIncludePattern: true,
-    filename: path.join(think.ROOT_PATH, 'logs/app.log')
+    filename: path.join(think.ROOT_PATH, 'logs/app.log'),
+    logout: {}
   }
 };
 /**
@@ -93,10 +95,10 @@ exports.websocket = {
     path: '/socket.io', // 默认 '/socket.io'
     adapter: null, // 默认无 adapter
     messages: [{
-      open: '/admin/websocket/open', // 建立连接时处理对应到 websocket Controller 下的 open Action
-      close: '/admin/websocket/close', // 关闭连接时处理的 Action
-      addUser: '/admin/websocket/addUser', // addUser 事件处理的 Action
-      sendMsg: '/admin/websocket/sendMsg' // addUser 事件处理的 Action
+      open: '/api/websocket/open', // 建立连接时处理对应到 websocket Controller 下的 open Action
+      close: '/api/websocket/close', // 关闭连接时处理的 Action
+      addUser: '/api/websocket/addUser', // addUser 事件处理的 Action
+      sendMsg: '/api/websocket/sendMsg' // addUser 事件处理的 Action
     }]
   }
 };

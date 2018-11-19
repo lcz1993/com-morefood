@@ -110,109 +110,66 @@
 
     </ul>
 </div>
-<script src="http://lib.baomitu.com/socket.io/2.0.1/socket.io.js"></script>
+<script src="/static/admin/js/socket/websocket.js"></script>
 
 <script language="javascript" type="text/javascript">
     const index=0;
-
-    var socket = io('http://127.0.0.1:8080?index=0');
-    socket.on('opend', function (data) {
-        console.log('opend:', data);
-    });
-
-    socket.on('joined', function (data) {
-        console.log('joined:', data);
-    });
-
-    socket.on('add', function (data) {
-        console.log(data)
-        if(data.to==0){
-            let msg=$('.msg').html();
-            msg += '<div style="text-align: left">'+data.username+'：'+data.msg+'</div>';
-            $('.msg').html(msg);
+    var socket = io('http://192.168.0.109:8080?index=0');
+    socket.on('print', function (data) {
+        console.log(data);
+        var restaurant_id = data.order.restaurant_id;
+        var restaurantId = '{{restaurant_id}}';
+        if(restaurantId == restaurant_id){
+            upstatus(data.notifications);
+            orderPrint(data.order);
+            print();
         }
     });
 
-    function localRefresh() {
-        var count = $('#order_count').text();
-        $.ajax({
-            url:'/admin/order/getorder',
-            type:'post',
-            dataType:'json',
-            success:function (res) {
-                if(res.errno === 0){
-                    var data = res.data.notifications;
-                    $('#total_count').text(data.count);
-                    $('#order_count').text(data.count);
-                    $('#order_div').empty();
-                    $('#print-ul').empty();
-                    if(data.count > 0){
-                        var a = '';
-                        a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
-                        a+='<span class="pull-left thumb-sm text-center">';
-                        a+='<i class="fa '+data.data.ico+' fa-1x text-success"></i>';
-                        a+='</span>';
-                        a+='<span class="media-body block m-b-none" id="order_info">'+data.data.info;
-                        a+='</span>';
-                        a+='</a>';
-                        var $a = $(a);
-                        $('#order_div').append($a);
-                        var list = res.data.list;
-                        var number = 0;
-                        for(var i in list){
-                            var b = list[i];
-                            if(b.is_print != 1){
-                                number++;
-                                orderPrint(b);
-                                $.ajax({
-                                    url:'/admin/order/printUp?id='+b.id,
-                                    type:'post',
-                                    dataType:'json',
-                                    success:function () {
-                                    }
-                                });
-                            }
-                        }
-                        if(number>0){
-                            print();
-                            // if(!music.play()){music.play();}//响铃
-                        }
-                    }else{
-                        var a = '';
-                        a+='<a href="#" class="media list-group-item" id="no_order">';
-                        a+='<span class="media-body block m-b-none">'+'没有订单';
-                        a+='</span>';
-                        a+='</a>';
-                        var $a = $(a);
-                        $('#order_div').append($a);
-                    }
-                    // if(data.count>0){
-                    //     if(!music.play()){music.play();}//响铃
-                    // }
-                }
-            },
-            fail:function () {
+    socket.on('opend', function (data) {
+        console.log(data);
+    });
 
-            }
+    socket.on('joined', function (data) {
+        console.log(data);
+    });
 
-        })
-    }
-    // TODO
-    // setInterval(localRefresh,3000);
 
-    function print(){
-        $("#print-div").jqprint({
-            debug: false,
-            importCSS: false, //将此属性改为false；直接在style中写入样式即可
-            printContainer: true,
-            operaSupport: false
-        });
+    function upstatus(data) {
+        console.log(data);
+        $('#total_count').text(data.count);
+        $('#order_count').text(data.count);
+        $('#order_div').empty();
+        $('#print-ul').empty();
+        if(data.count > 0){
+            console.log(data.count);
+            var a = '';
+            a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
+            a+='<span class="pull-left thumb-sm text-center">';
+            a+='<i class="fa '+data.data.ico+' fa-1x text-success"></i>';
+            a+='</span>';
+            a+='<span class="media-body block m-b-none" id="order_info">'+data.data.info;
+            a+='</span>';
+            a+='</a>';
+            var $a = $(a);
+            console.log($a);
+            $('#order_div').append($a);
+            console.log($('#order_div'));
+
+        }else{
+            var a = '';
+            a+='<a href="#" class="media list-group-item" id="no_order">';
+            a+='<span class="media-body block m-b-none">'+'没有订单';
+            a+='</span>';
+            a+='</a>';
+            var $a = $(a);
+            $('#order_div').append($a);
+        }
     }
     function orderPrint(data){
-        console.log(data);
         var li = '';
         li+='<li>';
-        li+='<h4 class="print-title" style="margin: 0;width: 50mm;">'+data.title+'<span style="float: right;font-size: 5px;">存根</span></h4>';
+        li+='<h4 class="print-title" style="margin: 0;width: 50mm;">'+data.title+'<span style="float: right;font-size: 5px;">存根'+data.print_no+'</span></h4>';
         li+='<p class="print-create-time" style="text-align: left;font-size: 1px;margin: 0;">下单时间:'+ data.order_time +'</p>';
         li+='<table width="45mm" style="width: 100%">';
         li+='<thead >';
@@ -330,4 +287,82 @@
         var $li = $(li);
         $('#print-ul').append($li);
     }
+
+    function print(){
+        $("#print-div").jqprint({
+            debug: false,
+            importCSS: false, //将此属性改为false；直接在style中写入样式即可
+            printContainer: true,
+            operaSupport: false
+        });
+    }
+    window.onload=function (){
+        localRefresh();
+    }
+    function localRefresh() {
+        var count = $('#order_count').text();
+        $.ajax({
+            url:'/admin/order/getorder',
+            type:'post',
+            dataType:'json',
+            success:function (res) {
+                if(res.errno === 0){
+                    var data = res.data.notifications;
+                    $('#total_count').text(data.count);
+                    $('#order_count').text(data.count);
+                    $('#order_div').empty();
+                    $('#print-ul').empty();
+                    if(data.count > 0){
+                        var a = '';
+                        a+='<a href="'+data.data.url+'" class="media list-group-item" id="order_url">';
+                        a+='<span class="pull-left thumb-sm text-center">';
+                        a+='<i class="fa '+data.data.ico+' fa-1x text-success"></i>';
+                        a+='</span>';
+                        a+='<span class="media-body block m-b-none" id="order_info">'+data.data.info;
+                        a+='</span>';
+                        a+='</a>';
+                        var $a = $(a);
+                        $('#order_div').append($a);
+                        var list = res.data.list;
+                        var number = 0;
+                        for(var i in list){
+                            var b = list[i];
+                            if(b.is_print != 1){
+                                number++;
+                                orderPrint(b);
+                                $.ajax({
+                                    url:'/admin/order/printUp?id='+b.id,
+                                    type:'post',
+                                    dataType:'json',
+                                    success:function () {
+                                    }
+                                });
+                            }
+                        }
+                        if(number>0){
+                            print();
+                            // if(!music.play()){music.play();}//响铃
+                        }
+                    }else{
+                        var a = '';
+                        a+='<a href="#" class="media list-group-item" id="no_order">';
+                        a+='<span class="media-body block m-b-none">'+'没有订单';
+                        a+='</span>';
+                        a+='</a>';
+                        var $a = $(a);
+                        $('#order_div').append($a);
+                    }
+                    // if(data.count>0){
+                    //     if(!music.play()){music.play();}//响铃
+                    // }
+                }
+            },
+            fail:function () {
+
+            }
+
+        })
+    }
+    // TODO
+    // setInterval(localRefresh,3000);
 </script>
