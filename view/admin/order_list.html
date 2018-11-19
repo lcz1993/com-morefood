@@ -12,46 +12,60 @@
                                 <i data-title="订单状态为已审核时才能发货，审核的订单才能进入执行中。" data-placement="bottom" data-toggle="tooltip" class="fa fa-info-sign text-muted" data-original-title="" title=""><i class="fa fa-question-circle"></i></i>
                             </header>
                             <div class="row wrapper">
+                                <div class="col-sm-12">
+                                    <div class="search-form">
+                                        <div class="col-sm-3 m-b-xs">
+                                            <div class="btn-group">
 
-                                <div class="col-sm-9 m-b-xs">
-                                    <div class="btn-group">
+                                                <a class="btn btn-sm btn-info {%if status == null %}active{%endif%}" href="/admin/order/list">
+                                                    全部订单
+                                                </a>
+                                                <a class="btn btn-sm btn-info {%if status == 2 %}active{%endif%}" href="/admin/order/list/?status=2">
+                                                    未审核
+                                                </a>
+                                                <a class="btn btn-sm btn-info {%if status == 3 %}active{%endif%}" href="/admin/order/list/?status=3">
+                                                    执行中
+                                                </a>
 
-                                        <a class="btn btn-sm btn-info {%if status == null %}active{%endif%}" href="/admin/order/list">
-                                           全部订单
-                                        </a>
-                                        <a class="btn btn-sm btn-info {%if status == 2 %}active{%endif%}" href="/admin/order/list/?status=2">
-                                           未审核
-                                        </a>
-                                        <a class="btn btn-sm btn-info {%if status == 3 %}active{%endif%}" href="/admin/order/list/?status=3">
-                                           执行中
-                                        </a>
-                                    </div>
-                                    {%if status == 2 %}
-                                        <a href="/admin/order/auditArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量审核</a>
-                                    {%endif%}
-                                    {%if status == 3 %}
-                                        <a href="/admin/order/shipArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量发货</a>
-                                    {%endif%}
-                                </div>
-
-                                <div class="col-sm-3">
-                                    <div class="input-group pull-right search-form">
-                                        <input type="text" class="input-sm form-control" name="q" placeholder="订单号|会员ID|收货人|收货人电话"
-                                               value="{{controller.get('q')}}">
-                                        <span class="input-group-btn">
+                                            </div>
+                                            {%if status == 2 %}
+                                            <a href="/admin/order/auditArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量审核</a>
+                                            {%endif%}
+                                            {%if status == 3 %}
+                                            <a href="/admin/order/shipArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量发货</a>
+                                            {%endif%}
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="hidden" value="{{controller.get('restaurant_id')}}" id="restaurant_id" name="restaurant_id">
+                                            <label class="control-label">店铺搜索:</label>
+                                            <select name="selectAge" id="selectAge" class="form-group input-sm" onchange="selectRes()">
+                                                <option value="" selected>-=-请选择-=-</option>
+                                                {% for item in restaurantArr %}
+                                                <option value="{{item.id}}" {% if controller.get('restaurant_id') == item.id %} selected {%endif%}>{{item.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <div class="input-group pull-right ">
+                                                <input type="text" class="input-sm form-control" name="q" placeholder="订单号|会员ID|收货人|收货人电话"
+                                                       value="{{controller.get('q')}}">
+                                                <span class="input-group-btn">
                         <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/order/list/{%if status %}?status=2{% endif %}">搜索</button>
                       </span>
-                                    </div>
-                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                        </div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover b-t b-light">
                                     <thead>
                                     <tr>
                                         <th style="width:20px;"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
+                                        <th>编码</th>
                                         <th>订单号</th>
                                         <th>订单总额</th>
-                                        <th>会员账号</th>
+                                        <th>详细信息</th>
                                         <th>收货人</th>
                                         <th>收货人电话</th>
                                         <!--<th>支付方式</th>-->
@@ -66,16 +80,15 @@
                                     {% for item in list %}
                                     <tr >
                                         <td><label class="checkbox m-n i-checks"><input class="ids" type="checkbox" name="ids" value="{{item.id}}"><i></i></label></td>
+                                        <td>{{item.print_no}}</td>
                                          <td>{{item.order_no}}</td>
-
                                         <td>￥{{item.order_amount|formatCurrency}}</td>
-                                        <td>{{item.user_id|get_wxname}}</td>
+                                        <td>{{item.prom_goods}}</td>
                                         <td>{{item.accept_name}}</td>
                                         <td>{{item.mobile}}</td>
                                         <!--<td>{{item.channel}}</td>-->
                                         <td > {%if item.pay_status == 0%}<span class="text-muted">未支付</span>{%else%}<span class="text-success">已支付</span>{%endif%}</td>
                                         <td >{%if item.delivery_status == 0%}<span class="text-muted">未发货</span> {%else%}<span class="text-success">已发货</span> {%endif%}</td>
-
                                         <td class="text-danger">
                                            {%if item.status ==2 %}<span class="text-muted">等待审核 </span>
                                             {%elif item.status ==3%}<span class="text-success">已审核</span>
@@ -146,27 +159,34 @@
 <script src="/static/admin/js/parsley/parsley.extend.js"></script>
 <script>
     $(function () {
-      //搜索功能
-      $("#search").click(function(){
-        var url = $(this).attr('url');
-        var query  = $('.search-form').find('input').serialize();
-        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
-        query = query.replace(/^&/g,'');
-        if( url.indexOf('?')>0 ){
-          url += '&' + query;
-        }else{
-          url += '?' + query;
-        }
-        window.location.href = url;
-      });
+        //搜索功能
+        $("#search").click(function(){
+            var url = $(this).attr('url');
+            var query  = $('.search-form').find('input').serialize();
+            query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+            query = query.replace(/^&/g,'');
+            if( url.indexOf('?')>0 ){
+                url += '&' + query;
+            }else{
+                url += '?' + query;
+            }
+            window.location.href = url;
+        });
 
-      //回车自动提交
-      $('.search-form').find('input').keyup(function(event){
-        if(event.keyCode===13){
-          $("#search").click();
-        }
-      });
+        //回车自动提交
+        $('.search-form').find('input').keyup(function(event){
+            if(event.keyCode===13){
+                $("#search").click();
+            }
+        });
 
     })
+
+    function selectRes(){
+        var restaurant_id = $('#selectAge option:selected').val();
+        $('#restaurant_id').val(restaurant_id);
+        console.log(restaurant_id);
+    }
+
 </script>
 {% endblock%}

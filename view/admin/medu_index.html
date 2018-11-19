@@ -12,17 +12,41 @@
 
         <section class="panel panel-default">
             <div class="row wrapper">
-                <div class="col-sm-9 m-b-xs">
-                    <a href="/admin/medu/add" class="btn  btn-info" >新增</a>
-                    <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/medu/del">删除</a>
-                </div>
-                <div class="col-sm-3">
-                    <div class="input-group pull-right search-form">
-                        <input type="text" class="input-sm form-control" name="keyword" placeholder="请输入关键字"
-                               value="{{controller.get('keyword')}}">
-                        <span class="input-group-btn">
-                        <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/medu/index">搜索</button>
-                      </span>
+                <div class="col-sm-12">
+                    <div class="col-sm-2 m-b-xs">
+                        <a href="/admin/medu/add" class="btn  btn-info" >新增</a>
+                        <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/medu/del">删除</a>
+                    </div>
+                    <div class="search-form">
+                        <div class="col-sm-3">
+                            <input type="hidden" value="{{controller.get('restaurant_id')}}" id="restaurant_id" name="restaurant_id">
+                            <label class="control-label">店铺搜索:</label>
+                            <select name="selectAge" id="selectAge" class="form-group input-sm" onchange="selectRes()">
+                                <option value="" selected>-=-请选择-=-</option>
+                                {% for item in restaurantArr %}
+                                <option value="{{item.id}}" {% if controller.get('restaurant_id') == item.id %} selected {%endif%}>{{item.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="hidden" value="{{controller.get('id')}}" id="id" name="id">
+                            <label class="control-label">类别搜索:</label>
+                            <select name="dish_name" id="dish_name" class="form-group input-sm" onchange="selectRas()">
+                                <option value="" selected>-=-请选择-=-</option>
+                                {% for item in dishArr %}
+                                <option value="{{item.id}}" {% if controller.get('id') == item.id %} selected {%endif%}>{{item.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group pull-right search-form">
+                            <input type="text" class="input-sm form-control" name="keyword" placeholder="请输入关键字"
+                                   value="{{controller.get('keyword')}}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/medu/index">搜索</button>
+                            </span>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,8 +111,9 @@
 
 
 {% endblock %}
-
 {% block script %}
+<script src="/static/admin/js/datepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="/static/admin/js/datepicker/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript"></script>
 <script>
     //搜索功能
     $("#search").click(function(){
@@ -110,6 +135,20 @@
             $("#search").click();
         }
     });
+
+    function selectRes(){
+        var restaurant_id = $('#selectAge option:selected').val();
+        $('#restaurant_id').val(restaurant_id);
+        console.log(restaurant_id);
+    }
+
+    function selectRas(){
+        var id = $('#dish_name option:selected').val();
+        $('#id').val(id);
+        console.log(id);
+    }
+
+
     function upClose(close,id){
 
         $.ajax({
