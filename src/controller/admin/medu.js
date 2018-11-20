@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq,no-undef,no-console,indent,camelcase,no-unused-vars,semi,no-trailing-spaces,prefer-const,space-before-blocks */
 // 菜单列表
 module.exports = class extends think.cmswing.admin {
   constructor(ctx) {
@@ -21,35 +20,35 @@ module.exports = class extends think.cmswing.admin {
   async indexAction() {
     // auto render template file ad_index.htm
     // 搜索
-      const restaurant_id = this.get('restaurant_id');
-      const restautantId = this.user.restaurant_id;
-      const id = this.get('id');
-      let restaurantArr = [];
+    const restaurant_id = this.get('restaurant_id');
+    const restautantId = this.user.restaurant_id;
+    const id = this.get('id');
+    let restaurantArr = [];
     const map = {};
     let dishArr = [];
-    if (!think.isEmpty(id)){
+    if (!think.isEmpty(id)) {
       map.dish_class = id;
     }
     if (this.get('keyword')) {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
-      if (!think.isEmpty(restaurant_id)) {
-          map.restaurant_id = restaurant_id;
-      }
-      if (restautantId != 0) {
-          map.restaurant_id = restautantId;
-          restaurantArr = await this.model('restaurant').where({id: restautantId}).select();
-          dishArr = await this.model('dish_class').where({restaurant_id: restautantId}).select();
-      } else {
-          restaurantArr = await this.model('restaurant').select();
-          dishArr = await this.model('dish_class').select();
-      }
+    if (!think.isEmpty(restaurant_id)) {
+      map.restaurant_id = restaurant_id;
+    }
+    if (restautantId != 0) {
+      map.restaurant_id = restautantId;
+      restaurantArr = await this.model('restaurant').where({id: restautantId}).select();
+      dishArr = await this.model('dish_class').where({restaurant_id: restautantId}).select();
+    } else {
+      restaurantArr = await this.model('restaurant').select();
+      dishArr = await this.model('dish_class').select();
+    }
     try {
       if (parseInt(this.user.restaurant_id) !== 0) {
         map.restaurant_id = this.user.restaurant_id;
       }
     } catch (e) {
-      console.log('error');
+      console.log(e);
     }
     const list = await this.model('medu').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     for (const medu of list.data) {
@@ -65,14 +64,13 @@ module.exports = class extends think.cmswing.admin {
       }
       if (medu.dish_class) {
         medu.dish_class = await this.model('dish_class').find(medu.dish_class);
-          console.log(medu.dish_class);
       }
     }
     const html = this.pagination(list);
     this.assign('list', list);
-      this.assign('restaurantArr', restaurantArr);
-      this.assign('dishArr', dishArr);
-      this.assign('pagerData', html); // 分页展示使用
+    this.assign('restaurantArr', restaurantArr);
+    this.assign('dishArr', dishArr);
+    this.assign('pagerData', html); // 分页展示使用
     this.meta_title = '菜单列表';
     return this.display();
   }
