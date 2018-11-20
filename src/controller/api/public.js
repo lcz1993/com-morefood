@@ -52,7 +52,6 @@ module.exports = class extends think.cmswing.app {
      */
   async loginAction() {
     const code = this.post('code');
-    // const tel = this.post('tel');
     const fullUserInfo = this.post('userInfo');
     const userInfo = fullUserInfo.userInfo;
     let clientIp = this.service('express', 'api').check_document_position(this.ctx.req); // 暂时不记录 ip
@@ -131,5 +130,43 @@ module.exports = class extends think.cmswing.app {
     }
 
     return this.success({ token: sessionKey, userInfo: newUserInfo });
+  }
+  /**
+     * 获取用户tel
+     * @returns {Promise<*>}
+     */
+  async telAction() {
+    const code = this.post('code');
+    const encryptedData = this.post('encryptedData');
+    const iv = this.post('iv');
+    // 获取openid
+    const options = {
+      method: 'GET',
+      url: 'https://api.weixin.qq.com/sns/jscode2session',
+      qs: {
+        grant_type: 'authorization_code',
+        js_code: code,
+        secret: think.config('weixin.secret'),
+        appid: think.config('weixin.appid')
+      }
+    };
+    let sessionData = await rp(options);
+    sessionData = JSON.parse(sessionData);
+    if (!sessionData.session_key) {
+      console.log(sessionData.session_key);
+      return this.fail(1, '出错');
+    }
+    const WXBizDataDrypt = this.service('WXBizDataDrypt', think.config('weixin.appid'), sessionData.session_key);
+    const data = WXBizDataDrypt.decryptData(encryptedData, iv);
+    const userInfo = {
+      id: this.getLoginUserId(),
+      tel: data.phoneNumber
+    };
+    const res = await this.model('wx_user').where({id: userInfo.id}).update(userInfo);
+    let newUserInfo = {};
+    if (res) {
+      newUserInfo = await this.model('wx_user').field(['id', 'nickname', 'sex', 'headimgurl', 'tel']).where({ id: userInfo.id }).find();
+    }
+    return this.success(newUserInfo);
   }
 };

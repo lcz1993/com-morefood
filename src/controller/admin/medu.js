@@ -21,7 +21,12 @@ module.exports = class extends think.cmswing.admin {
     // auto render template file ad_index.htm
     // 搜索
     const restaurant_id = this.get('restaurant_id');
-    const restautantId = this.user.restaurant_id;
+    let restautantId = '';
+    try {
+      restautantId = this.user.restaurant_id;
+    } catch (e) {
+      console.log(e);
+    }
     const id = this.get('id');
     let restaurantArr = [];
     const map = {};

@@ -90,13 +90,13 @@ module.exports = class extends think.cmswing.app {
       commList.push(comm);
     }
     commentList.data = commList;
-    const manyi = await this.model('comment').where({type_id: 0}).count('id');
+    const manyi = await this.model('comment').where({value_id: id, type_id: 0}).count('id');
     commentList.manyi = manyi;
-    const bumanyi = await this.model('comment').where({type_id: 1}).count('id');
+    const bumanyi = await this.model('comment').where({value_id: id, type_id: 1}).count('id');
     commentList.bumanyi = bumanyi;
-    const youtu = await this.model('comment').where({status: 1}).count('id');
+    const youtu = await this.model('comment').where({value_id: id, status: 1}).count('id');
     commentList.youtu = youtu;
-    const quanbu = await this.model('comment').where().count('id');
+    const quanbu = await this.model('comment').where({value_id: id}).count('id');
     commentList.quanbu = quanbu;
     return this.success(commentList);
   }

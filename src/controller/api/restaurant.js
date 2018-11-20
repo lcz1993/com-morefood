@@ -68,7 +68,6 @@ module.exports = class extends think.cmswing.app {
       start_time: ['<', new Date().getTime()],
       end_time: ['>', new Date().getTime()]
     }).select();
-    console.log(meduIds);
     if (meduIds.length > 0) {
       for (const i in meduIds) {
         const med = meduIds[i];
@@ -102,7 +101,8 @@ module.exports = class extends think.cmswing.app {
           icon: medu.dish_picture,
           image: medu.image,
           desc: medu.dish_desc,
-          is_stop: medu.is_stop
+          is_stop: medu.is_stop,
+          num: '第一份特价'
         };
         fs.push(f);
       }
@@ -146,7 +146,7 @@ module.exports = class extends think.cmswing.app {
         const f = {
           id: medu.id,
           name: medu.dish_name,
-          price: medu.original_price,
+          price: medu.original_price ? medu.original_price : '',
           oldPrice: medu.old_price,
           description: medu.description,
           sellCount: medu.sell_count,

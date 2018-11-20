@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "co-wechat-api": "^3.7.0",
+    "crypto": "^1.0.1",
     "gt3-sdk": "^2.0.0",
     "jimp": "^0.2.28",
     "jsonwebtoken": "^8.0.0",
@@ -35,10 +36,10 @@
     "think-session-file": "^1.0.6",
     "think-view": "^1.0.11",
     "think-view-nunjucks": "^1.0.7",
-    "think-wechat": "^1.1.0",
-    "thinkjs": "^3.2.8",
     "think-websocket": "^1.0.3",
     "think-websocket-socket.io": "^1.0.2",
+    "think-wechat": "^1.1.0",
+    "thinkjs": "^3.2.8",
     "weapp.socket.io": "^2.0.1",
     "weixinpay": "^1.0.12"
   },
