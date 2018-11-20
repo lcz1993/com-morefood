@@ -1,4 +1,4 @@
-/* eslint-disable indent,no-unused-vars,camelcase,keyword-spacing,eqeqeq,space-before-blocks,key-spacing,no-undef,standard/object-curly-even-spacing,brace-style,no-eval,no-multi-spaces,quotes,no-trailing-spaces,no-multiple-empty-lines,space-infix-ops,no-irregular-whitespace */
+/* eslint-disable indent,no-unused-vars,camelcase,keyword-spacing,eqeqeq,space-before-blocks,key-spacing,no-undef,standard/object-curly-even-spacing,brace-style,no-eval,no-multi-spaces,quotes,no-trailing-spaces,no-multiple-empty-lines,space-infix-ops,no-irregular-whitespace,spaced-comment */
 module.exports = class extends think.cmswing.admin {
   constructor(ctx) {
     super(ctx); // 调用父级的 constructor 方法，并把 ctx 传递进去
@@ -546,6 +546,7 @@ module.exports = class extends think.cmswing.admin {
      * 批量发货
    *
      */
+  //判断是否配送
   async shipArrAction() {
     const ids = this.para('ids');
     if (think.isEmpty(ids)) {
