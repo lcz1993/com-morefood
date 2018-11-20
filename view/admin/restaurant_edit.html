@@ -3,6 +3,11 @@
 <!--<link rel="stylesheet" href="/static/js/slider/slider.css" type="text/css" />-->
 <link rel="stylesheet" href="/static/admin/js/chosen/chosen.css" type="text/css" />
 <link rel="stylesheet" href="/static/admin/js/datepicker/bootstrap-datetimepicker.min.css" type="text/css">
+<style>
+    .display{
+        display:block;
+    }
+</style>
 <script src="/static/admin/js/jquery.min.js"></script>
 {% endblock %}
 {% block content %}
@@ -65,6 +70,18 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 是否配送</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="radio" name="is_send"  value="0" {%if data.is_send == 0 %}checked{% endif %} onclick="display()">配送
+                                            <input name="is_send" type="radio" value="1"  {%if data.is_send == 1 %}checked{% endif %} onclick="display()">不配送
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 消费情况</label>
@@ -118,6 +135,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="display" id="display">
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 起送价格(元)</label>
@@ -153,6 +172,7 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -287,4 +307,15 @@
 <script src="/static/admin/js/parsley/parsley.extend.js"></script>
 <script src="/static/admin/js/datepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="/static/admin/js/datepicker/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript"></script>
+<script>
+    function display() {
+        var is_send = $('input[name="is_send"]:checked').val();
+        if (is_send == 0) {
+            $("#display").css("display", "block");
+        }
+        else {
+            $("#display").css("display", "none");
+        }
+    }
+</script>
 {% endblock %}

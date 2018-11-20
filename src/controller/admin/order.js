@@ -49,12 +49,10 @@ module.exports = class extends think.cmswing.admin {
           const  id = item.id;
           const a = await this.model('order_goods').where({order_id:id}).countSelect();
           let str = '';
-          console.log(a.data);
           for (const b of a.data){
               const data = JSON.parse(b.prom_goods);
                   str += data.title + '(' + data.qty + '份￥' + '),';
               item.prom_goods = str;
-              console.log(str);
              }
       }
       const html = this.pagination(list);
@@ -67,58 +65,6 @@ module.exports = class extends think.cmswing.admin {
           return this.display();
       }
 
- // // 订单列表
- //    async listAction() {
- //        const status = this.get('status');
- //            const restaurant_id = this.get('restaurant_id');
- //            const restautantId = this.user.restaurant_id;
- //        const map = {};
- //        let restaurantArr = [];
- //            if (!think.isEmpty(restaurant_id)) {
- //                map.restaurant_id = restaurant_id;
- //            }
- //            if (restautantId != 0) {
- //                map.restaurant_id = restautantId;
- //                restaurantArr = await this.model('restaurant').where({id: restautantId}).select();
- //            } else {
- //                restaurantArr = await this.model('restaurant').select();
- //            }
- //        if (!think.isEmpty(status)) {
- //            map.status = status;
- //            this.assign('status', status);
- //        }
- //        const q = this.get('q');
- //        if (!think.isEmpty(q)) {
- //            map['order_no|user_id|accept_name|mobile'] = ['like', q];
- //        }
- //        map.is_del = 0;
- //        map.type = 0;
- //        const user = await this.session('userInfo');
- //        if (parseInt(user.restaurant_id) !== 0) {
- //            map.restaurant_id = user.restaurant_id;
- //        }
- //        // this.config("db.nums_per_page",20)
- //        const list = await this.model('order').where(map).page(this.get('page') || 1, 20).order('create_time DESC').countSelect();
- //        for (const item in list.data) {
- //            const  id = item.id;
- //            const a = await this.model('order_goods').where({order_id:id}).countSelect();
- //            for (const b of a.data){
- //                const foodArr = JSON.parse(b.prom_goods);
- //                let str = '';
- //                for (const i in foodArr) {
- //                    str += foodArr[i].title + '(' + foodArr[i].qty + '份￥' + '),';
- //                }
- //                b.prom_goods = str;
- //            }
- //        }
- //
- //        const html = this.pagination(list);
- //        this.assign('pagerData', html); // 分页展示使用const a = await this.model('order_goods').where({order_id:id}).countSelect();
- //        this.active = 'admin/order/list';
- //        this.assign('list', list.data);
- //        this.meta_title = '订单管理';
- //        return this.display();
- //    }
       /**
        * 审核订单
        */
@@ -322,7 +268,6 @@ module.exports = class extends think.cmswing.admin {
               // 获取购买人信息
               // 购买人信息
               const user = await this.model('wx_user').find(order.user_id);
-              console.log(user);
               this.assign('user', user);
               this.assign('order', order);
               // 获取省份
@@ -565,6 +510,8 @@ module.exports = class extends think.cmswing.admin {
       address: location,
       user_name: order.accept_name,
       user_tel: order.mobile,
+      deliver_name: order.deliver_name,
+        deliver_tel: order.deliver_tel,
       original_amount: parseFloat(amount) + parseFloat(restaurant.send_money),
       restaurant_tel: restaurant.contect_tel
     };
@@ -609,18 +556,34 @@ module.exports = class extends think.cmswing.admin {
     if (parseInt(user.restaurant_id) !== 0) {
       restaurantId = parseInt(user.restaurant_id);
     }
-    const deliverArr = await this.model('deliver').where({restaurant_id: restaurantId, is_default: 0}).select();
-    let deliver = {};
-    if (deliverArr.length > 0) {
-      deliver = deliverArr[0];
+    const data = await this.model('order').where({id:ids}).countSelect();
+    for (const i of data.data){
+        const restaurant_id = i.restaurant_id;
+        const list = await this.model('restaurant').where({id:restaurant_id}).countSelect();
+        for (const a of list.data){
+            const  is_send = a.is_send;
+            if (is_send ==1){
+                const time = global.dateformat('Y-m-d H:i:s', new Date());
+                await this.model('order').where({id: ['IN', ids]}).update({
+                    delivery_status: 1,
+                    status: 5,
+                    admin_remark: '批量发货,发货时间' + time});
+            }else {
+                const deliverArr = await this.model('deliver').where({restaurant_id:restaurant_id, is_default: 0}).select();
+                let deliver = {};
+                if (deliverArr.length > 0) {
+                    deliver = deliverArr[0];
+                }
+                const time = global.dateformat('Y-m-d H:i:s', new Date());
+                await this.model('order').where({id: ['IN', ids]}).update({
+                    deliver_name: deliver.deliver_name,
+                    deliver_tel: deliver.deliver_tel,
+                    delivery_status: 1,
+                    status: 5,
+                    admin_remark: '批量发货,发货时间' + time});
+            }
+        }
     }
-    const time = global.dateformat('Y-m-d H:i:s', new Date());
-    await this.model('order').where({id: ['IN', ids]}).update({
-      deliver_name: deliver.deliver_name,
-      deliver_tel: deliver.deliver_tel,
-      delivery_status: 1,
-      status: 5,
-      admin_remark: '批量发货,发货时间' + time});
     return this.success({name: '发货成功!'});
   }
 };
