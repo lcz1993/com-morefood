@@ -35,8 +35,17 @@ module.exports = class extends think.cmswing.app {
     const addressId = this.get('addressId');
     const cartArr = await this.model('selection').where({user_id: userId}).select();
     if (cartArr.length == 0) {
-      return fail();
+      return this.fail();
     }
+    // 获取每日特价信息
+    const meduIds = await this.model('discount').where({
+      restaurant_id: restaurantId,
+      is_show: 0,
+      status: 0,
+      type_id: 2,
+      start_time: ['<', new Date().getTime()],
+      end_time: ['>', new Date().getTime()]
+    }).select();
     const orderList = [];
     for (const food of cartArr) {
       const num = food.cnt_dish;
@@ -53,14 +62,27 @@ module.exports = class extends think.cmswing.app {
         const b = await this.model('ext_attachment_pic').find(f.image);
         f.image = b.path;
       }
-      const price = f.original_price == 0 ? f.old_price : f.original_price;
+      const original_price = f.original_price;
+      const old_price = f.old_price;
+      let totalPrice = 0;
+      for (const discountId of meduIds) {
+        const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
+        if (discountId.medu_id == food.dish_id && status != 1) {
+          totalPrice = original_price + old_price * (num - 1);
+          // 将用户消费购买特价商品信息保存
+          // await think.cache(`wx-u${userId}r${restaurantId}m${food.dish_id}`, 1);
+        } else {
+          totalPrice = old_price * num;
+        }
+      }
+      totalPrice = Math.round(totalPrice * 100) / 100;
       f = {
         id: f.id,
         name: f.dish_name,
         num: num,
         image: f.dish_picture,
-        unit_price: price,
-        total_price: price * num
+        unit_price: old_price,
+        total_price: totalPrice
       };
       orderList.push(f);
     }
@@ -217,6 +239,23 @@ module.exports = class extends think.cmswing.app {
             num: f.num - orderFood.num
           });
         }
+        // 获取每日特价信息
+        const meduIds = await this.model('discount').where({
+          restaurant_id: order.restaurant_id,
+          is_show: 0,
+          status: 0,
+          type_id: 2,
+          start_time: ['<', new Date().getTime()],
+          end_time: ['>', new Date().getTime()]
+        }).select();
+        for (const discountId of meduIds) {
+          const status = await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`);
+          if (discountId.medu_id == f.id && status != 1) {
+            // 将用户消费购买特价商品信息保存
+            await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`, 1);
+          }
+        }
+
         let prom_goods = {
           id: orderFood.id,
           uid: userId,

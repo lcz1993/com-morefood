@@ -8,4 +8,9 @@ module.exports = [{
   handle: 'admin/crontab/score',
   type: 'one',
   enable: true // 关闭当前定时器，默认true
+}, {
+  cron: '52 15 * * *',
+  handle: 'admin/crontab/clear',
+  type: 'one',
+  enable: true // 关闭当前定时器，默认true
 }];
