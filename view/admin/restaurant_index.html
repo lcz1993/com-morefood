@@ -58,7 +58,9 @@
                         <td>{{ item.nature_id|get_nature_name }}</td>
                         <td>{{ item.contect_tel }}</td>
                         <td>{{ item.range }}</td>
-                        <td>{{ item.is_send }}</td>
+                        <td>{%if item.is_send ==0 %} 配送 {%endif%}
+                            {%if item.is_send ==1 %} 不配送 {%endif%}
+                        </td>
                         <td>{{ item.fee_standard }}</td>
                         <td>{{ item.addr }}</td>
                         <td>{{ item.owner_name }}</td>

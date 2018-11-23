@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // 菜单列表
 module.exports = class extends think.cmswing.admin {
   constructor(ctx) {
@@ -35,7 +36,7 @@ module.exports = class extends think.cmswing.admin {
       map.dish_class = id;
     }
     if (this.get('keyword')) {
-      map.name = ['like', '%' + this.get('keyword') + '%'];
+      map.dish_name = ['like', '%' + this.get('keyword') + '%'];
     }
     if (!think.isEmpty(restaurant_id)) {
       map.restaurant_id = restaurant_id;
