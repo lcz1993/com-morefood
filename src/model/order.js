@@ -211,7 +211,6 @@ module.exports = class extends think.Model {
     start.setSeconds(0);
     start.setMilliseconds(0);
     const todayStartTime = Date.parse(start) / 1;
-    console.log(todayStartTime); // Mon Dec 04 2017 00:00:00 GMT+0800 (中国标准时间)
     const max_no = await this.where({
       restaurant_id: orderInfo.restaurant_id,
       create_time: ['>', todayStartTime]

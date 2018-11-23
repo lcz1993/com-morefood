@@ -50,6 +50,19 @@ module.exports = class extends think.Controller {
     const area = await this.model('area').find(order.county);
     location += area.name;
     location += order.addr;
+    // 获取当日print_no最大值
+    const start = new Date();
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+    const todayStartTime = Date.parse(start) / 1;
+    const max_no = await this.model('order').where({
+      restaurant_id: order.restaurant_id,
+      create_time: ['>', todayStartTime]
+    }).max('print_no');
+    order.print_no = max_no ? parseInt(max_no) + 1 : 0;
+    console.log(order);
     const d = {
       id: order.id,
       title: '及时雨校园餐饮',
