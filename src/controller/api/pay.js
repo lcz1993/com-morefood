@@ -105,6 +105,10 @@ module.exports = class extends think.cmswing.app {
       location += a.name;
       a = await this.model('area').find(address.county);
       location += a.name;
+      if (address.school_id) {
+        a = await this.model('school').find(address.school_id);
+        location += a.name;
+      }
       location += address.addr;
       address = {
         id: address.id,

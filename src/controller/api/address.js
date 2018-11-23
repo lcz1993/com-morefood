@@ -20,6 +20,10 @@ module.exports = class extends think.cmswing.app {
       location += a.name;
       a = await this.model('area').find(address.county);
       location += a.name;
+      if (address.school_id) {
+        a = await this.model('school').find(address.school_id);
+        location += a.name;
+      }
       location += address.addr;
       const b = {
         id: address.id,
@@ -97,6 +101,19 @@ module.exports = class extends think.cmswing.app {
     a = await this.model('area').find(address.county);
     region.push(a.name);
     address.region = region;
+    const schoolList = await this.model('school').where({display: 0}).order('sort ASC').select();
+    const idArr = [];
+    const nameArr = [];
+    for (const item in schoolList) {
+      const school = schoolList[item];
+      idArr.push(school.id);
+      nameArr.push(school.name);
+    }
+    const schoolArr = {
+      id: idArr,
+      name: nameArr
+    };
+    address.schoolArr = schoolArr;
     return this.success(address);
   }
   async editAction() {
@@ -147,7 +164,6 @@ module.exports = class extends think.cmswing.app {
       id: idArr,
       name: nameArr
     };
-    console.log(data);
     return this.success(data);
   }
 };
