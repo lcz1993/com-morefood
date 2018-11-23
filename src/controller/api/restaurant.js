@@ -48,7 +48,8 @@ module.exports = class extends think.cmswing.app {
       addr: a.addr,
       contect_tel: a.contect_tel,
       min_price: a.min_price,
-      is_close: a.is_close
+      is_close: a.is_close,
+      is_send: a.is_send
     };
     // 店铺已经打烊≈
     if (is_close == 1) {
@@ -75,7 +76,6 @@ module.exports = class extends think.cmswing.app {
           global.removeByValue(meduIds, med);
         }
       }
-      console.log(meduIds);
       const fs = [];
       for (const i in meduIds) {
         const med = meduIds[i];
@@ -143,24 +143,29 @@ module.exports = class extends think.cmswing.app {
         } else {
           num = '该商品已下架';
         }
-        const f = {
-          id: medu.id,
-          name: medu.dish_name,
-          price: medu.original_price ? medu.original_price : '',
-          oldPrice: medu.old_price,
-          description: medu.description,
-          sellCount: medu.sell_count,
-          Count: 0,
-          rating: medu.rating,
-          info: medu.dish_desc,
-          icon: medu.dish_picture,
-          image: medu.image,
-          desc: medu.dish_desc,
-          is_stop: medu.is_stop,
-          is_hot: medu.is_hot,
-          num: num
-        };
-        foods.push(f);
+        for (const i in meduIds) {
+          const med = meduIds[i];
+          if (med.medu_id != medu.id) {
+            const f = {
+              id: medu.id,
+              name: medu.dish_name,
+              price: medu.original_price ? medu.original_price : '',
+              oldPrice: medu.old_price,
+              description: medu.description,
+              sellCount: medu.sell_count,
+              Count: 0,
+              rating: medu.rating,
+              info: medu.dish_desc,
+              icon: medu.dish_picture,
+              image: medu.image,
+              desc: medu.dish_desc,
+              is_stop: medu.is_stop,
+              is_hot: medu.is_hot,
+              num: num
+            };
+            foods.push(f);
+          }
+        }
       }
       const a = {
         id: dishClassId,
@@ -383,5 +388,18 @@ module.exports = class extends think.cmswing.app {
     }
     list.data = restaurantList;
     return this.success(list);
+  }
+
+  /**
+     *
+     * @returns {Promise<void>}
+     */
+  async buyAction() {
+    const userId = this.getLoginUserId();
+    const restaurantId = this.get('id');
+    const meduId = this.get('meduId');
+    let status = await think.cache(`wx-u${userId}r${restaurantId}m${meduId}`);
+    status = status ? status : 0;
+    return this.success(status);
   }
 };

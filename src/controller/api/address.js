@@ -20,6 +20,10 @@ module.exports = class extends think.cmswing.app {
       location += a.name;
       a = await this.model('area').find(address.county);
       location += a.name;
+      if (address.school_id) {
+        a = await this.model('school').find(address.school_id);
+        location += a.name;
+      }
       location += address.addr;
       const b = {
         id: address.id,
@@ -31,7 +35,8 @@ module.exports = class extends think.cmswing.app {
         is_default: address.is_default,
         province: address.province,
         city: address.city,
-        county: address.county
+        county: address.county,
+        school_id: address.school_id
       };
       addressList.push(b);
     }
@@ -39,6 +44,7 @@ module.exports = class extends think.cmswing.app {
   }
   async saveAction() {
     const address = this.post('address');
+    console.log(address);
     const userId = this.post('userId');
     const addressOld = await this.model('address').where({user_id: userId, is_default: 1}).select();
     if (addressOld.length > 0) {
@@ -56,6 +62,7 @@ module.exports = class extends think.cmswing.app {
       addr: address.address,
       is_default: address.is_default,
       gender: address.gender,
+      school_id: address.school_id,
       sign: address.sign
     };
     const res = await this.model('address').add(data);
@@ -94,13 +101,24 @@ module.exports = class extends think.cmswing.app {
     a = await this.model('area').find(address.county);
     region.push(a.name);
     address.region = region;
+    const schoolList = await this.model('school').where({display: 0}).order('sort ASC').select();
+    const idArr = [];
+    const nameArr = [];
+    for (const item in schoolList) {
+      const school = schoolList[item];
+      idArr.push(school.id);
+      nameArr.push(school.name);
+    }
+    const schoolArr = {
+      id: idArr,
+      name: nameArr
+    };
+    address.schoolArr = schoolArr;
     return this.success(address);
   }
   async editAction() {
     const address = this.post('address');
-    console.log(address);
     const userId = this.post('userId');
-    console.log(userId);
     const addressOld = await this.model('address').where({user_id: userId, is_default: 1}).select();
     if (addressOld.length > 0) {
       const a = addressOld[0];
@@ -118,6 +136,7 @@ module.exports = class extends think.cmswing.app {
       addr: address.address,
       is_default: address.is_default,
       gender: address.gender,
+      school_id: address.school_id,
       sign: address.sign
     };
     const res = await this.model('address').update(data);
@@ -126,5 +145,25 @@ module.exports = class extends think.cmswing.app {
     } else {
       return this.fail();
     }
+  }
+
+  /**
+     * 获取学校数组集合
+     * @returns {Promise<void>}
+     */
+  async schoolAction() {
+    const schoolList = await this.model('school').where({display: 0}).order('sort ASC').select();
+    const idArr = [];
+    const nameArr = [];
+    for (const item in schoolList) {
+      const school = schoolList[item];
+      idArr.push(school.id);
+      nameArr.push(school.name);
+    }
+    const data = {
+      id: idArr,
+      name: nameArr
+    };
+    return this.success(data);
   }
 };

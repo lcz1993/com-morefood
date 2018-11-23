@@ -52,7 +52,6 @@ module.exports = {
   publicAction: [
     // 格式为： controller+action
     'api/address/getarea',
-    'api/restaurant/index',
     'api/nature/index',
     'api/restaurant/list',
     'api/websocket/sendMsg',

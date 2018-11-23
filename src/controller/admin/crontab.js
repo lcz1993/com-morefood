@@ -109,4 +109,29 @@ module.exports = class extends think.Controller {
     // this.end();
     return this.body = '';
   }
+  /**
+     * 每天清除特价购买情况
+     * @returns {Promise<*>}
+     */
+  async clearAction() {
+    // 订单在规定时间为付款自动作废执行方法
+    // 禁止 URL 访问该 Action
+    if (!this.isCli) {
+      const error = this.controller('cmswing/error');
+      return error.noAction('only invoked in cli mode！');
+    }
+    const userArr = await this.model('wx_user').select();
+    const restaurantArr = await this.model('restaurant').select();
+    const meduArr = await this.model('medu').select();
+    for (const user of userArr) {
+      for (const restaurant of restaurantArr) {
+        for (const medu of meduArr) {
+          await think.cache(`wx-u${user.id}r${restaurant.id}m${medu.id}`, null);
+        }
+      }
+    }
+    // think.logger.debug(new Date(), '订单作废任务执行时间');
+    // this.end();
+    return this.body = '';
+  }
 };
