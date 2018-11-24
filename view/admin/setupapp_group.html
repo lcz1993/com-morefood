@@ -50,7 +50,7 @@
 <script src="/static/admin/js/datatables/jquery.csv-0.71.min.js"  type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-       var table = $('[data-ride="datatables"]').DataTable({
+        var table = $('[data-ride="datatables"]').DataTable({
             "serverSide": true,
             "ajax": {
                 "url": "/admin/setupapp/groupdata",
@@ -75,7 +75,7 @@
                 {
                     targets: 0,
                     render: function (data, type, row) {
-                       // console.log(data);
+                        // console.log(data);
                         var html ='<label class="checkbox m-n i-checks"><input type="checkbox" name="post[]"><i></i></label>';
                         return html;
                     }
@@ -85,37 +85,37 @@
                     render: function (data, type, row) {
                         //console.log(data);
                         var html = '<a class="btn btn-default btn-xs" href="/admin/setupapp/edit/?id='+data.id+'">编辑</a> ' +
-                                ' <a class="btn btn-default btn-xs del" onclick="del('+ data.id +')">删除</a>';
+                            ' <a class="btn btn-default btn-xs del" onclick="del('+ data.id +')">删除</a>';
                         return html;
                     }
                 }
 
             ],
-           language: {
-               "sProcessing": "处理中...",
-               "sLengthMenu": "显示 _MENU_ 项结果",
-               "sZeroRecords": "没有匹配结果",
-               "sInfo": "显示第 _START_ 至 _END_ 个配置，共 _TOTAL_ 个",
-               "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
-               "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-               "sInfoPostFix": "",
-               "sSearch": "搜索:",
-               "sUrl": "",
-               "sEmptyTable": "表中数据为空",
-               "sLoadingRecords": "载入中...",
-               "sInfoThousands": ",",
-               "oPaginate": {
-                   "sFirst": "首页",
-                   "sPrevious": "上页",
-                   "sNext": "下页",
-                   "sLast": "末页"
-               },
-               "oAria": {
-                   "sSortAscending": ": 以升序排列此列",
-                   "sSortDescending": ": 以降序排列此列"
-               }
-           }
-    } );
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 个配置，共 _TOTAL_ 个",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            }
+        } );
 
         $(".groupindex").click(function(){
             table.ajax.url('/admin/setupapp/groupdata' ).load();
@@ -128,27 +128,27 @@
 
     function del(id) {
         swal({
-                    title: "你确定?",
-                    text: "你将要删除配置，并且不能恢复!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "是的!",
-                    cancelButtonText: "就不!",
-                    closeOnConfirm: false
-                },
-                function(){
-                    $.ajax({
-                        url: "/admin/setupapp/del",
-                        data: {
-                            "id": id
-                        }, success: function (data) {
+                title: "你确定?",
+                text: "你将要删除配置，并且不能恢复!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "是的!",
+                cancelButtonText: "就不!",
+                closeOnConfirm: false
+            },
+            function(){
+                $.ajax({
+                    url: "/admin/setupapp/del",
+                    data: {
+                        "id": id
+                    }, success: function (data) {
 
-                            location.href = "/admin/setupapp/group";
-                        }
-                    });
-
+                        location.href = "/admin/setupapp/group";
+                    }
                 });
+
+            });
 
     }
 </script>

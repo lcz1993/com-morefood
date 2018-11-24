@@ -24,18 +24,26 @@ module.exports = class extends think.cmswing.admin {
     const path1 = think.getPath('common', 'config');
     if (think.isDir(think.ROOT_PATH + '/src')) {
       const data = 'export default' + JSON.stringify(setup);
-      fs.writeFileSync(think.ROOT_PATH + '/src/cmswing/config/setup.js', data);
+      fs.writeFileSync(think.ROOT_PATH + '/src/cmswing/config/setupapp.js', data);
     }
     const data1 = 'exports.__esModule = true;exports.default =' + JSON.stringify(setup);
-    fs.writeFileSync(path1 + '/setup.js', data1);
+    fs.writeFileSync(path1 + '/setupapp.js', data1);
   }
   async indexAction() {
     // 加载配置
     // await this.loadsetup();
     // auto render template file index_index.html
     const id = this.get('id') || 1;
-    const type = this.config('setup.CONFIG_GROUP_LIST');
+    const type = this.config('setupapp.CONFIG_GROUP_LIST');
     const list = await this.db.where({'status': 1, 'group': id}).field('id,name,title,extra,value,remark,type').order('sort').select();
+    for (const i of list) {
+      if (i.type === 5) {
+        await this.hook('adminUpPic', i.name, i.value, {$hook_key: i.name});
+      }
+      if (i.type === 6) {
+        await this.hook('adminUpPics', i.name, i.value, {$hook_key: i.name});
+      }
+    }
     if (list) {
       this.assign('list', list);
     }
@@ -69,11 +77,11 @@ module.exports = class extends think.cmswing.admin {
       const lists = await this.db.limit(start, length).where(map).order('sort ASC').countSelect();
       lists.data.forEach(v => {
         if (v.group) {
-          v.group = (this.config('setup.CONFIG_GROUP_LIST'))[v.group];
+          v.group = (this.config('setupapp.CONFIG_GROUP_LIST'))[v.group];
         } else {
           v.group = '未分组';
         }
-        v.type = (this.config('setup.CONFIG_TYPE_LIST'))[v.type];
+        v.type = (this.config('setupapp.CONFIG_TYPE_LIST'))[v.type];
       });
 
       const data = {
@@ -105,7 +113,7 @@ module.exports = class extends think.cmswing.admin {
         return this.json(0);
       }
     } else {
-      this.active = 'admin/setup/group';
+      this.active = 'admin/setupapp/group';
       this.meta_title = '新增配置';
       return this.display();
     }
@@ -131,7 +139,7 @@ module.exports = class extends think.cmswing.admin {
       map.id = this.get('id');
       const info = await this.db.where(map).find();
       this.assign('info', info);
-      this.active = 'admin/setup/group';
+      this.active = 'admin/setupapp/group';
       this.meta_title = '编辑新增';
       return this.display();
     }

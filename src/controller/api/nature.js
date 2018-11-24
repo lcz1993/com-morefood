@@ -16,6 +16,34 @@ module.exports = class extends think.cmswing.app {
       };
       natureArr.push(n);
     }
-    return this.success(natureArr);
+    // 获取首页的图片
+    // 顶部轮播图
+    const images = this.config('setupapp.APP_TOP_IMAGE');
+    // 顶部优惠券图片
+    const disImg = this.config('setupapp.APP_DISCOUNT_IMG');
+    // 左右侧透明背景图
+    const leftImg = this.config('setupapp.APP_LEFT_IMG');
+    const rightImg = this.config('setupapp.APP_RIGHT_IMG');
+    const imgList = images.split(',');
+    const imgArr = [];
+    for (const img of imgList) {
+      const a = await global.get_pic(img);
+      imgArr.push(a);
+    }
+    const disImgPath = await global.get_pic(disImg);
+    const leftImgPath = await global.get_pic(leftImg);
+    const rightImgPath = await global.get_pic(rightImg);
+    console.log(imgArr);
+    console.log(disImgPath);
+    console.log(leftImgPath);
+    console.log(rightImgPath);
+    const data = {
+      imgArr: imgArr,
+      disImgPath: disImgPath,
+      leftImgPath: leftImgPath,
+      rightImgPath: rightImgPath,
+      natureArr: natureArr
+    };
+    return this.success(data);
   }
 };
