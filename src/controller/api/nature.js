@@ -33,10 +33,6 @@ module.exports = class extends think.cmswing.app {
     const disImgPath = await global.get_pic(disImg);
     const leftImgPath = await global.get_pic(leftImg);
     const rightImgPath = await global.get_pic(rightImg);
-    console.log(imgArr);
-    console.log(disImgPath);
-    console.log(leftImgPath);
-    console.log(rightImgPath);
     const data = {
       imgArr: imgArr,
       disImgPath: disImgPath,
