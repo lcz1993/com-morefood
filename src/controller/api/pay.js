@@ -30,7 +30,7 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<*>}
      */
   async indexAction() {
-    const userId = this.get('userId');
+    const userId = this.getLoginUserId();
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
     const cartArr = await this.model('selection').where({user_id: userId}).select();
@@ -287,6 +287,11 @@ module.exports = class extends think.cmswing.app {
       return this.fail();
     }
   }
+
+  /**
+     * 获取订单
+     * @returns {Promise<*>}
+     */
   async getAction() {
     const id = this.get('id');
     const order = await this.model('order').field(['id', 'restaurant_id', 'accept_name', 'mobile', 'province', 'city', 'county', 'addr', 'order_amount']).find(id);
@@ -302,19 +307,33 @@ module.exports = class extends think.cmswing.app {
       });
     }
     let addressMsg = '';
-    let a = await this.model('area').field(['name']).find(order.province);
-    addressMsg += a.name;
-    a = await this.model('area').field(['name']).find(order.city);
-    addressMsg += a.name;
-    a = await this.model('area').field(['name']).find(order.county);
-    addressMsg += a.name;
-    addressMsg += order.addr;
+    let a = '';
+    if (order.province) {
+      a = await this.model('area').field(['name']).find(order.province);
+      addressMsg += a.name;
+    }
+    if (order.city) {
+      a = await this.model('area').field(['name']).find(order.city);
+      addressMsg += a.name;
+    }
+    if (order.county) {
+      a = await this.model('area').field(['name']).find(order.county);
+      addressMsg += a.name;
+    }
+    if (order.addr) {
+      addressMsg += order.addr;
+    }
     order.addressMsg = addressMsg;
     order.orderList = orderList;
     order.restaurantName = restaurant.name;
     order.restaurantId = restaurant.id;
     return this.success(order);
   }
+
+  /**
+     * 提交订单
+     * @returns {Promise<*>}
+     */
   async submitAction() {
     const orderId = this.get('orderId');
     const orderInfo = await this.model('order').where({ id: orderId }).find();
@@ -367,6 +386,11 @@ module.exports = class extends think.cmswing.app {
       return this.fail('微信支付失败');
     }
   }
+
+  /**
+     * 支付异步回调接口
+     * @returns {Promise<string>}
+     */
   async notifyAction() {
     const WeixinSerivce = this.service('weixin', 'api');
     const result = WeixinSerivce.payNotify(this.post('xml'));
@@ -386,6 +410,11 @@ module.exports = class extends think.cmswing.app {
 
     return `<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>`;
   }
+
+  /**
+     * 支付完成后进行回调函数
+     * @returns {Promise<*>}
+     */
   async statusAction() {
     const orderId = this.post('orderId');
     const WeixinSerivce = this.service('weixin', 'api');
@@ -402,5 +431,153 @@ module.exports = class extends think.cmswing.app {
     } else {
       return this.fail();
     }
+  }
+
+  /**
+     * 不需要配送的页面初始化
+     * @returns {*}
+     */
+  async nosendAction() {
+    const userId = this.getLoginUserId();
+    const restaurantId = this.get('restaurantId');
+    const cartArr = await this.model('selection').where({user_id: userId}).select();
+    if (cartArr.length == 0) {
+      return this.fail();
+    }
+    // 获取每日特价信息
+    const meduIds = await this.model('discount').where({
+      restaurant_id: restaurantId,
+      is_show: 0,
+      status: 0,
+      type_id: 2,
+      start_time: ['<', new Date().getTime()],
+      end_time: ['>', new Date().getTime()]
+    }).select();
+    const orderList = [];
+    for (const food of cartArr) {
+      const num = food.cnt_dish;
+      let f = await this.model('medu').find(food.dish_id);
+      if (f.restaurant_id != restaurantId) {
+        global.removeByValue(cartArr, food);
+        break;
+      }
+      if (f.dish_picture) {
+        const b = await this.model('ext_attachment_pic').find(f.dish_picture);
+        f.dish_picture = b.path;
+      }
+      if (f.image) {
+        const b = await this.model('ext_attachment_pic').find(f.image);
+        f.image = b.path;
+      }
+      const original_price = f.original_price;
+      const old_price = f.old_price;
+      let totalPrice = 0;
+      if (meduIds.length > 0) {
+        for (const discountId of meduIds) {
+          const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
+          if (discountId.medu_id == food.dish_id && status != 1) {
+            totalPrice = original_price + old_price * (num - 1);
+            // 将用户消费购买特价商品信息保存
+            // await think.cache(`wx-u${userId}r${restaurantId}m${food.dish_id}`, 1);
+          } else {
+            totalPrice = old_price * num;
+          }
+        }
+      } else {
+        totalPrice = old_price * num;
+      }
+      totalPrice = Math.round(totalPrice * 100) / 100;
+      f = {
+        id: f.id,
+        name: f.dish_name,
+        num: num,
+        image: f.dish_picture,
+        unit_price: old_price,
+        total_price: totalPrice
+      };
+      orderList.push(f);
+    }
+    const restaurant = await this.model('restaurant').find(restaurantId);
+
+    return this.success({
+      cartArr: orderList,
+      restaurant: restaurant
+    });
+  }
+
+  /**
+     * 不需要配送保存
+     * @returns {Promise<*>}
+     */
+  async nosendsaveAction() {
+    const order = this.post('order');
+    const orderList = this.post('orderList');
+    const userId = this.getLoginUserId();
+    const m = new Date().getTime().toString();
+    order.order_no = think._.padEnd(userId, 10, '0') + m.substr(8);
+    order.create_time = new Date().getTime();
+    const restaurant = await this.model('restaurant').find(order.restaurant_id);
+    order.patable_freight = restaurant.send_money;
+    order.real_freight = order.sendMoney;
+    order.user_id = userId;
+    let res = '';
+    if (!order.id) {
+      order.id = null;
+      res = await this.model('order').add(order);
+    } else {
+      res = await this.model('order').update(order);
+    }
+    if (res) {
+      for (const orderFood of orderList) {
+        const f = await this.model('medu').find(orderFood.id);
+        if (f.num != null) {
+          await this.model('medu').where({id: f.id}).update({
+            num: f.num - orderFood.num
+          });
+        }
+        // 获取每日特价信息
+        const meduIds = await this.model('discount').where({
+          restaurant_id: order.restaurant_id,
+          is_show: 0,
+          status: 0,
+          type_id: 2,
+          start_time: ['<', new Date().getTime()],
+          end_time: ['>', new Date().getTime()]
+        }).select();
+        for (const discountId of meduIds) {
+          const status = await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`);
+          if (discountId.medu_id == f.id && status != 1) {
+            // 将用户消费购买特价商品信息保存
+            await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`, 1);
+          }
+        }
+
+        let prom_goods = {
+          id: orderFood.id,
+          uid: userId,
+          product_id: '',
+          qty: orderFood.num,
+          type: '',
+          price: orderFood.total_price,
+          title: f.dish_name,
+          unit_price: f.original_price,
+          pic: orderFood.image
+        };
+        prom_goods = JSON.stringify(prom_goods);
+        const food = {
+          order_id: res,
+          goods_id: orderFood.id,
+          goods_price: orderFood.unit_price,
+          goods_nums: orderFood.num,
+          prom_goods: prom_goods
+        };
+        await this.model('order_goods').add(food);
+        this.model('discount').useCount(orderFood.id, order.restaurant_id, orderFood.num);
+      }
+      return this.success(res);
+    } else {
+      return this.fail();
+    }
+    return this.success();
   }
 };

@@ -11,7 +11,7 @@
         <p>{{controller.meta_title}}</p>
 
     </header>
-    <section class="scrollable wrapper">
+    <section class="scrollable wra§pper">
 
         <div class="row">
 
@@ -170,7 +170,9 @@
                             </div>
                             <div class="form-group form-submit">
                                 <div class="col-sm-4 col-sm-offset-2">
-
+                                    <input type="hidden" name="original_price" value="0">
+                                    <input type="hidden" name="sell_count" value="0">
+                                    <input type="hidden" name="rating" value="0">
                                     <button type="submit" target-form="form-horizontal" class="btn btn-primary ajax-post">保存</button>
                                     <button type="submit" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返回</button>
                                 </div>

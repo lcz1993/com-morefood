@@ -1,4 +1,3 @@
-/* eslint-disable spaced-comment,no-multiple-empty-lines,no-multi-spaces,no-unused-vars,indent,space-infix-ops,no-trailing-spaces,camelcase,key-spacing,space-before-blocks,comma-spacing,eqeqeq,quotes,no-console */
 const _ = require('lodash');
 
 module.exports = class extends think.Model {
@@ -194,7 +193,7 @@ module.exports = class extends think.Model {
     const node = {
       orderId: orderId,
       foodList: foodArr
-  };
+    };
       // 生成财务日志
     const balance = {
       restaurant_id: orderInfo.restaurant_id,
@@ -205,25 +204,26 @@ module.exports = class extends think.Model {
       note: JSON.stringify(node)
     };
     await this.model('balance_log').add(balance);
-    //获取用户的积分
-      const  data = await this.model('order').where({id:orderId}).select();
-      for (const i in data){
-          var create_time =Date.parse(new Date());
-        const user_id  = data.user_id;
-          const amount = orderInfo.order_amount;
-          const  integral = Math.round(amount*100)/100;
-          await  this.model('wx_user').where({id: user_id}).increment('integral',integral);
-          if (amount != 0){
-            const map = {};
-            map.order_id = orderId;
-            map.is_integral = "否";
-            map.num = amount;
-            map.is_add = "0";
-            map.reamrk = "交易折合";
-            map.create_time = create_time;
-              const res = await this.model('record').update(map);
-          }
+    // 获取用户的积分
+    const data = await this.model('order').where({id: orderId}).select();
+    for (const i in data) {
+      const record = data[i];
+      const create_time = new Date().getTime();
+      const user_id = record.user_id;
+      const amount = orderInfo.order_amount;
+      const integral = Math.round(amount * 100) / 100;
+      await this.model('wx_user').where({id: user_id}).increment('integral', integral);
+      if (amount != 0) {
+        const map = {};
+        map.order_id = orderId;
+        map.is_integral = '否';
+        map.num = amount;
+        map.is_add = '0';
+        map.reamrk = '交易折合';
+        map.create_time = create_time;
+        const res = await this.model('record').add(map);
       }
+    }
     // 获取当日print_no最大值
     const start = new Date();
     start.setHours(0);

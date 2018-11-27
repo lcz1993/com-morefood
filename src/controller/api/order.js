@@ -77,6 +77,7 @@ module.exports = class extends think.cmswing.app {
       restaurantId: order.restaurant_id,
       restaurantTel: restaurant.contect_tel,
       restaurantLogo: restaurantLogo,
+      restaurantSend: restaurant.is_send,
       order_status_text: order_status_text,
       admin_remark: order.admin_remark,
       handleOption: handleOption,
