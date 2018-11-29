@@ -283,6 +283,6 @@ module.exports = class extends think.Model {
       };
       list.data[item] = d;
     }
-    return this.success(list);
+    return list;
   }
 };

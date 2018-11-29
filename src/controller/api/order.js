@@ -101,7 +101,6 @@ module.exports = class extends think.cmswing.app {
     };
     return this.success(data);
   }
-
     /**
      * 小程序待使用的订单
      * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）
@@ -109,44 +108,9 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<*>}
      */
   async uselistAction() {
-    const status = this.get('status');
-    const restaurantArr = await this.model('restaurant').where({is_send: 1}).getField('id');
-    const map = {};
-    if (status == 0) {
-      map.pay_status = 1;
-      map.status = ['in', [2, 3]];
-    } else {
-      map.pay_status = 1;
-      map.status = 4;
-    }
-    map.restaurant_id = ['in', restaurantArr];
-    const list = await this.model('order').where(map).page(this.get('currentPage') || 1, 5).order('create_time DESC').countSelect();
-    for (const item in list.data) {
-      const i = list.data[item];
-      var num = 0;
-      let price = '';
-      let str = '';
-      let imgurl = '';
-      const id = i.id;
-      const order_no = i.order_no;
-      const b = await this.model('order_goods').where({order_id: id}).select();
-      for (const a of b) {
-        const prom = JSON.parse(a.prom_goods);
-        str += prom.title + '*' + prom.qty + '份 ,';
-        num = num + prom.qty;
-        imgurl = prom.pic;
-        price += prom.price;
-      }
-      const d = {
-        id: id,
-        num: num,
-        price: price,
-        desc: str,
-        order_no: order_no,
-        imgurl: imgurl
-      };
-      list.data[item] = d;
-    }
+    const ststus = this.get('status');
+    const currentPage = this.get('currentPage');
+    const list = await this.model('order').uselistAction(ststus, currentPage);
     return this.success(list);
   }
 };
