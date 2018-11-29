@@ -102,6 +102,12 @@ module.exports = class extends think.cmswing.app {
     return this.success(data);
   }
 
+    /**
+     * 小程序待使用的订单
+     * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）
+     * currentPage: 当前页数
+     * @returns {Promise<*>}
+     */
   async uselistAction() {
     const status = this.get('status');
     const restaurantArr = await this.model('restaurant').where({is_send: 1}).getField('id');
@@ -117,7 +123,7 @@ module.exports = class extends think.cmswing.app {
     const list = await this.model('order').where(map).page(this.get('currentPage') || 1, 5).order('create_time DESC').countSelect();
     for (const item in list.data) {
       const i = list.data[item];
-      let num = '';
+      var num = 0;
       let price = '';
       let str = '';
       let imgurl = '';
@@ -126,8 +132,8 @@ module.exports = class extends think.cmswing.app {
       const b = await this.model('order_goods').where({order_id: id}).select();
       for (const a of b) {
         const prom = JSON.parse(a.prom_goods);
-        str += prom.title + '*' + prom.qty + ',';
-        num += parseInt(prom.qty);
+        str += prom.title + '*' + prom.qty + '份 ,';
+        num = num + prom.qty;
         imgurl = prom.pic;
         price += prom.price;
       }

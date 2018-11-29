@@ -239,4 +239,50 @@ module.exports = class extends think.Model {
     const res = await this.update(order);
     return res;
   }
+  /**
+     * 小程序待使用的订单
+     * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）
+     * currentPage: 当前页数
+     * @returns {Promise<*>}
+     */
+  async uselistAction(status, currentPage) {
+    const restaurantArr = await this.model('restaurant').where({is_send: 1}).getField('id');
+    const map = {};
+    if (status == 0) {
+      map.pay_status = 1;
+      map.status = ['in', [2, 3]];
+    } else {
+      map.pay_status = 1;
+      map.status = 4;
+    }
+    map.restaurant_id = ['in', restaurantArr];
+    const list = await this.where(map).page(currentPage || 1, 5).order('create_time DESC').countSelect();
+    for (const item in list.data) {
+      const i = list.data[item];
+      var num = 0;
+      let price = '';
+      let str = '';
+      let imgurl = '';
+      const id = i.id;
+      const order_no = i.order_no;
+      const b = await this.model('order_goods').where({order_id: id}).select();
+      for (const a of b) {
+        const prom = JSON.parse(a.prom_goods);
+        str += prom.title + '*' + prom.qty + '份 ,';
+        num = num + prom.qty;
+        imgurl = prom.pic;
+        price += prom.price;
+      }
+      const d = {
+        id: id,
+        num: num,
+        price: price,
+        desc: str,
+        order_no: order_no,
+        imgurl: imgurl
+      };
+      list.data[item] = d;
+    }
+    return this.success(list);
+  }
 };
