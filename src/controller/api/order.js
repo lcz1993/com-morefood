@@ -101,4 +101,48 @@ module.exports = class extends think.cmswing.app {
     };
     return this.success(data);
   }
+
+  async uselistAction() {
+    const status = this.get('status');
+    const restaurantArr = await this.model('restaurant').where({is_send: 1}).getField('id');
+    console.log(restaurantArr);
+    const map = {};
+    if (status == 1) {
+      map.pay_status = 1;
+      map.status = ['in', [2, 3]];
+    } else {
+      map.pay_status = 1;
+      map.status = 4;
+    }
+    map.restaurant_id = ['in', restaurantArr];
+    const list = await this.model('order').where(map).page(this.get('currentPage') || 1, 5).order('create_time DESC').countSelect();
+    console.log(list);
+    for (const item in list.data) {
+      const i = list.data[item];
+      let num = '';
+      let price = '';
+      let str = '';
+      let imgurl = '';
+      const id = i.id;
+      const order_no = i.order_no;
+      const b = await this.model('order_goods').where({order_id: id}).select();
+      for (const a of b) {
+        const prom = JSON.parse(a.prom_goods);
+        str += prom.title + '*' + prom.qty + '份 ,';
+        num += parseInt(prom.qty);
+        imgurl = prom.pic;
+        price += prom.price;
+      }
+      const d = {
+        id: id,
+        num: num,
+        price: price,
+        desc: str,
+        order_no: order_no,
+        imgurl: imgurl
+      };
+      list.data[item] = d;
+    }
+    return this.success(list);
+  }
 };
