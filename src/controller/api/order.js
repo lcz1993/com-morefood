@@ -101,7 +101,7 @@ module.exports = class extends think.cmswing.app {
     };
     return this.success(data);
   }
-    /**
+  /**
      * 小程序待使用的订单
      * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）
      * currentPage: 当前页数
@@ -109,8 +109,8 @@ module.exports = class extends think.cmswing.app {
      */
   async uselistAction() {
     const ststus = this.get('status');
-    const currentPage = this.get('currentPage');
-    const list = await this.model('order').uselistAction(ststus, currentPage);
+    const currentPage = this.get('currentPage') || 1;
+    const list = await this.model('order').getuselist(ststus, currentPage);
     return this.success(list);
   }
 };

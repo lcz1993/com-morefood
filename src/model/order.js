@@ -245,7 +245,7 @@ module.exports = class extends think.Model {
      * currentPage: 当前页数
      * @returns {Promise<*>}
      */
-  async uselistAction(status, currentPage) {
+  async getuselist(status, currentPage) {
     const restaurantArr = await this.model('restaurant').where({is_send: 1}).getField('id');
     const map = {};
     if (status == 0) {
@@ -256,7 +256,7 @@ module.exports = class extends think.Model {
       map.status = 4;
     }
     map.restaurant_id = ['in', restaurantArr];
-    const list = await this.where(map).page(currentPage || 1, 5).order('create_time DESC').countSelect();
+    const list = await this.where(map).page(currentPage, 5).order('create_time DESC').countSelect();
     for (const item in list.data) {
       const i = list.data[item];
       var num = 0;
