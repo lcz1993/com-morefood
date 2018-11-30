@@ -205,26 +205,22 @@ module.exports = class extends think.Model {
     };
     await this.model('balance_log').add(balance);
     // 获取用户的积分
-    const data = await this.model('order').where({id: orderId}).select();
-    for (const i in data) {
-      const record = data[i];
-      const create_time = new Date().getTime();
-      const user_id = record.user_id;
-      const amount = orderInfo.order_amount;
-      const integral = Math.round(amount * 100) / 100;
-      await this.model('wx_user').where({id: user_id}).increment('integral', integral);
-      if (amount != 0) {
-        const map = {};
-        map.user_id = user_id;
-        map.status = 0;
-        map.order_id = orderId;
-        map.is_integral = '1';
-        map.num = amount;
-        map.is_add = '0';
-        map.reamrk = '交易折合';
-        map.create_time = create_time;
-        const res = await this.model('record').add(map);
-      }
+    const record = await this.model('order').find(orderId);
+    const user_id = record.user_id;
+    const amount = orderInfo.order_amount;
+    const integral = Math.round(amount * 100) / 100;
+    await this.model('wx_user').where({id: user_id}).increment('integral', integral);
+    if (amount != 0) {
+      await this.model('record').add({
+        order_id: orderId,
+        is_integral: 0,
+        num: amount,
+        is_add: 0,
+        remark: '交易折合',
+        create_time: new Date().getTime(),
+        user_id: user_id,
+        status: 0
+      });
     }
     // 获取当日print_no最大值
     const start = new Date();

@@ -35,7 +35,7 @@ module.exports = class extends think.cmswing.admin {
     start.setSeconds(0);
     start.setMilliseconds(0);
     const todayStartTime = Date.parse(start) / 1;
-    console.log(todayStartTime); // Mon Dec 04 2017 00:00:00 GMT+0800 (中国标准时间)
+    // console.log(todayStartTime); // Mon Dec 04 2017 00:00:00 GMT+0800 (中国标准时间)
     const map = {};
     let restaurantArr = [];
     if (!think.isEmpty(restaurant_id)) {
