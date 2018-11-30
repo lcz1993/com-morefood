@@ -13,7 +13,7 @@
         <section class="panel panel-default">
             <div class="row wrapper">
                 <div class="col-sm-9 m-b-xs">
-                    <a href="/admin/integeal/add" class="btn  btn-info" data-toggle="ajaxModal" >新增</a>
+                    <a href="/admin/integeal/add" class="btn  btn-info"  >新增</a>
                     <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/integeal/del">删除</a>
                 </div>
                 <div class="col-sm-3">
@@ -40,12 +40,13 @@
                         <th>价格</th>
                         <th>介绍</th>
                         <th>销量</th>
+                        <th>商品详情信息</th>
                         <th>是否停止销售</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in data %}
+                    {% for item in list.data %}
                     <tr>
                         <td><label class="checkbox m-n i-checks"><input type="checkbox" class="ids" value="{{item.id}}" name="ids" ><i></i></label>
                         </td>
@@ -58,6 +59,7 @@
                         <td>{{ item.price }}</td>
                         <td>{{ item.desc }}</td>
                         <td>{{ item.sales }}</td>
+                        <td>{{ item.detail }}</td>
                         <td>{% if item.is_stop == 0%}正常{%elif item.is_stop == 1%}停止{%endif%}</td>
                         <td>
                             <a href="/admin/integeal/edit/?id={{item.id}}" class="text-info"  >编辑</a>

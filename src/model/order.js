@@ -215,8 +215,10 @@ module.exports = class extends think.Model {
       await this.model('wx_user').where({id: user_id}).increment('integral', integral);
       if (amount != 0) {
         const map = {};
+        map.user_id = user_id;
+        map.status = 0;
         map.order_id = orderId;
-        map.is_integral = '否';
+        map.is_integral = '1';
         map.num = amount;
         map.is_add = '0';
         map.reamrk = '交易折合';
