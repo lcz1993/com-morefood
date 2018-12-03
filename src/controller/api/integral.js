@@ -88,7 +88,7 @@ module.exports = class extends think.cmswing.app {
   }
 
   /**
-     * 积分分页返回页面
+     * 积分分页页面
      * @returns {Promise<*>}
      */
   async recordlistAction() {
@@ -107,5 +107,36 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const integral = await this.model('wx_user').where({id: userId}).getField('integral', true);
     return this.success(integral);
+  }
+
+  async goodslistAction() {
+    const sortRule = this.get('sort_rule');
+    const userId = this.getLoginUserId();
+    const integral = await this.model('wx_user').where({id: userId}).getField('integral', true);
+    const groom = this.get('groom');
+    const map = {};
+    let sort = '';
+    sortRule = parseInt(sortRule);
+    switch (sortRule) {
+      case 1:
+        sort = 'sort ASC';
+        break;
+      case 2:
+        sort = 'price ASC';
+        break;
+      case 3:
+        sort = 'price DESC';
+
+        break;
+      case 4:
+        map.price = ['<=', integral];
+        break;
+      default:
+        sort = 'sort ASC';
+        break;
+    }
+    if (groom) {
+      sort = 'groom DESC';
+    }
   }
 };

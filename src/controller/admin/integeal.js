@@ -8,6 +8,11 @@ module.exports = class extends think.cmswing.admin {
     // 其他额外的操作
     this.tactive = 'manager';
   }
+
+    /**
+     *
+     * @returns {Promise<*>}
+     */
   async indexAction() {
     const map = {};
     const keyword = this.get('keyword');
@@ -21,6 +26,11 @@ module.exports = class extends think.cmswing.admin {
     this.meta_title = '积分商品管理';
     return this.display();
   }
+
+    /**
+     *
+     * @returns {Promise<*>}
+     */
   async addAction() {
     if (this.isPost) {
       const data = this.post();
@@ -38,6 +48,10 @@ module.exports = class extends think.cmswing.admin {
     }
   }
 
+    /**
+     *
+     * @returns {Promise<*>}
+     */
   async editAction() {
     if (this.isPost) {
       const data = this.post();
@@ -58,6 +72,11 @@ module.exports = class extends think.cmswing.admin {
       return this.display();
     }
   }
+
+    /**
+     *
+     * @returns {Promise<*>}
+     */
   async delAction() {
     const ids = this.para('ids');
     if (think.isEmpty(ids)) {
