@@ -1,0 +1,249 @@
+{% extends "./inc/base.html" %}
+{% block style %}
+<!--<link rel="stylesheet" href="/static/js/slider/slider.css" type="text/css" />-->
+<link rel="stylesheet" href="/static/admin/js/chosen/chosen.css" type="text/css" />
+<link rel="stylesheet" href="/static/admin/js/datepicker/bootstrap-datetimepicker.min.css" type="text/css">
+<script src="/static/admin/js/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<section class="vbox">
+    <header class="header bg-light dk">
+        <p>{{controller.meta_title}}</p>
+
+    </header>
+    <section class="scrollable wrapper">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <section class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="/admin/integral/add" class="form-horizontal" method="post"  data-validate="parsley">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 商品名称</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="name" type="text" class="form-control" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图标</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            {{HOOKS@adminUpPic.icon|safe}}
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>图片上传</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">商品图片</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            {{HOOKS@adminUpPics.image|safe}}
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>图片上传</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 总量</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="amount_num" type="text" class="form-control number" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 总量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 剩余量</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="residue_num" type="text" class="form-control number" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 剩余量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="price" type="text" class="form-control number" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 价格不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 介绍</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="desc" type="text" class="form-control" data-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 排序</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="sort" type="text" class="form-control" data-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 销量</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="sales" type="text" class="form-control number" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 销量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 推荐度</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="groom" type="text" class="form-control number" value="{{data.groom}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">商品详情信息</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            {{HOOKS@adminEdit.detail|safe}}
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 文件上传</span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>文件上传</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 是否停售</label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline i-checks">
+                                        <input type="radio"  value="1" name="is_stop"    ><i></i> 停售
+                                    </label>
+                                    <label class="radio-inline i-checks">
+                                        <input type="radio"  value="0" name="is_stop"   checked><i></i>正常
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-submit">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button type="submit" target-form="form-horizontal" class="btn btn-primary ajax-post">保存</button>
+                                    <button type="submit" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    </section>
+</section>
+<script>
+    function selectClass(){
+        var restaurant_id = $('#restaurant_id option:selected').val();
+        $.ajax({
+            url:'/admin/nature/getClass?id='+restaurant_id,
+            type:'get',
+            resultType:'json',
+            success:function (res) {
+                if(res.errno == 0){
+                    var data = res.data.dishs;
+                    var option = '';
+                    console.log(data);
+                    for(var i in data){
+                        var dish = data[i];
+                        option += '<option value="'+dish.id+'">'+dish.name+'</option>';
+                    }
+                    var $option = $(option);
+                    $('#dish_class').append($option);
+                }
+            },
+            fail:function () {
+                console.log('参数错误');
+                toastr.error('参数错误');
+            }
+        })
+    }
+</script>
+{% endblock %}
+
+{% block script %}
+<!-- slider -->
+<!--<script src="/static/js/slider/bootstrap-slider.js"></script>-->
+<!-- file input -->
+<script src="/static/admin/js/chosen/chosen.jquery.min.js"></script>
+<script src="/static/admin/js/file-input/bootstrap-filestyle.min.js"></script>
+<script src="/static/admin/js/parsley/parsley.min.js"></script>
+<script src="/static/admin/js/parsley/parsley.extend.js"></script>
+<script src="/static/admin/js/datepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="/static/admin/js/datepicker/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript"></script>
+{% endblock %}
