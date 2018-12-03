@@ -34,13 +34,11 @@
                         <th>ID</th>
                         <th>名称</th>
                         <th>图标</th>
-                        <th>图片</th>
                         <th>总量</th>
                         <th>剩余量</th>
                         <th>价格</th>
                         <th>介绍</th>
                         <th>销量</th>
-                        <th>商品详情信息</th>
                         <th>是否停止销售</th>
                         <th style="width:130px;">操作</th>
                     </tr>
@@ -52,14 +50,14 @@
                         </td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.icon }}</td>
-                        <td>{{ item.image }}</td>
+                        <td>
+                            <img src="{{ item.icon|get_pic('m=1,w=200,h=200')}}" height="60">
+                        </td>
                         <td>{{ item.amount_num }}</td>
                         <td>{{ item.residue_num }}</td>
                         <td>{{ item.price }}</td>
                         <td>{{ item.desc }}</td>
                         <td>{{ item.sales }}</td>
-                        <td>{{ item.detail }}</td>
                         <td>{% if item.is_stop == 0%}正常{%elif item.is_stop == 1%}停止{%endif%}</td>
                         <td>
                             <a href="/admin/integral/edit/?id={{item.id}}" class="text-info"  >编辑</a>

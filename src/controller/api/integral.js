@@ -19,10 +19,27 @@ module.exports = class extends think.cmswing.app {
     const count = await this.model('sign').where({user_id: userId, create_time: ['>', todayStartTime]}).count();
     const user = await this.model('wx_user').find(userId);
     const signDays = user.sign_days;
-    const startDay = parseInt(signDays / 7) + 1;
-    const endDay = parseInt(signDays / 7) + 7;
-    const currentDay = signDays % 7;
-    const again = parseInt(signDays / 7) + 1;
+    let time = user.first_sign_time;
+    time = new Date(time);
+    time.setHours(0);
+    time.setMinutes(0);
+    time.setSeconds(0);
+    time.setMilliseconds(0);
+    let startDay = parseInt(signDays / 7) + 1;
+    let endDay = parseInt(signDays / 7) + 7;
+    let currentDay = signDays % 7;
+    let again = parseInt(signDays / 7) + 1;
+    if ((start - time) / 86400000 == signDays) {
+      startDay = parseInt(signDays / 7) + 1;
+      endDay = parseInt(signDays / 7) + 7;
+      currentDay = signDays % 7;
+      again = parseInt(signDays / 7) + 1;
+    } else {
+      startDay = 1;
+      endDay = 7;
+      currentDay = 0;
+      again = 1;
+    }
     const data = {
       count: count,
       signDays: signDays,
@@ -109,8 +126,13 @@ module.exports = class extends think.cmswing.app {
     return this.success(integral);
   }
 
+  /**
+     * 商品列表
+     * @returns {Promise<*>}
+     */
   async goodslistAction() {
-    const sortRule = this.get('sort_rule');
+    let sortRule = this.get('sort_rule');
+    const currentPage = this.get('currentPage') || 1;
     const userId = this.getLoginUserId();
     const integral = await this.model('wx_user').where({id: userId}).getField('integral', true);
     const groom = this.get('groom');
@@ -138,5 +160,25 @@ module.exports = class extends think.cmswing.app {
     if (groom) {
       sort = 'groom DESC';
     }
+    const list = await this.model('goods').where(map).order(sort).page(currentPage, 5).countSelect();
+    for (const i in list.data) {
+      const goods = list.data[i];
+      goods.icon = await global.get_pic(goods.icon);
+      console.log(goods.icon);
+    }
+    return this.success(list);
+  }
+
+  async getgoodsAction() {
+    const id = this.get('id');
+    const data = await this.model('goods').find(id);
+    const imgList = [];
+    const imageArr = data.image.split(',');
+    for (const i in imageArr) {
+      const item = imageArr[i];
+      imgList.push(await global.get_pic(item));
+    }
+    data.imgList = imgList;
+    return this.success(data);
   }
 };

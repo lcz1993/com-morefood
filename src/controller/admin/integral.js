@@ -9,7 +9,7 @@ module.exports = class extends think.cmswing.admin {
     this.tactive = 'manager';
   }
 
-    /**
+  /**
      *
      * @returns {Promise<*>}
      */
@@ -27,7 +27,7 @@ module.exports = class extends think.cmswing.admin {
     return this.display();
   }
 
-    /**
+  /**
      *
      * @returns {Promise<*>}
      */
@@ -49,7 +49,7 @@ module.exports = class extends think.cmswing.admin {
     }
   }
 
-    /**
+  /**
      *
      * @returns {Promise<*>}
      */
@@ -74,7 +74,7 @@ module.exports = class extends think.cmswing.admin {
     }
   }
 
-    /**
+  /**
      *
      * @returns {Promise<*>}
      */

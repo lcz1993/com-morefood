@@ -58,10 +58,6 @@ module.exports = class extends think.cmswing.admin {
     }
     const list = await this.model('medu').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     for (const medu of list.data) {
-      if (medu.dish_picture) {
-        const img = await this.model('ext_attachment_pic').find(medu.dish_picture);
-        medu.dish_picture = img.path;
-      }
       if (medu.restaurant_id) {
         medu.restaurant = await this.model('restaurant').find(medu.restaurant_id);
       }

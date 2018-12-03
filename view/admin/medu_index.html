@@ -80,7 +80,7 @@
                         <td>{{ item.dish_desc }}</td>
                         <td>{{ item.dish_class.name }}</td>
                         <td>
-                            <img src="{{ item.dish_picture}}" height="60">
+                            <img src="{{ item.dish_picture|get_pic('m=1,w=200,h=200')}}" height="60">
                         </td>
                         <td>
                             <a href="javascript:void(0);" class="active" data-toggle="class" onclick="upClose({{item.is_stop}},{{item.id}})">
