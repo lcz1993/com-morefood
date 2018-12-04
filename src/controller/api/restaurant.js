@@ -14,7 +14,6 @@ module.exports = class extends think.cmswing.app {
     }
     const a = await this.model('restaurant').find(restaurant_id);
     const is_close = a.is_close;
-
     if (a.bg_image) {
       const b = await this.model('ext_attachment_pic').find(a.bg_image);
       a.bgImage = b.path;
@@ -403,7 +402,8 @@ module.exports = class extends think.cmswing.app {
         send_money: restaurant.send_money,
         discountNum: discountList.length,
         nature: restaurant.nature_id,
-        discountList: disArr
+        discountList: disArr,
+        is_send: restaurant.is_send
       };
       restaurantList.push(restau);
     }
@@ -422,5 +422,16 @@ module.exports = class extends think.cmswing.app {
     let status = await think.cache(`wx-u${userId}r${restaurantId}m${meduId}`);
     status = status || 0;
     return this.success(status);
+  }
+
+  /**
+     * 获取medu详细信息
+     */
+  async getmeduAction() {
+    const id = this.get('id');
+    const data = await this.model('medu').find(id);
+    data.image = await global.get_pic(data.image);
+    data.dish_picture = await global.get_pic(data.dish_picture);
+    return this.success(data);
   }
 };

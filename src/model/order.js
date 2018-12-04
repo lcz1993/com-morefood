@@ -94,6 +94,9 @@ module.exports = class extends think.Model {
       case 4 :
         statusText = '已完成';
         break;
+      case 5:
+        statusText = '待收货';
+        break;
       case 6:
         statusText = '已取消';
         break;

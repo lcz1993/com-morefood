@@ -233,8 +233,8 @@ module.exports = class extends think.cmswing.app {
     // 剩余量销量
     if (num) {
       await this.model('goods').where({id: goods.id}).update({
-        residue_num: goods.residue_num - num,
-        sales: goods.sales + num
+        residue_num: parseInt(goods.residue_num) - parseInt(num),
+        sales: parseInt(goods.sales) + parseInt(num)
       });
     }
     let prom_goods = {
