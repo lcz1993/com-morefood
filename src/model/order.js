@@ -148,7 +148,11 @@ module.exports = class extends think.Model {
         v.number = a.qty;
       });
       item.order_sn = item.order_no;
-      item.actual_price = item.order_amount;
+      if (item.payment == '1') {
+        item.actual_price = item.order_amount + '积分';
+      } else {
+        item.actual_price = '￥' + item.order_amount;
+      }
       const time = item.create_time;
       if (time > t) {
         item.create_time = '今天';

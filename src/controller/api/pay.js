@@ -65,15 +65,19 @@ module.exports = class extends think.cmswing.app {
       const original_price = f.original_price;
       const old_price = f.old_price;
       let totalPrice = 0;
-      for (const discountId of meduIds) {
-        const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
-        if (discountId.medu_id == food.dish_id && status != 1) {
-          totalPrice = original_price + old_price * (num - 1);
+      if (meduIds.length > 0) {
+        for (const discountId of meduIds) {
+          const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
+          if (discountId.medu_id == food.dish_id && status != 1) {
+            totalPrice = original_price + old_price * (num - 1);
           // 将用户消费购买特价商品信息保存
           // await think.cache(`wx-u${userId}r${restaurantId}m${food.dish_id}`, 1);
-        } else {
-          totalPrice = old_price * num;
+          } else {
+            totalPrice = old_price * num;
+          }
         }
+      } else {
+        totalPrice = old_price * num;
       }
       totalPrice = Math.round(totalPrice * 100) / 100;
       f = {

@@ -2116,8 +2116,8 @@
              * ```
              */
             thumb: {
-                width: 110,
-                height: 110,
+                width: 210,
+                height: 210,
                 quality: 70,
                 allowMagnify: false,
                 crop: true,
@@ -2165,14 +2165,14 @@
              * ```
              */
             compress: {
-                width: 200,
-                height: 200,
+                width: 400,
+                height: 400,
                 quality: 90,
                 allowMagnify: false,
                 crop: false,
                 preserveHeaders: true,
                 noCompressIfLarger: false,
-                compressSize: 50
+                compressSize: 150
             }
         });
 
@@ -7766,6 +7766,7 @@
         'runtime/flash/runtime'
     ], function( FlashRuntime ) {
 
+        return FlashRuntime.register( 'Image', {
         return FlashRuntime.register( 'Image', {
             // init: function( options ) {
             //     var owner = this.owner;

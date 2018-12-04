@@ -97,6 +97,7 @@ module.exports = class extends think.cmswing.app {
       addr: addressMsg,
       order_no: order.order_no,
       payTime: payTime,
+      payment: order.payment,
       user_remark: order.user_remark
     };
     return this.success(data);

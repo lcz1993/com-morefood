@@ -112,7 +112,7 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const type = this.get('type');
     const currentPage = this.get('currentPage');
-    const list = await this.model('record').where({is_integral: type, status: type, user_id: userId}).order('create_time DESC').page(currentPage, 5).countSelect();
+    const list = await this.model('record').where({is_integral: type, status: type, user_id: userId}).order('create_time DESC').page(currentPage, 10).countSelect();
     return this.success(list);
   }
 
@@ -164,11 +164,14 @@ module.exports = class extends think.cmswing.app {
     for (const i in list.data) {
       const goods = list.data[i];
       goods.icon = await global.get_pic(goods.icon);
-      console.log(goods.icon);
     }
     return this.success(list);
   }
 
+  /**
+     * 获取商品详情
+     * @returns {Promise<*>}
+     */
   async getgoodsAction() {
     const id = this.get('id');
     const data = await this.model('goods').find(id);
@@ -179,6 +182,101 @@ module.exports = class extends think.cmswing.app {
       imgList.push(await global.get_pic(item));
     }
     data.imgList = imgList;
+    return this.success(data);
+  }
+
+  /**
+     * 确认选择积分商品
+     * @returns {Promise<void>}
+     */
+  async saveAction() {
+    const data = JSON.parse(this.get('data'));
+    const id = data.id;
+    const num = data.num;
+    const goods = await this.model('goods').find(id);
+    const userId = this.getLoginUserId();
+    const user = await this.model('wx_user').find(userId);
+    const count = goods.price * num;
+    if (user.integral < count) {
+      return this.fail('积分不足，购买失败！');
+    }
+    const m = new Date().getTime().toString();
+    const order = {};
+    order.order_no = 'JF' + think._.padEnd(userId, 10, '0') + m.substr(8);
+    order.create_time = new Date().getTime();
+    order.user_id = userId;
+    order.payment = 1;
+    order.status = 2;
+    order.pay_status = 1;
+    order.delivery_status = 0;
+    order.real_amount = goods.price * num;
+    order.order_amount = goods.price * num;
+    order.accept_name = data.accept_name;
+    order.user_remark = data.user_remark;
+    order.mobile = data.mobile;
+    order.create_time = new Date().getTime();
+    const res = await this.model('order').add(order);
+    // 扣积分，并生成积分流水记录
+    await this.model('wx_user').where({id: userId}).decrement('integral', parseFloat(count));
+    // 积分流水表
+    const map = {
+      is_integral: 0,
+      num: count,
+      is_add: 1,
+      user_id: userId,
+      status: 0,
+      order_id: res,
+      remark: '积分消费',
+      create_time: new Date().getTime()
+    };
+    await this.model('record').add(map);
+    // 剩余量销量
+    if (num) {
+      await this.model('goods').where({id: goods.id}).update({
+        residue_num: goods.residue_num - num,
+        sales: goods.sales + num
+      });
+    }
+    let prom_goods = {
+      id: goods.id,
+      uid: userId,
+      product_id: '',
+      qty: num,
+      type: '',
+      price: goods.price * num,
+      title: goods.name,
+      unit_price: goods.price,
+      pic: await global.get_pic(goods.icon)
+    };
+    prom_goods = JSON.stringify(prom_goods);
+    const food = {
+      order_id: res,
+      goods_id: goods.id,
+      goods_price: goods.price,
+      goods_nums: num,
+      prom_goods: prom_goods
+    };
+    await this.model('order_goods').add(food);
+
+    return this.success(res);
+  }
+
+  /**
+     * 下单选择页面
+     * @returns {Promise<*>}
+     */
+  async checkoutAction() {
+    const id = this.get('id');
+    let num = this.get('num');
+    if (!num) {
+      num = 1;
+    }
+    const data = await this.model('goods').find(id);
+    data.icon = await global.get_pic(data.icon);
+    data.num = num;
+    const userId = this.getLoginUserId();
+    const amountIntegral = await this.model('wx_user').where({id: userId}).getField('integral', true);
+    data.amountIntegral = amountIntegral;
     return this.success(data);
   }
 };
