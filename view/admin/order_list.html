@@ -31,7 +31,7 @@
                                             {%if status == 2 %}
                                             <a href="/admin/order/auditArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量审核</a>
                                             {%endif%}
-                                            {%if status == 3 %}
+                                            {%if status == 3 and  restaurant.is_send == 0 %}
                                             <a href="/admin/order/shipArr" class="btn btn-sm btn-info ajax-post confirm" target-form="ids">批量发货</a>
                                             {%endif%}
                                         </div>
@@ -102,7 +102,7 @@
 		                    <li><a href="/admin/order/see/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-eye"></i> 查看</a></li>
 		                   {%if item.pay_status !=1 and item.status != 3 and item.delivery_status != 1 and item.status != 4%} <li><a href="/admin/order/edit/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-edit"></i> 编辑</a></li>{%endif%}
                               {%if item.status ==2 %} <li><a href="/admin/order/audit/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-check-square-o"></i> 审核</a></li>
-                              {%elif item.status ==3 and item.delivery_status == 0%} <li><a href="/admin/order/ship/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-truck"></i> 发货</a></li>
+                              {%elif item.status ==3 and item.delivery_status == 0 and restaurant.is_send == 0%} <li><a href="/admin/order/ship/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-truck"></i>发货</a></li>
                               {%endif%}
                               {%if item.status != 6 and item.delivery_status != 2 and item.status ==3%}
                               <li><a href="/admin/order/finish/?id={{item.id}}" data-toggle="ajaxModal"><i class="fa fa-smile-o"></i> 完成</a></li>

@@ -244,6 +244,7 @@ module.exports = class extends think.Model {
     const res = await this.update(order);
     return res;
   }
+
   /**
      * 小程序待使用的订单
      * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）

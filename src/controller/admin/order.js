@@ -17,6 +17,9 @@ module.exports = class extends think.cmswing.admin {
     const status = this.get('status');
     const restaurant_id = this.get('restaurant_id');
     const restautantId = this.user.restaurant_id;
+    const restautant = await this.model('restaurant').find(restautantId);
+    this.assign('restautant', restautant);
+
     const map = {};
     let restaurantArr = [];
     if (!think.isEmpty(restaurant_id)) {
