@@ -27,6 +27,7 @@ module.exports = class extends think.cmswing.admin {
       restautantId = this.user.restaurant_id;
     } catch (e) {
       console.log(e);
+      return this.redirect('/admin/public/signin');
     }
     const id = this.get('id');
     let restaurantArr = [];
@@ -89,7 +90,13 @@ module.exports = class extends think.cmswing.admin {
         return this.fail('添加失败！');
       }
     } else {
-      const restaurantId = this.user.restaurant_id;
+      let restaurantId = '';
+      try {
+        restaurantId = this.user.restaurant_id;
+      } catch (e) {
+        console.log(e);
+        return this.redirect('/admin/public/signin');
+      }
       this.assign('restaurantId', restaurantId);
       if (restaurantId == 0) {
         const restaurantList = await this.model('restaurant').select();
@@ -108,6 +115,7 @@ module.exports = class extends think.cmswing.admin {
       this.meta_title = '新增菜单';
       await this.hook('adminUpPic', 'dish_picture', '', {$hook_key: 'dish_picture'});
       await this.hook('adminUpPic', 'image', '', {$hook_key: 'image'});
+      await this.hook('adminEdit', 'dish_desc', '', {$hook_key: 'dish_desc', $hook_type: '2_2'});
       return this.display();
     }
   }
@@ -146,6 +154,7 @@ module.exports = class extends think.cmswing.admin {
       this.meta_title = '编辑菜单';
       await this.hook('adminUpPic', 'dish_picture', medu.dish_picture, {$hook_key: 'dish_picture'});
       await this.hook('adminUpPic', 'image', medu.image, {$hook_key: 'image'});
+      await this.hook('adminEdit', 'dish_desc', medu.dish_desc, {$hook_key: 'dish_desc', $hook_type: '2_2'});
       return this.display();
     }
   }
