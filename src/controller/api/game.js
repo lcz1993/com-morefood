@@ -8,48 +8,36 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<*>}
      */
   async wheelindexAction() {
+    const activity = await this.model('activity').find(1);
+    const list = await this.model('activity_prize').where({activity_id: 1}).select();
+    const arr = [];
+    for (const i in list) {
+      const item = list[i];
+      const image = await global.get_pic(item.prize_pic);
+      const prize = {
+        id: item.id,
+        name: item.prize_name,
+        image: image,
+        probability: item.prize_counts > 0 ? item.percentage : 0
+      };
+      arr.push(prize);
+    }
+    const userId = this.getLoginUserId();
+    const integral = await this.model('wx_user').where({id: userId}).getField('integral', true);
     const xiaojuedingArr = {
-      id: 0,
-      game_rule: '游戏规则，很不游戏规则，很不错哦',
-      awards: [{
-        id: 1,
-        name: '描述经历过最尴尬的事',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 2,
-        name: '今天穿什么颜色的内裤',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 3,
-        name: '第一次啪啪啪几岁',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 4,
-        name: '做过最疯狂的事是什么',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 5,
-        name: '单身的感觉好吗',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 6,
-        name: '单身的感觉好吗',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }, {
-        id: 7,
-        name: '单身的感觉好吗',
-        image: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2260893404,3331864984&fm=58',
-        probability: 10
-      }]
+      id: activity.id,
+      game_rule: activity.activity_rules,
+      awards: arr
     };
+    // 从缓冲中取值，查看是今日免费次数是否已经使用
+    let status = await think.cache(`wx-u${userId}a${activity.id}`);
+    if (think.isEmpty(status)) {
+      status = 1;
+    }
     const data = {
-      xiaojuedingArr: xiaojuedingArr
+      xiaojuedingArr: xiaojuedingArr,
+      status: status,
+      integral: integral
     };
     return this.success(data);
   }

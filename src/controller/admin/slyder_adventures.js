@@ -10,16 +10,9 @@ module.exports = class extends think.cmswing.admin {
   }
   // eslint-disable-next-line semi
   async indexAction() {
-    const map = {};
-    map.activity_name = '大转盘';
-    const keyword = this.get('keyword');
-    if (!think.isEmpty(keyword)) {
-      map.activity_name = ['like', '%' + keyword + '%'];
-    }
-    const id = await this.model('activity').where({ activity_name: '大转盘' }).getField('id', true);
+    const id = this.get('id');
     const data = await this.model('activity').find(id);
     const prize = await this.model('activity_prize').where({ activity_id: id }).page(this.get('page') || 1, 5).order('id ASC').countSelect();
-    console.log(prize);
     this.assign('prize', prize);
     const html = this.pagination(prize);
     this.assign('pagerData', html); // 分页展示使用
@@ -50,8 +43,7 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       this.meta_title = '积分商品添加';
-      const id = await this.model('activity').where({ activity_name: '大转盘' }).getField('id', true);
-      const data = await this.model('activity').find(id);
+      const data = await this.model('activity').find(1);
       this.assign('data', data);
       await this.hook('adminUpPic', 'prize_pic', '', {$hook_key: 'prize_pic'});
       return this.display();
@@ -80,7 +72,6 @@ module.exports = class extends think.cmswing.admin {
   async editActivityAction() {
     if (this.isPost) {
       const data = this.post();
-      console.log(data);
       const a = data.start_time;
       const b = data.end_time;
       data.start_time = new Date(a.replace(/-/g, '/')).getTime();

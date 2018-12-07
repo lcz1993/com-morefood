@@ -26,21 +26,9 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <select class="form-control input-sm" name="type" id="type" onchange="selectClass()">
-                                                {% if data.type == 1 %}
-                                                <option value="1" >红包</option>
-                                                <option value="2" >积分</option>
-                                                <option value="3" >实物礼品</option>
-                                                {%endif%}
-                                                {% if data.type == 2 %}
-                                                <option value="2" >积分</option>
-                                                <option value="1" >红包</option>
-                                                <option value="3" >实物礼品</option>
-                                                {%endif%}
-                                                {% if data.type == 3 %}
-                                                <option value="3" >实物礼品</option>
-                                                <option value="2" >积分</option>
-                                                <option value="1" >红包</option>
-                                                {%endif%}
+                                                <option value="1" {% if data.type == 1 %}selected{%endif%}>红包</option>
+                                                <option value="2" {% if data.type == 2 %}selected{%endif%}>积分</option>
+                                                <option value="3" {% if data.type == 3 %}selected{%endif%}>实物礼品</option>
                                             </select>
 
 
@@ -85,70 +73,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <select class="form-control input-sm" name="restaurant_id" id="restaurant_id" onchange="selectClass()">
-                                                {% if data.prize_level == 0 %}
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="2" >二等奖</option>
-                                                <option value="3" >三等奖</option>
-                                                <option value="4" >四等奖</option>
-                                                <option value="5" >五等奖</option>
-                                                <option value="6" >六等奖</option>
-
-                                                {%endif%}
-                                                {% if data.prize_level == 1 %}
-                                                <option value="1" >一等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="0" >二等奖</option>
-                                                <option value="0" >三等奖</option>
-                                                <option value="0" >四等奖</option>
-                                                <option value="0" >五等奖</option>
-                                                <option value="0" >六等奖</option>
-                                                {%endif%}
-                                                {% if data.prize_level == 2 %}
-                                                <option value="2" >二等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="3" >三等奖</option>
-                                                <option value="4" >四等奖</option>
-                                                <option value="5" >五等奖</option>
-                                                <option value="6" >六等奖</option>
-                                                {%endif%}
-                                                {% if data.prize_level == 3 %}
-                                                <option value="3" >三等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="2" >二等奖</option>
-                                                <option value="4" >四等奖</option>
-                                                <option value="5" >五等奖</option>
-                                                <option value="6" >六等奖</option>
-                                                {%endif%}
-                                                {% if data.prize_level == 4 %}
-                                                <option value="4" >四等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="2" >二等奖</option>
-                                                <option value="3" >三等奖</option>
-                                                <option value="5" >五等奖</option>
-                                                <option value="6" >六等奖</option>
-                                                {%endif%}
-                                                {% if data.prize_level == 5 %}
-                                                <option value="5" >五等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="2" >二等奖</option>
-                                                <option value="3" >三等奖</option>
-                                                <option value="4" >四等奖</option>
-                                                <option value="6" >六等奖</option>
-                                                {%endif%}
-                                                {% if data.prize_level == 6 %}
-                                                <option value="6" >六等奖</option>
-                                                <option value="0" >特等奖</option>
-                                                <option value="1" >一等奖</option>
-                                                <option value="2" >二等奖</option>
-                                                <option value="3" >三等奖</option>
-                                                <option value="4" >四等奖</option>
-                                                <option value="5" >五等奖</option>
-                                                {%endif%}
+                                                <option value="0" {% if data.prize_level == 0 %}selected{%endif%} >特等奖</option>
+                                                <option value="1" {% if data.prize_level == 1 %}selected{%endif%} >一等奖</option>
+                                                <option value="2" {% if data.prize_level == 2 %}selected{%endif%} >二等奖</option>
+                                                <option value="3" {% if data.prize_level == 3 %}selected{%endif%} >三等奖</option>
+                                                <option value="4" {% if data.prize_level == 4 %}selected{%endif%} >四等奖</option>
+                                                <option value="5" {% if data.prize_level == 5 %}selected{%endif%} >五等奖</option>
+                                                <option value="6" {% if data.prize_level == 6 %}selected{%endif%} >六等奖</option>
                                             </select>
                                         </div>
                                         <div class="col-md-12 hide">

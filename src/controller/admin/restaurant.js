@@ -24,9 +24,14 @@ module.exports = class extends think.cmswing.admin {
     if (this.get('keyword')) {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
-    const user = await this.session('userInfo');
-    if (parseInt(user.restaurant_id) !== 0) {
-      map.id = user.restaurant_id;
+    let user = {};
+    try {
+      user = await this.session('userInfo');
+      if (parseInt(user.restaurant_id) !== 0) {
+        map.id = user.restaurant_id;
+      }
+    } catch (e) {
+      return this.redirect('/admin/public/signin');
     }
     const list = await this.model('restaurant').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     const html = this.pagination(list);

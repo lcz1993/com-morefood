@@ -56,6 +56,7 @@ module.exports = class extends think.cmswing.admin {
       }
     } catch (e) {
       console.log(e);
+      return this.redirect('/admin/public/signin');
     }
     const list = await this.model('medu').where(map).order('id DESC').page(this.get('page') || 1, 20).countSelect();
     for (const medu of list.data) {
