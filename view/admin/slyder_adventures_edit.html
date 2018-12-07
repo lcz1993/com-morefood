@@ -1,0 +1,248 @@
+{% extends "./inc/base.html" %}
+{% block style %}
+<!--<link rel="stylesheet" href="/static/js/slider/slider.css" type="text/css" />-->
+<link rel="stylesheet" href="/static/admin/js/chosen/chosen.css" type="text/css" />
+<link rel="stylesheet" href="/static/admin/js/datepicker/bootstrap-datetimepicker.min.css" type="text/css">
+<script src="/static/admin/js/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<section class="vbox">
+    <header class="header bg-light dk">
+        <p>{{controller.meta_title}}</p>
+
+    </header>
+    <section class="scrollable wrapper">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <section class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="/admin/slyder_adventures/edit" class="form-horizontal" method="post"  data-validate="parsley">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品类型</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-control input-sm" name="type" id="type" onchange="selectClass()">
+                                                {% if data.type == 1 %}
+                                                <option value="1" >红包</option>
+                                                <option value="2" >积分</option>
+                                                <option value="3" >实物礼品</option>
+                                                {%endif%}
+                                                {% if data.type == 2 %}
+                                                <option value="2" >积分</option>
+                                                <option value="1" >红包</option>
+                                                <option value="3" >实物礼品</option>
+                                                {%endif%}
+                                                {% if data.type == 3 %}
+                                                <option value="3" >实物礼品</option>
+                                                <option value="2" >积分</option>
+                                                <option value="1" >红包</option>
+                                                {%endif%}
+                                            </select>
+
+
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 类型不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品名称</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="prize_name" type="text" value="{{data.prize_name}}" class="form-control" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品数量</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12"><input name="prize_counts" value="{{data.prize_counts}}" type="text" class="form-control number" data-required="true"></div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 数量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品等级</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <select class="form-control input-sm" name="restaurant_id" id="restaurant_id" onchange="selectClass()">
+                                                {% if data.prize_level == 0 %}
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="2" >二等奖</option>
+                                                <option value="3" >三等奖</option>
+                                                <option value="4" >四等奖</option>
+                                                <option value="5" >五等奖</option>
+                                                <option value="6" >六等奖</option>
+
+                                                {%endif%}
+                                                {% if data.prize_level == 1 %}
+                                                <option value="1" >一等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="0" >二等奖</option>
+                                                <option value="0" >三等奖</option>
+                                                <option value="0" >四等奖</option>
+                                                <option value="0" >五等奖</option>
+                                                <option value="0" >六等奖</option>
+                                                {%endif%}
+                                                {% if data.prize_level == 2 %}
+                                                <option value="2" >二等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="3" >三等奖</option>
+                                                <option value="4" >四等奖</option>
+                                                <option value="5" >五等奖</option>
+                                                <option value="6" >六等奖</option>
+                                                {%endif%}
+                                                {% if data.prize_level == 3 %}
+                                                <option value="3" >三等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="2" >二等奖</option>
+                                                <option value="4" >四等奖</option>
+                                                <option value="5" >五等奖</option>
+                                                <option value="6" >六等奖</option>
+                                                {%endif%}
+                                                {% if data.prize_level == 4 %}
+                                                <option value="4" >四等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="2" >二等奖</option>
+                                                <option value="3" >三等奖</option>
+                                                <option value="5" >五等奖</option>
+                                                <option value="6" >六等奖</option>
+                                                {%endif%}
+                                                {% if data.prize_level == 5 %}
+                                                <option value="5" >五等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="2" >二等奖</option>
+                                                <option value="3" >三等奖</option>
+                                                <option value="4" >四等奖</option>
+                                                <option value="6" >六等奖</option>
+                                                {%endif%}
+                                                {% if data.prize_level == 6 %}
+                                                <option value="6" >六等奖</option>
+                                                <option value="0" >特等奖</option>
+                                                <option value="1" >一等奖</option>
+                                                <option value="2" >二等奖</option>
+                                                <option value="3" >三等奖</option>
+                                                <option value="4" >四等奖</option>
+                                                <option value="5" >五等奖</option>
+                                                {%endif%}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 等级不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品概率</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input name="percentage" value="{{data.percentage}}" type="text" class="form-control number" >
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">奖品图片</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            {{HOOKS@adminUpPic.prize_pic|safe}}
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>图片上传</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-submit">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input name="id" value="{{data.id}}" type="hidden">
+                                    <button type="submit" target-form="form-horizontal" class="btn btn-primary ajax-post">保存</button>
+                                    <button type="submit" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    </section>
+</section>
+<script>
+    function selectClass(){
+        var restaurant_id = $('#restaurant_id option:selected').val();
+        $.ajax({
+            url:'/admin/medu/getClass?id='+restaurant_id,
+            type:'get',
+            resultType:'json',
+            success:function (res) {
+                if(res.errno == 0){
+                    var data = res.data.dishs;
+                    var option = '';
+                    console.log(data);
+                    for(var i in data){
+                        var dish = data[i];
+                        option += '<option value="'+dish.id+'">'+dish.name+'</option>';
+                    }
+                    var $option = $(option);
+                    $('#dish_class').append($option);
+                }
+            },
+            fail:function () {
+                console.log('参数错误');
+                toastr.error('参数错误');
+            }
+        })
+    }
+</script>
+{% endblock %}
+
+{% block script %}
+<!-- slider -->
+<!--<script src="/static/js/slider/bootstrap-slider.js"></script>-->
+<!-- file input -->
+<script src="/static/admin/js/chosen/chosen.jquery.min.js"></script>
+<script src="/static/admin/js/file-input/bootstrap-filestyle.min.js"></script>
+<script src="/static/admin/js/parsley/parsley.min.js"></script>
+<script src="/static/admin/js/parsley/parsley.extend.js"></script>
+<script src="/static/admin/js/datepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="/static/admin/js/datepicker/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript"></script>
+{% endblock %}
