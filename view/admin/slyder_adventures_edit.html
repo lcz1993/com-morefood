@@ -3,6 +3,11 @@
 <!--<link rel="stylesheet" href="/static/js/slider/slider.css" type="text/css" />-->
 <link rel="stylesheet" href="/static/admin/js/chosen/chosen.css" type="text/css" />
 <link rel="stylesheet" href="/static/admin/js/datepicker/bootstrap-datetimepicker.min.css" type="text/css">
+<style>
+    .display{
+        display:none;
+    }
+</style>
 <script src="/static/admin/js/jquery.min.js"></script>
 {% endblock %}
 {% block content %}
@@ -25,10 +30,12 @@
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <select class="form-control input-sm" name="type" id="type" onchange="selectClass()">
-                                                <option value="1" {% if data.type == 1 %}selected{%endif%}>红包</option>
-                                                <option value="2" {% if data.type == 2 %}selected{%endif%}>积分</option>
-                                                <option value="3" {% if data.type == 3 %}selected{%endif%}>实物礼品</option>
+                                            <select class="form-control input-sm" name="type"  id="type" onchange="display()">
+                                                <!--<option value="" selected>-=-请选择-=-</option>-->
+                                                {% for index, item in config.setupapp.TYPES_PRIZES%}
+                                                <option value="{{index}}" {%if data.type == index %}selected{%endif%}>{{item}}</option>
+                                                {% endfor %}
+                                                <!--<option value="4" >满赠</option>-->
                                             </select>
 
 
@@ -66,20 +73,43 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">抽奖商品排序</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-12"><input name="prize_counts" value="{{data.sort}}" type="text" class="form-control number"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="display" id="display">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">数量</label>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-12"><input name="prize_counts" value="{{data.num}}" type="text" class="form-control number" data-required="true"></div>
+                                            <div class="col-md-12">
+                                                <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>输入红包金额或积分大小</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品等级</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <select class="form-control input-sm" name="restaurant_id" id="restaurant_id" onchange="selectClass()">
-                                                <option value="0" {% if data.prize_level == 0 %}selected{%endif%} >特等奖</option>
-                                                <option value="1" {% if data.prize_level == 1 %}selected{%endif%} >一等奖</option>
-                                                <option value="2" {% if data.prize_level == 2 %}selected{%endif%} >二等奖</option>
-                                                <option value="3" {% if data.prize_level == 3 %}selected{%endif%} >三等奖</option>
-                                                <option value="4" {% if data.prize_level == 4 %}selected{%endif%} >四等奖</option>
-                                                <option value="5" {% if data.prize_level == 5 %}selected{%endif%} >五等奖</option>
-                                                <option value="6" {% if data.prize_level == 6 %}selected{%endif%} >六等奖</option>
+                                            <select class="form-control input-sm" name="prize_level"  id="prize_level">
+                                                <!--<option value="" selected>-=-请选择-=-</option>-->
+                                                {% for index, item in config.setupapp.PRIZE_LEVEL%}
+                                                <option value="{{index}}" {%if data.prize_level == index %}selected{%endif%}>{{item}}</option>
+                                                {% endfor %}
+                                                <!--<option value="4" >满赠</option>-->
                                             </select>
                                         </div>
                                         <div class="col-md-12 hide">
@@ -162,7 +192,21 @@
                 toastr.error('参数错误');
             }
         })
+
     }
+
+    function display() {
+        var obj = document.getElementById("type"); //定位id
+        var index = obj.selectedIndex; // 选中索引
+        var is_send = obj.options[index].value; // 选中值
+        if (is_send == 1 || is_send == 2 ) {
+            $("#display").css("display", "block");
+        }
+        else {
+            $("#display").css("display", "none");
+        }
+    }
+    window.onload =display;
 </script>
 {% endblock %}
 

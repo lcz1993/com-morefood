@@ -12,7 +12,7 @@ module.exports = class extends think.cmswing.admin {
   async indexAction() {
     const id = this.get('id');
     const data = await this.model('activity').find(id);
-    const prize = await this.model('activity_prize').where({ activity_id: id }).page(this.get('page') || 1, 5).order('id ASC').countSelect();
+    const prize = await this.model('activity_prize').where({ activity_id: id }).page(this.get('page') || 1, 20).order('id ASC').countSelect();
     this.assign('prize', prize);
     const html = this.pagination(prize);
     this.assign('pagerData', html); // 分页展示使用
@@ -27,7 +27,7 @@ module.exports = class extends think.cmswing.admin {
       const map = {};
       const data = this.post();
       map.type = data.type;
-      map.activity_id = data.activity_id;
+      map.activity_id = data.id;
       map.prize_name = data.prize_name;
       map.prize_counts = data.prize_counts;
       map.prize_level = data.prize_level;
@@ -35,9 +35,11 @@ module.exports = class extends think.cmswing.admin {
       map.create_time = Date.parse(new Date());
       map.member_id = this.user.uid;
       map.prize_pic = data.prize_pic;
+      map.sort = data.sort;
+      map.num = data.num;
       const res = await this.model('activity_prize').add(map);
       if (res) {
-        return this.success({name: '添加成功！'});
+        return this.success({name: '添加成功！', url: '/admin/slyder_adventures/index/?id=1'});
       } else {
         return this.fail('添加失败!');
       }
@@ -55,7 +57,7 @@ module.exports = class extends think.cmswing.admin {
       const data = this.post();
       const res = await this.model('activity_prize').update(data);
       if (res) {
-        return this.success({name: '修改成功！', url: '/admin/slyder_adventures/index'});
+        return this.success({name: '修改成功！', url: '/admin/slyder_adventures/index/?id=1'});
       } else {
         return this.fail('修改失败！');
       }
