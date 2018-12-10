@@ -18,7 +18,7 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const count = await this.model('sign').where({user_id: userId, create_time: ['>', todayStartTime]}).count();
     const user = await this.model('wx_user').find(userId);
-    const signDays = user.sign_days;
+    let signDays = user.sign_days;
     let time = user.first_sign_time;
     time = new Date(time);
     time.setHours(0);
@@ -29,16 +29,20 @@ module.exports = class extends think.cmswing.app {
     let endDay = parseInt(signDays / 7) + 7;
     let currentDay = signDays % 7;
     let again = parseInt(signDays / 7) + 1;
-    if ((start - time) / 86400000 == signDays) {
+    console.log((start.getTime() - time.getTime()) / 86400000);
+    // 连续签到
+    if ((start.getTime() - time.getTime()) / 86400000 == signDays) {
       startDay = parseInt(signDays / 7) + 1;
       endDay = parseInt(signDays / 7) + 7;
       currentDay = signDays % 7;
       again = parseInt(signDays / 7) + 1;
+      // 不连续签到
     } else {
       startDay = 1;
       endDay = 7;
       currentDay = 0;
       again = 1;
+      signDays = 0;
     }
     const data = {
       count: count,
@@ -65,9 +69,11 @@ module.exports = class extends think.cmswing.app {
     }
     const startTime = user.first_sign_time;
     let count = await this.model('sign').where({create_time: ['BETWEEN', startTime, createTime]}).count();
+    let signDays = 1;
     if (count == user.sign_days && user.sign_days != 0) {
       await this.model('wx_user').where({id: user.id}).increment({'sign_days': 1, 'integral': again});
       count++;
+      signDays = user.sign_days + 1;
     } else {
       count = 1;
       await this.model('wx_user').where({id: user.id}).increment('integral', again);
@@ -78,7 +84,6 @@ module.exports = class extends think.cmswing.app {
       create_time: createTime,
       again: again
     });
-    const signDays = user.sign_days + 1;
     const startDay = parseInt(signDays / 7) + 1;
     const endDay = parseInt(signDays / 7) + 7;
     const currentDay = parseInt(signDays % 7);
