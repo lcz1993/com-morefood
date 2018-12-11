@@ -10,7 +10,7 @@ module.exports = class extends think.cmswing.app {
   async wheelindexAction() {
     const id = this.get('id');
     const activity = await this.model('activity').find(id);
-    const list = await this.model('activity_prize').where({activity_id: 1}).order('sort asc').select();
+    const list = await this.model('activity_prize').where({activity_id: id}).order('sort asc').select();
     const arr = [];
     for (const i in list) {
       const item = list[i];
@@ -140,6 +140,61 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const id = this.get('id');
     await think.cache(`wx-u${userId}a${id}times`, this.get('times'));
+    await think.cache(`wx-u${userId}a${id}`, 0);
     return this.success();
+  }
+
+  /**
+     * 刮刮乐页面初始化
+     */
+  async scratchindexAction() {
+    const id = this.get('id');
+    const list = await this.model('activity_prize').where({activity_id: id, prize_counts: ['>', '0']}).select();
+    const pri = Math.round(Math.random() * 100);
+    let p = 0;
+    let prize = {};
+    for (const i in list) {
+      const item = list[i];
+      if (pri > p && pri < p + item.percentage) {
+        prize = item;
+      }
+      p += item.percentage;
+    }
+    const userId = this.getLoginUserId();
+    const integral = await this.model('wx_user').where({id: userId}).getField('integral', true);
+    // 获取当前状态：0不可以转，1可以转
+    let status = await think.cache(`wx-u${userId}a${id}`);
+    let times = await think.cache(`wx-u${userId}a${id}times`);
+    if (think.isEmpty(status) && status != 0) {
+      status = 1;
+    }
+    if (think.isEmpty(times)) {
+      times = 1;
+    }
+    const rule = await this.model('activity').where({id: id}).getField('activity_rules', true);
+    if (list.length == 0) {
+      prize = {
+        id: 0,
+        activity_id: '2',
+        type: 0,
+        prize_name: '谢谢参与',
+        prize_counts: '9999',
+        prize_level: '-1',
+        percentage: 100,
+        create_time: 0,
+        member_id: '1',
+        prize_pic: '',
+        sort: '0',
+        num: null
+      };
+    }
+    prize.game_rule = rule;
+    const data = {
+      prize: prize,
+      status: status,
+      integral: integral,
+      times: times
+    };
+    return this.success(data);
   }
 };
