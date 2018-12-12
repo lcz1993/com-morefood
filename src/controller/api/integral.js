@@ -284,4 +284,20 @@ module.exports = class extends think.cmswing.app {
     data.amountIntegral = amountIntegral;
     return this.success(data);
   }
+
+  /**
+     * 获取积分顶部轮播广告
+     */
+  async getmsgAction() {
+    const list = await this.model('order').where({payment: 1, pay_status: 1}).limit(5).order('create_time DESC').select();
+    let text = '';
+    for (const i in list) {
+      const item = list[i];
+      const userName = await this.model('wx_user').where({id: item.user_id}).getField('nickname', true);
+      let goods = await this.model('order_goods').where({order_id: item.id}).getField('prom_goods', true);
+      goods = JSON.parse(goods);
+      text += '恭喜' + userName + '使用' + item.order_amount + '积分兑换' + goods.title + '。          ';
+    }
+    return this.success(text);
+  }
 };
