@@ -22,8 +22,21 @@ module.exports = class extends think.cmswing.admin {
     return this.display();
   }
 
+  async percentageAction() {
+    const activity_id = this.get('id');
+    const p = await this.model('activity_prize').where({activity_id: activity_id}).sum('percentage');
+    const list = await this.model('activity_prize').where({activity_id: activity_id}).countSelect();
+    for (const i of list.data) {
+      const id = i.id;
+      const g = i.percentage;
+      const percentage = Math.round((g / p) * 100);
+      await this.model('activity_prize').where({id: id}).update({percentage: percentage});
+    }
+  }
+
   async addAction() {
-    if (this.isPost) {activity
+    if (this.isPost) {
+      activity;
       const map = {};
       const data = this.post();
       map.type = data.type;

@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 <section class="vbox">
-    <header class="header bg-light dk">
+    <header class="header bg-light dk" onload="onbeforeunload_handler()" >
         <p>{{controller.meta_title}}</p>
     </header>
     <section class="scrollable wrapper">
@@ -164,5 +164,15 @@
             autoclose: true
         })
     })
+
+    window.onbeforeunload = onbeforeunload_handler;
+    window.onunload = onunload_handler;
+    function onbeforeunload_handler(){
+        $.ajax({
+            url:'/admin/slot_machines/percentage/?id=1',
+            type:'get',
+            dataType:'json',
+        })
+    }
 </script>
 {% endblock %}
