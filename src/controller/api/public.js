@@ -153,7 +153,6 @@ module.exports = class extends think.cmswing.app {
     let sessionData = await rp(options);
     sessionData = JSON.parse(sessionData);
     if (!sessionData.session_key) {
-      console.log(sessionData.session_key);
       return this.fail(1, '出错');
     }
     const WXBizDataDrypt = this.service('WXBizDataDrypt', think.config('weixin.appid'), sessionData.session_key);
@@ -168,5 +167,14 @@ module.exports = class extends think.cmswing.app {
       newUserInfo = await this.model('wx_user').field(['id', 'nickname', 'sex', 'headimgurl', 'tel']).where({ id: userInfo.id }).find();
     }
     return this.success(newUserInfo);
+  }
+
+  /**
+     * 获取积分，储值，VIP
+     */
+  async getAction() {
+    const userId = this.getLoginUserId();
+    const user = await this.model('wx_user').field('is_vip,integral,money').find(userId);
+    return this.success(user);
   }
 };
