@@ -22,20 +22,29 @@
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 关键字</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-3"><input name="keyword" type="text" value="{{data.keyword}}" class="form-control" data-required="true"></div>
+                                        <div class="col-md-6"><input name="keyword" type="text" value="{{data.keyword}}" class="form-control" data-required="true"></div>
                                         <div class="col-md-12 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 关键字不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 界面排序</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="sort_order" value="{{data.sort_order}}" type="text" class="form-control" data-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 热词</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <label class="radio-inline i-checks">
                                         <input type="radio"  value="1" name="is_hot"  onclick="$('.pid').show()" {%if data.is_hot==1%}checked{%endif%}><i></i>是
                                     </label>
@@ -43,12 +52,9 @@
                                         <input type="radio"  value="0" name="is_hot"  onclick="$('.pid').hide()" {%if data.is_hot==0%}checked{%endif%}><i></i>否
                                     </label>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 默认</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <label class="radio-inline i-checks">
                                         <input type="radio"  value="1" name="is_default"  onclick="$('.pid').show()"  {%if data.is_default==1%}checked{%endif%}><i></i>是
                                     </label>
@@ -56,12 +62,13 @@
                                         <input type="radio"  value="0" name="is_default"  onclick="$('.pid').hide()"  {%if data.is_default==0%}checked{%endif%}><i></i>否
                                     </label>
                                 </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 显示/隐藏</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <label class="radio-inline i-checks">
                                         <input type="radio"  value="1" name="is_show"  onclick="$('.pid').show()"  {%if data.is_show==1%}checked{%endif%}><i></i>显示
                                     </label>
@@ -69,6 +76,17 @@
                                         <input type="radio"  value="0" name="is_show"  onclick="$('.pid').hide()"  {%if data.is_show==0%}checked{%endif%}><i></i>隐藏
                                     </label>
                                 </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 状态</label>
+                                <div class="col-sm-4">
+                                    <label class="radio-inline i-checks">
+                                        <input type="radio"  value="0" name="type"  onclick="$('.pid').show()" {%if data.type==0%}checked{%endif%}><i></i>正常
+                                    </label>
+                                    <label class="radio-inline i-checks">
+                                        <input type="radio"  value="1" name="type"  onclick="$('.pid').hide()" {%if data.type==1%}checked{%endif%}><i></i>待处理
+                                    </label>
+                                </div>
+
                             </div>
 
                             <!--<div class="line line-dashed b-b line-lg pull-in"></div>-->
@@ -79,30 +97,8 @@
                                 <!--</div>-->
                             <!--</div>-->
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 界面排序</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <input name="sort_order" value="{{data.sort_order}}" type="text" class="form-control" data-required="true">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 状态</label>
-                                <div class="col-sm-10">
-                                    <label class="radio-inline i-checks">
-                                        <input type="radio"  value="0" name="type"  onclick="$('.pid').show()" {%if data.type==0%}checked{%endif%}><i></i>正常
-                                    </label>
-                                    <label class="radio-inline i-checks">
-                                        <input type="radio"  value="1" name="type"  onclick="$('.pid').hide()" {%if data.type==1%}checked{%endif%}><i></i>待处理
-                                    </label>
-                                </div>
-                            </div>
+
 
                             <div class="form-group form-submit">
                                 <div class="col-sm-4 col-sm-offset-2">

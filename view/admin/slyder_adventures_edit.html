@@ -27,9 +27,9 @@
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品类型</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <select class="form-control input-sm" name="type"  id="type" onchange="display()">
                                                 <!--<option value="" selected>-=-请选择-=-</option>-->
                                                 {% for index, item in config.setupapp.TYPES_PRIZES%}
@@ -40,49 +40,48 @@
 
 
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 类型不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="prize_name" type="text" value="{{data.prize_name}}" class="form-control" data-required="true">
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品数量</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="prize_counts" value="{{data.prize_counts}}" type="text" class="form-control number" data-required="true"></div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6"><input name="prize_counts" value="{{data.prize_counts}}" type="text" class="form-control number" data-required="true"></div>
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 数量不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">抽奖商品排序</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="prize_counts" value="{{data.sort}}" type="text" class="form-control number"></div>
+                                        <div class="col-md-6"><input name="prize_counts" value="{{data.sort}}" type="text" class="form-control number"></div>
 
                                     </div>
                                 </div>
+
                             </div>
+
 
                             <div class="display" id="display">
                                 <div class="form-group">
@@ -101,36 +100,35 @@
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品等级</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <select class="form-control input-sm" name="prize_level"  id="prize_level">
+                                        <div class="col-md-6">
+                                            <select class="form-control input-sm" name="prize_level"  id="prize_level" onchange="display()">
                                                 <!--<option value="" selected>-=-请选择-=-</option>-->
-                                                {% for index, item in config.setupapp.PRIZE_LEVEL%}
+                                                {% for index, item in config.setupapp.PRIZE_LEVEL%}
                                                 <option value="{{index}}" {%if data.prize_level == index %}selected{%endif%}>{{item}}</option>
                                                 {% endfor %}
                                                 <!--<option value="4" >满赠</option>-->
                                             </select>
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 等级不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品概率</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="percentage" value="{{data.percentage}}" type="text" class="form-control number" >
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>

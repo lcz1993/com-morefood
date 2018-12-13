@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品类型</label>
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-md-8 ">
                                             <select class="form-control input-sm" name="type"  id="type" onchange="display()">
@@ -39,12 +39,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-md-8 ">
                                             <input type="text" name="prize_name" class="input-sm form-control" placeholder="奖品名称" data-required="true" >
@@ -55,11 +52,13 @@
 
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品数量</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-md-8 ">
                                             <input type="text" name="prize_counts" class="input-sm form-control" placeholder="奖品数量" data-required="true" id="prize_counts">
@@ -70,6 +69,17 @@
 
                                     </div>
                                 </div>
+
+                                <label class="col-sm-2 control-label">抽奖商品排序</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-8 ">
+                                            <input type="text" name="sort" class="input-sm form-control"  id="sort" value="0">
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="display" id="display">
@@ -89,41 +99,26 @@
                                 </div>
                             </div>
 
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">抽奖商品排序</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-8 ">
-                                            <input type="text" name="sort" class="input-sm form-control"  id="sort" value="0">
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品等级</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-md-8 ">
-                                            <select class="form-control input-sm" name="prize_level"  id="prize_level">
-                                                <option value="" selected>-=-请选择-=-</option>
-                                                {% for index, item in config.setupapp.PRIZE_LEVEL%}
+                                            <select class="form-control input-sm" name="prize_level"  id="prize_level" onchange="display()">
+                                                <option>-=-请选择-=-</option>
+                                                {% for index, item in config.setupapp.PRIZE_LEVEL%}
                                                 <option value="{{index}}">{{item}}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品获得概率</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-7 ">
+                                        <div class="col-md-8 ">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="percentage" id="percentage" placeholder="奖品获得概率">
                                                 <div class="input-group-addon">%</div>
@@ -131,7 +126,9 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">图标</label>

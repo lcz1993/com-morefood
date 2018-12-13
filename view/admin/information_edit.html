@@ -27,104 +27,100 @@
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品ID</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="prize_id" type="text" value="{{data.prize_id}}" class="form-control" data-required="true" readonly="readonly">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 奖品名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="prize_name" type="text" value="{{data.prize_name}}" class="form-control" data-required="true" readonly="readonly">
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 添加积分数量</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input  value="{{list.num}}" type="text" class="form-control number" data-required="true" readonly="readonly"></div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6"><input  value="{{list.num}}" type="text" class="form-control number" data-required="true" readonly="readonly"></div>
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 数量不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">获取方式</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input  value="{{list.remark}}" type="text" class="form-control number" readonly="readonly"></div>
+                                        <div class="col-md-6"><input  value="{{list.remark}}" type="text" class="form-control number" readonly="readonly"></div>
 
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="display" id="display">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">用户ID</label>
-                                    <div class="col-sm-10">
-                                        <div class="row">
-                                            <div class="col-md-12"><input name="user_id" value="{{data.user_id}}" type="text" class="form-control number" data-required="true" readonly="readonly"></div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 用户名称</label>
-                                <div class="col-sm-10">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 用户ID</label>
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="user_name" value="{{data.user_name}}" type="text" class="form-control number" data-required="true" readonly="readonly"></div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 等级不能为空.</span>
+                                        <div class="col-md-6">
+                                            <input name="user_id" value="{{data.user_id}}" type="text" class="form-control number"  readonly="readonly">
                                         </div>
                                     </div>
                                 </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 用户名称</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="user_name" value="{{data.user_name}}" type="text" class="form-control number"  readonly="readonly">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+
+
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 电话</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="user_mobile" value="{{data.user_mobile}}" type="text" class="form-control number"  readonly="readonly">
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 地址</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="user_address" value="{{data.user_address}}" type="text" class="form-control number"  readonly="readonly">
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>

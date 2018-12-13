@@ -20,9 +20,9 @@
                         <form action="/admin/activity/edit" class="form-horizontal" method="post"  data-validate="parsley">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 活动名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="activity_name" type="text" class="form-control" value="{{data.activity_name}}" data-required="true">
                                         </div>
                                         <div class="col-md-12 hide">
@@ -30,14 +30,24 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 抽奖次数</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="times" type="text" class="form-control number" value="{{data.times}}">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 开始时间</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="start_time" type="text" class="date" value="{{ data.start_time|moment("YYYY-MM-DD HH:mm")}}" data-required="true" placeholder="开始时间">
                                         </div>
                                         <div class="col-md-12 hide">
@@ -45,13 +55,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 结束时间</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="end_time" type="text" class="date" value="{{ data.end_time|moment("YYYY-MM-DD HH:mm")}}"" data-required="true" placeholder="结束时间">
                                         </div>
                                         <div class="col-md-12 hide">
@@ -59,19 +67,9 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 抽奖次数</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="times" type="text" class="form-control number" value="{{data.times}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">

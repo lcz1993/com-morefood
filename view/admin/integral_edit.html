@@ -20,9 +20,9 @@
                         <form action="/admin/integral/edit" class="form-horizontal" method="post"  data-validate="parsley">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 商品名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="name" type="text" class="form-control" value="{{data.name}}" data-required="true">
                                         </div>
                                         <div class="col-md-12 hide">
@@ -30,17 +30,101 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 总量</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="amount_num" type="text" class="form-control" value="{{data.amount_num}}" data-required="true">
+                                        </div>
+                                        <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 总量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">图标</label>
-                                <div class="col-sm-10">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 剩余总量</label>
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-sm-10">
-                                            {{HOOKS@adminUpPic.icon|safe}}
+                                        <div class="col-md-6">
+                                            <input name="residue_num" type="text" class="form-control" value="{{data.residue_num}}" data-required="true">
                                         </div>
                                         <div class="col-md-12 hide">
+                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 剩余总量不能为空.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="price" type="text" class="form-control number" value="{{data.price}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 介绍</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="desc" type="text" class="form-control number" value="{{data.desc}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 排序</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="sort" type="text" value="{{data.sort}}" class="form-control" data-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 销量</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="sales" type="text" class="form-control number" value="{{data.sales}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 推荐度</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input name="groom" type="text" class="form-control number" value="{{data.groom}}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图标</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            {{HOOKS@adminUpPic.icon|safe}}
+                                        </div>
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
                                         </div>
                                         <div class="col-md-12">
@@ -48,6 +132,18 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 是否停售</label>
+                                <div class="col-sm-4">
+                                    <!--添加判断配送不配送-->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="radio" name="is_stop"  value="0" {%if data.is_stop == 0 %}checked{% endif %} >正常
+                                            <input name="is_stop" type="radio" value="1"  {%if data.is_stop == 1 %}checked{% endif %} >停售
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
@@ -70,113 +166,11 @@
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 总量</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="amount_num" type="text" class="form-control" value="{{data.amount_num}}" data-required="true">
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 总量不能为空.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 剩余总量</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="residue_num" type="text" class="form-control" value="{{data.residue_num}}" data-required="true">
-                                        </div>
-                                        <div class="col-md-12 hide">
-                                            <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 剩余总量不能为空.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="price" type="text" class="form-control number" value="{{data.price}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 介绍</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="desc" type="text" class="form-control number" value="{{data.desc}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 排序</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="sort" type="text" value="{{data.sort}}" class="form-control" data-required="true">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 销量</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="sales" type="text" class="form-control number" value="{{data.sales}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 推荐度</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input name="groom" type="text" class="form-control number" value="{{data.groom}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">商品详情信息</label>
                                 <div class="col-sm-10">
                                     <div class="row">
                                         <div class="col-sm-10">
                                             {{HOOKS@adminEdit.detail|safe}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 是否停售</label>
-                                <div class="col-sm-10">
-                                    <!--添加判断配送不配送-->
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input type="radio" name="is_stop"  value="0" {%if data.is_stop == 0 %}checked{% endif %} >正常
-                                            <input name="is_stop" type="radio" value="1"  {%if data.is_stop == 1 %}checked{% endif %} >停售
                                         </div>
                                     </div>
                                 </div>
