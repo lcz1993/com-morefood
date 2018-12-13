@@ -68,7 +68,7 @@ module.exports = class extends think.cmswing.admin {
       const data = this.post();
       map.recharge_amount = data.recharge_amount;
       map.donation_amount = data.donation_amount;
-      map.modification_time = Date.parse(new Date());
+      map.update_time = Date.parse(new Date());
       map.commodity_details = data.commodity_details;
       const res = await this.model('recharge_amount').update(map);
       if (res) {

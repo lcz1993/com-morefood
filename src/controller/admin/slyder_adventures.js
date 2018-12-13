@@ -36,7 +36,6 @@ module.exports = class extends think.cmswing.admin {
 
   async addAction() {
     if (this.isPost) {
-      activity;
       const map = {};
       const data = this.post();
       map.type = data.type;
