@@ -2,6 +2,11 @@ module.exports = class extends think.cmswing.app {
   constructor(ctx) {
     super(ctx);
   }
+
+  /**
+     * 获取初始化页面
+     * @returns {Promise<*>}
+     */
   async indexAction() {
     const addressArr = await this.model('recharge_amount').select();
     const addressList = [];
@@ -17,9 +22,13 @@ module.exports = class extends think.cmswing.app {
     return this.success(addressList);
   }
 
-  async getmoneyAction() {
+  /**
+     * 根据ID获取
+     * @returns {Promise<*>}
+     */
+  async getAction() {
     const id = this.get('id');
-    const money = await this.model('recharge_amount').where({id: id}).select();
-    return this.json(money);
+    const data = await this.model('recharge_amount').find(id);
+    return this.success(data);
   }
 };

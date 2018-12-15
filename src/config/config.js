@@ -44,7 +44,6 @@ module.exports = {
   // 可以公开访问的Controller
   publicController: [
     // 格式为controller
-    'api/public',
     'api/index'
   ],
 
@@ -55,8 +54,10 @@ module.exports = {
     'api/nature/index',
     'api/restaurant/list',
     'api/websocket/sendMsg',
-    'api/websocket/open'
-
+    'api/websocket/open',
+    'api/public/getCode',
+    'api/public/login',
+    'api/public/tel'
   ],
   // 以下为腾讯云短信服务
   cloud: {
