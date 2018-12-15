@@ -433,6 +433,26 @@ module.exports = class extends think.cmswing.app {
       await await this.model('order').updataStatus(orderId);
       return this.success();
     } else {
+      await this.model('order').del({id: orderId});
+      return this.fail();
+    }
+  }
+
+  async statuAction() {
+    const orderId = this.post('orderId');
+    const WeixinSerivce = this.service('weixin', 'api');
+    const orderInfo = await this.model('order').find(orderId);
+    const openid = await this.model('wx_user').where({ id: orderInfo.user_id }).getField('openid', true);
+    const payInfo = {
+      openid: openid,
+      out_trade_no: orderInfo.order_no
+    };
+    const result = await WeixinSerivce.queryOrder(payInfo);
+    if (result.trade_state == 'SUCCESS') {
+      await await this.model('order').updataStatu(orderId);
+      return this.success();
+    } else {
+      await await this.model('order').where({id: ['IN', orderId]}).delete();
       return this.fail();
     }
   }
@@ -583,5 +603,74 @@ module.exports = class extends think.cmswing.app {
       return this.fail();
     }
     return this.success();
+  }
+
+  async rechargeAction() {
+    const contentid = this.get('contentid');
+    const map = {};
+    let order_id = '';
+    const rechargeList = await this.model('recharge_amount').find(contentid);
+    const user_id = this.getLoginUserId();
+    const m = new Date().getTime().toString();
+    const order_no = think._.padEnd(user_id, 10, '0') + m.substr(8);
+    const accept_name = await this.model('wx_user').where({id: user_id}).getField('nickname', true);
+    const mobile = await this.model('wx_user').where({id: user_id}).getField('tel', true);
+    const real_amount = rechargeList.recharge_amount;
+    const create_time = Date.parse(new Date());
+    const order_amount = rechargeList.recharge_amount;
+    map.user_id = user_id;
+    map.order_no = order_no;
+    map.status = 0;
+    map.accept_name = accept_name;
+    map.mobile = mobile;
+    map.real_amount = real_amount;
+    map.create_time = create_time;
+    map.user_remark = rechargeList.commodity_details;
+    map.order_amount = order_amount;
+    map.type = 1;
+    const res = await this.model('order').add(map);
+    if (res) {
+      order_id = await this.model('order').where({order_no: order_no}).getField('id', true);
+    }
+    const orderInfo = await this.model('order').where({id: order_id}).find();
+    if (think.isEmpty(orderInfo)) {
+      return this.fail(400, '订单已取消');
+    }
+    if (parseInt(orderInfo.pay_status) !== 0) {
+      return this.fail(400, '订单已支付，请不要重复操作');
+    }
+    const openid = await this.model('wx_user').where({id: orderInfo.user_id}).getField('openid', true);
+    if (think.isEmpty(openid)) {
+      return this.fail('微信支付失败');
+    }
+    let clientIp = this.service('express', 'api').check_document_position(this.ctx.req); // 暂时不记录 ip
+    const arr = clientIp.split(':');
+    clientIp = arr[arr.length - 1];
+    const WeixinSerivce = this.service('weixin', 'api');
+    const amount = parseInt(orderInfo.order_amount * 100);
+    // try {
+    const returnParams = await WeixinSerivce.createUnifiedOrder({
+      openid: openid,
+      body: '订单编号：' + orderInfo.order_no,
+      out_trade_no: orderInfo.order_no,
+      total_fee: amount,
+      restaurant_id: orderInfo.restaurant_id,
+      spbill_create_ip: clientIp
+    });
+      // console.log(returnParams);
+      // const res = await this.model('order').updataStatus(orderId);
+      // if (res) {
+      //   return this.success(returnParams);
+      // } else {
+      //   return this.fail();
+      // }
+    const data = {
+      returnParams: returnParams,
+      orderId: order_id
+    };
+    return this.success(data);
+    // } catch (err) {
+    //   return this.fail('微信支付失败');
+    // }
   }
 };

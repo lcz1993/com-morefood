@@ -21,9 +21,9 @@
                         <form action="/admin/medu/add" class="form-horizontal" method="post"  data-validate="parsley">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 餐厅</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             {% if restaurantId == 0 %}
                                             <select class="form-control input-sm" name="restaurant_id" onchange="selectClass()" id="restaurant_id">
                                                 <option>-=-请选择-=-</option>
@@ -38,13 +38,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 所属类别</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <select class="form-control input-sm" name="dish_class" id="dish_class">
                                                 <option>-=-请选择-=-</option>
                                                 {%for v in dishClassList%}
@@ -54,70 +52,69 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 名称</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-2">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="dish_name" type="text" class="form-control" data-required="true">
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 名称不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="line line-dashed b-b line-lg pull-in"></div>
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
-                                <div class="col-sm-10">
+
+                                <label class="col-sm-1 control-label"><i class="fa fa-asterisk text-danger"></i> 价格</label>
+                                <div class="col-sm-2">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="old_price" value="{{data.old_price}}" type="text" class="form-control number" data-required="true">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 描述</label>
-                                <div class="col-sm-10">
+
+                                <label class="col-sm-1 control-label"><i class="fa fa-asterisk text-danger"></i> 描述</label>
+                                <div class="col-sm-2">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="description" value="{{data.description}}" type="text" class="form-control" ></div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6"><input name="description" value="{{data.description}}" type="text" class="form-control" ></div>
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 描述不能为空.</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 剩余数量</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <input name="num" value="{{data.num}}" type="text" class="form-control number" >
                                             <span class="help-block m-b-none text-muted">不输入剩余数量则视为不限数量.</span>
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>请输入数字</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 标识</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-md-12"><input name="is_hot" value="{{data.is_hot}}" type="text" class="form-control"></div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6"><input name="is_hot" value="{{data.is_hot}}" type="text" class="form-control"></div>
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>招牌菜请输入'招牌'，推荐菜请输入'推荐'.</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
@@ -134,36 +131,35 @@
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">图片</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             {{HOOKS@adminUpPic.dish_picture|safe}}
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>图片上传</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div class="form-group">
+
                                 <label class="col-sm-2 control-label">详情展示图片</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <div class="row">
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             {{HOOKS@adminUpPic.image|safe}}
                                         </div>
-                                        <div class="col-md-12 hide">
+                                        <div class="col-md-6 hide">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i> 图片上传</span>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <span class="help-block m-b-none text-muted"><i class="fa fa-info-circle text-info"></i>图片上传</span>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="form-group form-submit">
                                 <div class="col-sm-4 col-sm-offset-2">

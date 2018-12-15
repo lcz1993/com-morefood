@@ -245,6 +245,74 @@ module.exports = class extends think.Model {
     return res;
   }
 
+  async updataStatu(orderId) {
+    const order = {
+      id: orderId,
+      pay_status: 1,
+      status: 4,
+      pay_time: new Date().getTime()
+    };
+    const orderInfo = await this.find(orderId);
+    const foodList = await this.model('order_goods').where({order_id: orderId}).select();
+    // 计算总销量
+    let count = 0;
+    const foodArr = [];
+    for (const item in foodList) {
+      const food = foodList[item];
+      const a = JSON.parse(food.prom_goods);
+      count += a.qty;
+      await this.model('medu').where({id: food.goods_id}).increment({sell_count: a.qty});
+      foodArr.push(a);
+    }
+    await this.model('restaurant').where({id: orderInfo.restaurant_id}).increment({sales: count});
+    const node = {
+      orderId: orderId,
+      foodList: foodArr
+    };
+    // 生成财务日志
+    const balance = {
+      restaurant_id: orderInfo.restaurant_id,
+      user_id: orderInfo.user_id,
+      time: new Date().getTime(),
+      amount: orderInfo.order_amount,
+      amount_log: '',
+      note: JSON.stringify(node)
+    };
+    await this.model('balance_log').add(balance);
+    // 获取用户的积分
+    const record = await this.model('order').find(orderId);
+    const user_id = record.user_id;
+    const amount = orderInfo.order_amount;
+    const integral = Math.round(amount * 100) / 100;
+    await this.model('wx_user').where({id: user_id}).increment('integral', integral);
+    if (amount != 0) {
+      await this.model('record').add({
+        order_id: orderId,
+        is_integral: 0,
+        num: amount,
+        is_add: 0,
+        remark: '交易折合',
+        create_time: new Date().getTime(),
+        user_id: user_id,
+        status: 0
+      });
+    }
+    // 获取当日print_no最大值
+    const start = new Date();
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+    const todayStartTime = Date.parse(start) / 1;
+    const max_no = await this.where({
+      restaurant_id: orderInfo.restaurant_id,
+      create_time: ['>', todayStartTime]
+    }).max('print_no');
+    order.print_no = max_no + 1;
+    const res = await this.update(order);
+    return res;
+  }
+
   /**
      * 小程序待使用的订单
      * status: 订单的状态 0：未使用（2：待审核，3：已审核） 1：使用（4：已完成）
