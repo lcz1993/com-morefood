@@ -33,8 +33,7 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
-    const maxTime = await this.model('selection').where({user_id: userId}).max('add_time');
-    const cartArr = await this.model('selection').where({user_id: userId, add_time: maxTime}).select();
+    const cartArr = await this.model('selection').where({user_id: userId}).select();
     if (cartArr.length == 0) {
       return this.fail();
     }
@@ -434,6 +433,29 @@ module.exports = class extends think.cmswing.app {
       await await this.model('order').updataStatus(orderId);
       return this.success();
     } else {
+      return this.fail();
+    }
+  }
+
+  /**
+     * VIP支付完成后进行回调函数
+     * @returns {Promise<*>}
+     */
+  async viprechargeAction() {
+    const orderId = this.post('orderId');
+    const WeixinSerivce = this.service('weixin', 'api');
+    const orderInfo = await this.model('order').find(orderId);
+    const openid = await this.model('wx_user').where({ id: orderInfo.user_id }).getField('openid', true);
+    const payInfo = {
+      openid: openid,
+      out_trade_no: orderInfo.order_no
+    };
+    const result = await WeixinSerivce.queryOrder(payInfo);
+    if (result.trade_state == 'SUCCESS') {
+      await await this.model('order').updataStatu(orderId);
+      return this.success();
+    } else {
+      await await this.model('order').where({id: ['IN', orderId]}).delete();
       return this.fail();
     }
   }
