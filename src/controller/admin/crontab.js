@@ -23,15 +23,6 @@ module.exports = class extends think.Controller {
       return error.noAction('only invoked in cli mode！');
     }
 
-    // 定期清空购物车
-    const cartArr = await this.model('selection').select();
-    for (const cart of cartArr) {
-      const addTime = cart.add_time;
-      if ((addTime + 3600000) < (new Date().getTime())) {
-        await this.model('selection').where({id: cart.id}).delete();
-      }
-    }
-
     // 查询未付款，未作废的订单的订单
     const orderList = await this.model('order').where({status: 0}).select();
     const WeixinSerivce = this.service('weixin', 'api');
@@ -130,6 +121,16 @@ module.exports = class extends think.Controller {
         }
       }
     }
+
+    // 每天清除购物车
+    const cartArr = await this.model('selection').select();
+    for (const cart of cartArr) {
+      const addTime = cart.add_time;
+      if ((addTime + 3600000) < (new Date().getTime())) {
+        await this.model('selection').where({id: cart.id}).delete();
+      }
+    }
+
     // think.logger.debug(new Date(), '订单作废任务执行时间');
     // this.end();
     return this.body = '';
