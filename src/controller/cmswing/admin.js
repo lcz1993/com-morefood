@@ -329,8 +329,36 @@ module.exports = class extends think.Controller {
     if (tree) {
       var list = await this.model('menu').field('id,pid,title,url,tip,hide').order('sort asc').select();
       nodes = get_children(list, 0);
+      console.log(nodes);
     } else {
       nodes = await this.model('menu').field('title,url,tip,pid').order('sort asc').select();
+    }
+    tree_nodes = nodes;
+    return nodes;
+  }
+
+  /**
+     * 返回后台节点数据
+     * @param {boolean} tree    是否返回多维数组结构(生成菜单时用到),为false返回一维数组(生成权限节点时用到)
+     * @retrun {array}
+     *
+     * 注意,返回的主菜单节点数组中有'controller'元素,以供区分子节点和主节点
+     *
+     * @author
+     */
+  async schoolnodes(tree) {
+    tree = tree || true;
+    // let modelname = http.module;
+    let tree_nodes = [];
+    if (tree && !think.isEmpty(tree_nodes)) {
+      return tree_nodes;
+    }
+    let nodes;
+    if (tree) {
+      var list = await this.model('school').field('id,pid,name,display').order('sort asc').select();
+      nodes = get_children(list, 0);
+    } else {
+      nodes = await this.model('school').field('name,pid').order('sort asc').select();
     }
     tree_nodes = nodes;
     return nodes;

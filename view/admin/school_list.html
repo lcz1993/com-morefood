@@ -19,6 +19,7 @@
                     <div class="col-sm-2 m-b-xs">
                         <a href="/admin/school/add" class="btn  btn-info"  data-toggle="ajaxModal">新增</a>
                         <a class="btn btn-info ajax-post confirm" target-form="ids" href="/admin/school/del">删除</a>
+                        <a class="btn btn-info" onclick="javascript:history.back(-1);return false;">返 回</a>
                     </div>
                     <div class="search-form">
                         <!--新增店铺搜索-->
@@ -40,7 +41,10 @@
                     <tr>
                         <th><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
                         <th>ID</th>
-                        <th>学校名称</th>
+                        <a>
+                        <th>名称</th></a>
+                        <th>父级菜单</th>
+                        <th>是否隐藏</th>
                         <th>排序</th>
                         <th style="width:130px;">操作</th>
                     </tr>
@@ -51,7 +55,15 @@
                         <td><label class="checkbox m-n i-checks"><input type="checkbox" class="ids" value="{{item.id}}" name="ids" ><i></i></label>
                         </td>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
+                        <td><a href="/admin/school/list/?pid={{item.id}}">{{ item.name }}</a></td>
+                        <td>
+                            {%if item.pid  ==0 %} 一级分类 {%endif%}
+                            {%if item.pid !=0 %} {{ item.pname }} {%endif%}
+                        </td>
+                        <td>
+                            {%if item.display  ==0 %} 显示 {%endif%}
+                            {%if item.display ==1 %} 不显示 {%endif%}
+                        </td>
                         <td>{{ item.sort }}</td>
                         <td>
                             <a href="/admin/school/edit/?id={{item.id}}" class="text-info"  data-toggle="ajaxModal">编辑</a>

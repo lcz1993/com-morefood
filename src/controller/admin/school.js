@@ -13,11 +13,32 @@ module.exports = class extends think.cmswing.admin {
   // 学校管理的数据查询
   async listAction() {
     const map = {};
+    let pname = '';
+    const pid = this.get('pid');
     const keyword = this.get('keyword');
     if (!think.isEmpty(keyword)) {
       map.name = ['like', '%' + keyword + '%'];
     }
+    if (!think.isEmpty(pid)) {
+      pname = await this.model('school').where({ id: pid }).getField('name', true);
+      map.pid = pid;
+    } else {
+      map.pid = 0;
+    }
+
     const list = await this.model('school').where(map).page(this.get('page') || 1, 20).order('sort ASC').countSelect();
+    for (const item in list.data) {
+      const i = list.data[item];
+      const d = {
+        pid: i.pid,
+        pname: pname,
+        id: i.id,
+        name: i.name,
+        sort: i.sort,
+        display: i.display
+      };
+      list.data[item] = d;
+    }
     const html = this.pagination(list);
     this.assign('pagerData', html); // 分页展示使用
     this.assign('list', list.data);
@@ -28,7 +49,6 @@ module.exports = class extends think.cmswing.admin {
   async addAction() {
     if (this.isPost) {
       const data = this.post();
-      console.log(data);
       const res = await this.model('school').add(data);
       if (res) {
         return this.success({name: '添加成功！'});
@@ -66,5 +86,15 @@ module.exports = class extends think.cmswing.admin {
     // 删除话题
     await this.model('school').where({id: ['IN', ids]}).delete();
     return this.success({name: '删除成功!'});
+  }
+
+  /**
+     * 获取上级菜单
+     * @returns {Promise|*}
+     */
+  async getmenuAction() {
+    const menu = await this.schoolnodes();
+    // console.log(menu);
+    return this.json(menu);
   }
 };

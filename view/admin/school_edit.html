@@ -7,43 +7,46 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">学校名称</label>
+                    <label class="col-sm-3 control-label">名称</label>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <input type="text" name="name" value="{{data.name}}" class="input-sm form-control" placeholder="学校名称" data-required="true">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">上级菜单</label>
+                    <div class="col-md-6">
+                        <select class="form-control input-sm" name="pid" id="pid" data-pid="{{data.pid}}">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序</label>
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <input type="text" name="sort" value="{{data.sort}}" class="input-sm form-control" placeholder="排序" data-required="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否显示</label>
                     <div class="col-sm-9">
                         <div class="row">
                             <div class="col-md-8 ">
-                                <input type="text" name="name" value="{{data.name}}" class="input-sm form-control" placeholder="学校名称" data-required="true">
+                                <label>是</label>
+                                <input type="radio" name="display" value="0" {% if data.display == 0 %}checked="checked"{%endif%}/>
+                                <label>否</label>
+                                <input type="radio" name="display" value="1" {% if data.display == 1 %}checked="checked"{%endif%}/>    <!--默认选中-->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">排序</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="sort" value="{{data.sort}}" class="input-sm form-control" placeholder="排序" data-required="true">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">是否显示</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <label>是</label>
-                                    <input type="radio" name="display" value="0" {% if data.display == 0 %}checked="checked"{%endif%}/>
-                                    <label>否</label>
-                                    <input type="radio" name="display" value="1" {% if data.display == 1 %}checked="checked"{%endif%}/>    <!--默认选中-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id" value="{{data.id}}">
                     <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
@@ -64,4 +67,41 @@
             autoclose:true
         });
     })
+
+    //获取上级菜单
+    $.ajax({
+        url: "/admin/school/getmenu",
+        success: function (msg) {
+            /* 展示生成的HTML */
+            console.log(msg)
+            $("#pid").html(category_to_html(msg));
+
+        }
+    });
+    /* 生成HTML ul/li 形式 */
+    function category_to_html(nodes) {
+        var html = [];
+        var size = nodes.length;
+        var left = null;
+        var pid = $("#pid").attr("data-pid");
+        var selected = null
+        if(pid ==0){
+            html.push('<option value="0" selected="selected">一级菜单</option>');
+        }else {
+            html.push('<option value="0" >一级菜单</option>');
+        }
+        for (var i = 0; i < size; i++) {
+            left = nodes[i];
+
+            if(left['id']==pid){
+                html.push('<option value="' + left['id'] +'" selected="selected">'+new Array(left["deep"]+1).join("= ") + left['name'] +  '</option>');
+
+            }else{
+                html.push('<option value="' + left['id'] +'"' +pid+'>'+new Array(left["deep"]+1).join("= ") + left['name'] +  '</option>');
+            }
+        }
+        return html.join("\n");
+    }
+
+
 </script>
