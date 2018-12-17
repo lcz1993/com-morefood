@@ -438,7 +438,11 @@ module.exports = class extends think.cmswing.app {
     }
   }
 
-  async statuAction() {
+  /**
+     * VIP支付完成后进行回调函数
+     * @returns {Promise<*>}
+     */
+  async viprechargeAction() {
     const orderId = this.post('orderId');
     const WeixinSerivce = this.service('weixin', 'api');
     const orderInfo = await this.model('order').find(orderId);
