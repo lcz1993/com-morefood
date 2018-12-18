@@ -70,6 +70,7 @@ module.exports = class extends think.cmswing.app {
     const map = {};
     map.value_id = id;
     if (parseInt(typeId) === 3) {
+      // 有图
       map.status = 1;
     } else if (parseInt(typeId) === 0 || parseInt(typeId) === 1) {
       map.type_id = typeId;

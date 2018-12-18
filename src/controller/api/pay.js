@@ -33,7 +33,8 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
-    const cartArr = await this.model('selection').where({user_id: userId}).select();
+    const maxTime = await this.model('selection').where({user_id: userId}).max('add_time');
+    const cartArr = await this.model('selection').where({user_id: userId, add_time: maxTime}).select();
     if (cartArr.length == 0) {
       return this.fail();
     }
@@ -110,9 +111,17 @@ module.exports = class extends think.cmswing.app {
       a = await this.model('area').find(address.county);
       location += a.name;
       if (address.school_id) {
-        a = await this.model('school').find(address.school_id);
-        address.addr = a.name + address.addr;
+        let sc = {pid: address.school_id};
+        let b = '';
+        do {
+          sc.id = sc.pid;
+          sc = await this.model('school').find(sc.id);
+          b = sc.name + b;
+        } while (sc.pid != 0);
+        address.addr = b + address.addr;
       }
+      console.log(address.addr)
+      console.log(location)
       location += address.addr;
       address = {
         id: address.id,
@@ -433,15 +442,12 @@ module.exports = class extends think.cmswing.app {
       await await this.model('order').updataStatus(orderId);
       return this.success();
     } else {
+      await this.model('order').del({id: orderId});
       return this.fail();
     }
   }
 
-  /**
-     * VIP支付完成后进行回调函数
-     * @returns {Promise<*>}
-     */
-  async viprechargeAction() {
+  async statuAction() {
     const orderId = this.post('orderId');
     const WeixinSerivce = this.service('weixin', 'api');
     const orderInfo = await this.model('order').find(orderId);

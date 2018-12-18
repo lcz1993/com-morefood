@@ -55,7 +55,7 @@
                         <td><label class="checkbox m-n i-checks"><input type="checkbox" class="ids" value="{{item.id}}" name="ids" ><i></i></label>
                         </td>
                         <td>{{ item.id }}</td>
-                        <td><a href="/admin/school/list/?pid={{item.id}}">{{ item.name }}</a></td>
+                        <td><a href="/admin/school/list/?pid={{item.id}}" style="color: #38f">{{ item.name }}</a></td>
                         <td>
                             {%if item.pid  ==0 %} 一级分类 {%endif%}
                             {%if item.pid !=0 %} {{ item.pname }} {%endif%}

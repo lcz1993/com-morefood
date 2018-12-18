@@ -101,19 +101,76 @@ module.exports = class extends think.cmswing.app {
     a = await this.model('area').find(address.county);
     region.push(a.name);
     address.region = region;
-    const schoolList = await this.model('school').where({display: 0}).order('sort ASC').select();
-    const idArr = [];
-    const nameArr = [];
-    for (const item in schoolList) {
-      const school = schoolList[item];
-      idArr.push(school.id);
-      nameArr.push(school.name);
+    let sc = {pid: address.school_id};
+    do {
+      sc.id = sc.pid;
+      sc = await this.model('school').find(sc.id);
+    } while (sc.pid != 0);
+    const arr = [];
+    const schoolList = await this.model('school').where({display: 0, pid: 0}).field('id, name').order('sort ASC').select();
+    arr.push(schoolList);
+    const zyList = await this.model('school').where({display: 0, pid: sc.id}).field('id, name').order('sort ASC').select();
+    arr.push(zyList);
+    const njList = await this.model('school').where({display: 0, pid: zyList[0].id}).field('id, name').order('sort ASC').select();
+    arr.push(njList);
+    const bjList = await this.model('school').where({display: 0, pid: njList[0].id}).field('id, name').order('sort ASC').select();
+    arr.push(bjList);
+    const schoolNameList = [];
+    const schoolIdList = [];
+    for (const i in arr) {
+      const item = arr[i];
+      const nameArr = [];
+      const idArr = [];
+      for (const j in item) {
+        const jtem = item[j];
+        nameArr.push(jtem.name);
+        idArr.push(jtem.id);
+      }
+      schoolNameList.push(nameArr);
+      schoolIdList.push(idArr);
     }
-    const schoolArr = {
-      id: idArr,
-      name: nameArr
+
+    let schoolId = address.school_id;
+    const index = [0, 0, 0, 0];
+    let pid = 0;
+    for (const i in schoolIdList[3]) {
+      const item = schoolIdList[3][i];
+      pid = await this.model('school').where({id: schoolId}).getField('pid', true);
+      if (item == schoolId) {
+        index[3] = i;
+        schoolId = pid;
+      }
+    }
+    for (const i in schoolIdList[2]) {
+      const item = schoolIdList[2][i];
+      pid = await this.model('school').where({id: schoolId}).getField('pid', true);
+      if (item == schoolId) {
+        index[2] = i;
+        schoolId = pid;
+      }
+    }
+    for (const i in schoolIdList[1]) {
+      const item = schoolIdList[1][i];
+      pid = await this.model('school').where({id: schoolId}).getField('pid', true);
+      if (item == schoolId) {
+        index[1] = i;
+        schoolId = pid;
+      }
+    }
+    for (const i in schoolIdList[0]) {
+      const item = schoolIdList[0][i];
+      if (item == schoolId) {
+        index[0] = i;
+        schoolId = pid;
+      }
+    }
+    console.log(index);
+    const school = {
+      schoolNameList: schoolNameList,
+      schoolIdList: schoolIdList,
+      index: index
     };
-    address.schoolArr = schoolArr;
+    address.schoolArr = school;
     return this.success(address);
   }
   async editAction() {
@@ -152,18 +209,58 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<void>}
      */
   async schoolAction() {
-    const schoolList = await this.model('school').where({display: 0}).order('sort ASC').select();
-    const idArr = [];
-    const nameArr = [];
-    for (const item in schoolList) {
-      const school = schoolList[item];
-      idArr.push(school.id);
-      nameArr.push(school.name);
+    const id = this.get('id');
+    const grade = parseInt(this.get('grade'));
+    const arr = [];
+    let zyList = [], njList = [], bjList = [], schoolList = [];
+    switch (grade) {
+      case 2:
+        bjList = await this.model('school').where({display: 0, pid: id || njList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(bjList);
+        break;
+      case 1:
+        njList = await this.model('school').where({display: 0, pid: id || zyList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(njList);
+        bjList = await this.model('school').where({display: 0, pid: njList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(bjList);
+        break;
+      case 0:
+        zyList = await this.model('school').where({display: 0, pid: id || schoolList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(zyList);
+        njList = await this.model('school').where({display: 0, pid: zyList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(njList);
+        bjList = await this.model('school').where({display: 0, pid: njList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(bjList);
+        break;
+      default:
+        schoolList = await this.model('school').where({display: 0, pid: 0}).field('id, name').order('sort ASC').select();
+        arr.push(schoolList);
+        zyList = await this.model('school').where({display: 0, pid: schoolList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(zyList);
+        njList = await this.model('school').where({display: 0, pid: zyList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(njList);
+        bjList = await this.model('school').where({display: 0, pid: njList[0].id}).field('id, name').order('sort ASC').select();
+        arr.push(bjList);
     }
-    const data = {
-      id: idArr,
-      name: nameArr
+    const schoolNameList = [];
+    const schoolIdList = [];
+    for (const i in arr) {
+      const item = arr[i];
+      const nameArr = [];
+      const idArr = [];
+      for (const j in item) {
+        const jtem = item[j];
+        nameArr.push(jtem.name);
+        idArr.push(jtem.id);
+      }
+      schoolNameList.push(nameArr);
+      schoolIdList.push(idArr);
+    }
+    const school = {
+      schoolNameList: schoolNameList,
+      schoolIdList: schoolIdList
     };
-    return this.success(data);
+    console.log(school);
+    return this.success(school);
   }
 };
