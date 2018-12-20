@@ -1,6 +1,6 @@
 // default config
 module.exports = {
-  stickyCluster: true, // 开启 WebSocket
+  stickyCluster: false, // 开启 WebSocket
   port: 8080,
   http_: 1, // 1:http,2:https
   document_model_type: {2: '主题', 1: '目录', 3: '段落'}, // 文档模型配置 (文档模型核心配置，请勿更改)
@@ -57,7 +57,8 @@ module.exports = {
     'api/websocket/open',
     'api/public/getCode',
     'api/public/login',
-    'api/public/tel'
+    'api/public/tel',
+    'api/public/logn'
   ],
   // 以下为腾讯云短信服务
   cloud: {

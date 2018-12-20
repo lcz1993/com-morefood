@@ -182,9 +182,7 @@ module.exports = class extends think.cmswing.app {
     // 获取登陆的logo
     const logo = this.config('setupapp.ADD_LOGO');
     const disImgPath = await global.get_pic(logo);
-    const data = {
-      disImgPath: disImgPath
-    };
+    const data = disImgPath;
     return this.success(data);
   }
 };

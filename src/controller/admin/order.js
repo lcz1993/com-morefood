@@ -445,6 +445,18 @@ module.exports = class extends think.cmswing.admin {
       const a = await this.model('area').find(order.county);
       location += a.name;
       location += order.addr;
+
+      const start = new Date();
+      start.setHours(0);
+      start.setMinutes(0);
+      start.setSeconds(0);
+      start.setMilliseconds(0);
+      const todayStartTime = Date.parse(start) / 1;
+      const max_no = await this.model('order').where({
+        restaurant_id: order.restaurant_id,
+        create_time: ['>', todayStartTime]
+      }).max('print_no');
+      order.print_no = max_no ? parseInt(max_no) + 1 : 0;
       const d = {
         id: order.id,
         title: '及时雨校园餐饮',
@@ -460,7 +472,8 @@ module.exports = class extends think.cmswing.admin {
         user_tel: order.mobile,
         original_amount: global.formatCurrency(parseFloat(amount) + parseFloat(restaurant.send_money)),
         restaurant_tel: restaurant.contect_tel,
-        is_print: order.is_print
+        is_print: order.is_print,
+        print_no: order.print_no
       };
       orderArr.push(d);
     }
@@ -471,6 +484,10 @@ module.exports = class extends think.cmswing.admin {
     return this.success(data);
   }
 
+  /**
+     * 页面打印，不是自动打印
+     * @returns {Promise<*>}
+     */
   async printAction() {
     const id = this.get('id');
     const order = await this.model('order').find(id);
