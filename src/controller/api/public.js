@@ -177,7 +177,7 @@ module.exports = class extends think.cmswing.app {
     const user = await this.model('wx_user').field('is_vip,integral,money').find(userId);
     return this.success(user);
   }
-
+  // 返回登陆页面的logo
   async lognAction() {
     // 获取登陆的logo
     const logo = this.config('setupapp.ADD_LOGO');
