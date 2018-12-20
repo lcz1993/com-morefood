@@ -42,34 +42,4 @@ module.exports = class extends think.cmswing.app {
     };
     return this.success(data);
   }
-
-  async lognAction() {
-    const natureList = await this.model('nature').select();
-    const natureArr = [];
-    for (const i in natureList) {
-      const nature = natureList[i];
-      nature.imgUrl = await global.get_pic(nature.icon);
-      const n = {
-        id: nature.id,
-        name: nature.name,
-        imgUrl: nature.imgUrl
-      };
-      natureArr.push(n);
-    }
-    // 获取登陆的logo
-    const logo = this.config('setupapp.ADD_LOGO');
-    const imgList = logo.split(',');
-    const imgArr = [];
-    for (const img of imgList) {
-      const a = await global.get_pic(img);
-      imgArr.push(a);
-    }
-    const disImgPath = await global.get_pic(logo);
-    const data = {
-      imgArr: imgArr,
-      disImgPath: disImgPath,
-      natureArr: natureArr
-    };
-    return this.success(data);
-  }
 };
