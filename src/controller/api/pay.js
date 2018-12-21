@@ -10,7 +10,7 @@ module.exports = class extends think.cmswing.app {
   async cartAction() {
     const cartArr = this.post('carArray');
     const userId = this.getLoginUserId();
-    await this.model('selection').where({user_id: userId}).delete();
+    await this.model('selection').where({user_id: userId}).update({status: 1});
     for (const cart of cartArr) {
       if (think.isEmpty(cart.id)) {
         return this.fail('选择商品不能为空！');
@@ -19,7 +19,8 @@ module.exports = class extends think.cmswing.app {
         user_id: userId,
         dish_id: cart.id,
         cnt_dish: cart.num,
-        add_time: new Date().getTime()
+        add_time: new Date().getTime(),
+        status: 0
       });
     }
     return this.success();
@@ -33,8 +34,7 @@ module.exports = class extends think.cmswing.app {
     const userId = this.getLoginUserId();
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
-    const maxTime = await this.model('selection').where({user_id: userId}).max('add_time');
-    const cartArr = await this.model('selection').where({user_id: userId, add_time: maxTime}).select();
+    const cartArr = await this.model('selection').where({user_id: userId, status: 0}).select();
     if (cartArr.length == 0) {
       return this.fail();
     }
@@ -120,8 +120,8 @@ module.exports = class extends think.cmswing.app {
         } while (sc.pid != 0);
         address.addr = b + address.addr;
       }
-      console.log(address.addr)
-      console.log(location)
+      console.log(address.addr);
+      console.log(location);
       location += address.addr;
       address = {
         id: address.id,
