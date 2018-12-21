@@ -48,6 +48,15 @@ module.exports = class extends think.Controller {
         }
       }
     }
+
+    // 清除
+    const cartArr = await this.model('selection').where({status: 0}).select();
+    const now = new Date().getTime();
+    for (const cart of cartArr) {
+      if (parseInt(cart.add_time) + 900000 < now) {
+        await this.model('selection').where({id: cart.id}).update({status: 1});
+      }
+    }
     // think.logger.debug(new Date(), '订单作废任务执行时间');
     // this.end();
     return this.body = '';
