@@ -442,7 +442,6 @@ module.exports = class extends think.cmswing.app {
       await await this.model('order').updataStatus(orderId);
       return this.success();
     } else {
-      await this.model('order').del({id: orderId});
       return this.fail();
     }
   }
