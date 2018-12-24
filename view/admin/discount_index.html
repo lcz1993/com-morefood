@@ -37,6 +37,7 @@
                             <th>所属餐厅</th>
                             <th>名称</th>
                             <th>类型</th>
+                            <th>发放平台</th>
                             <th style="width:130px;">操作</th>
                         </tr>
                         </thead>
@@ -48,13 +49,18 @@
                             <td>{{ item.id }}</td>
                             <td>{{ item.restaurant_name }}</td>
                             <td>{{ item.name }}</td>
-                            <td>{%if item.type_id == 1 %}新用户优惠
+                            <td>{%if item.type_id == 1 %}满减卷
                                 {%elif item.type_id == 2%}特价商品
-                                {%elif item.type_id == 3%}下单立减
-                                {%elif item.type_id == 4%}赠品优惠
-                                {%elif item.type_id == 5%}下单返红包
-                                {%elif item.type_id == 6%}进店领红包
+                                {%elif item.type_id == 3%}赠品卷
+                                {%elif item.type_id == 4%}返现卷
+                                {%elif item.type_id == 5%}折扣卷
                                 {%endif%}</td>
+                            <td>
+                                {%if item.distribution_platform == 1 %}平台
+                                {%elif item.distribution_platform == 2%}店铺
+                                {%elif item.distribution_platform == 3%}个人
+                                {%endif%}
+                            </td>
                             <td>
                                 <a href="/admin/discount/edit/?id={{item.id}}" class="text-info" data-toggle="ajaxModal">编辑</a>
                                 <a href="/admin/discount/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>

@@ -85,16 +85,7 @@ module.exports = class extends think.cmswing.admin {
         // 赠品优惠
         case 4:
           data.min_price = data.min_price_4;
-          break;
-        // 下单返红包
-        case 5:
-          data.min_price = data.min_price_5;
-          data.cut_price = data.cut_price_5;
-          break;
-        // 进店领红包
-        case 6:
-          data.min_price = data.min_price_6;
-          data.cut_price = data.cut_price_6;
+          data.cut_price = data.cut_price_4;
           break;
         default:
           return this.fail('添加失败!');
@@ -107,6 +98,7 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       this.active = '/admin/discount/index';
+      await this.hook('adminEdit', 'desc', '', {$hook_key: 'desc', $hook_type: '1'});
       this.meta_title = '新增优惠券';
       return this.display();
     }
@@ -151,16 +143,7 @@ module.exports = class extends think.cmswing.admin {
           // 赠品优惠
         case 4:
           data.min_price = data.min_price_4;
-          break;
-          // 下单返红包
-        case 5:
-          data.min_price = data.min_price_5;
-          data.cut_price = data.cut_price_5;
-          break;
-          // 进店领红包
-        case 6:
-          data.min_price = data.min_price_6;
-          data.cut_price = data.cut_price_6;
+          data.cut_price = data.cut_price_4;
           break;
         default:
           return this.fail('添加失败!');
@@ -174,6 +157,7 @@ module.exports = class extends think.cmswing.admin {
     } else {
       const id = await this.get('id');
       const data = await this.model('discount').find(id);
+      await this.hook('adminEdit', 'desc', data.desc, {$hook_key: 'desc', $hook_type: '1'});
       data.start_time = global.dateformat('Y-m-d H:i:s', data.start_time);
       data.end_time = global.dateformat('Y-m-d H:i:s', data.end_time);
       const type_id = parseInt(data.type_id);
@@ -203,6 +187,7 @@ module.exports = class extends think.cmswing.admin {
           meduId = data.medu_id;
           data.medu_dish_class = await this.model('medu').field('dish_class', true).find(meduId);
           data.min_price_4 = data.min_price;
+          data.cut_price_4 = data.cut_price;
           break;
           // 下单返红包
         case 5:
@@ -213,6 +198,10 @@ module.exports = class extends think.cmswing.admin {
         case 6:
           data.min_price_6 = data.min_price;
           data.cut_price_6 = data.cut_price;
+          break;
+        case 7:
+          data.min_price_7 = data.min_price;
+          data.cut_price_7 = data.cut_price;
           break;
         default:
           return this.fail('添加失败!');

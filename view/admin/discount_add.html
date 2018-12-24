@@ -68,6 +68,22 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">发放平台</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <label>是</label>
+                                <input type="radio" name="distribution_platform" value="1" checked="checked"/><!--默认选中-->
+                                <label>否</label>
+                                <input type="radio" name="distribution_platform" value="2"  />
+                                <label>否</label>
+                                <input type="radio" name="distribution_platform" value="3"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="col-sm-3 control-label">优惠券种类</label>
                     <div class="col-sm-9">
                         <div class="row">
@@ -98,18 +114,42 @@
                         </div>
                     </div>
                     <div class="form-group " >
-                        <label class="col-sm-3 control-label">减</label>
+                        <label class="col-sm-3 control-label">赠送</label>
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col-md-8 ">
-                                    <input type="text" name="cut_price_3" class="input-sm form-control number" placeholder="减">
+                                    <input type="text" name="gift_goods" class="input-sm form-control" placeholder="赠送">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
+                <div class="hide" id="discount_5">
+                    <div class="form-group  " >
+                        <label class="col-sm-3 control-label">满</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="min_price_5" class="input-sm form-control number" placeholder="满">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group " >
+                        <label class="col-sm-3 control-label">折扣</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="percent" id="percent" placeholder="折扣">
+                                        <div class="input-group-addon">%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="hide" id="discount_1">
                     <div class="form-group  " id="min_price">
@@ -161,16 +201,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" id="min_price_4">
-                        <label class="col-sm-3 control-label">最低消费限制</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="min_price_4" class="input-sm form-control number" placeholder="最低消费限制">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="form-group" id="min_price_4">-->
+                        <!--<label class="col-sm-3 control-label">最低消费限制</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="min_price_4" class="input-sm form-control number" placeholder="最低消费限制">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="form-group" id="discount_orgin_price">
                         <label class="col-sm-3 control-label">单品特价</label>
                         <div class="col-sm-9">
@@ -181,12 +221,84 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group "  id="discount_2_max_count">
-                        <label class="col-sm-3 control-label">发放数量</label>
+                    <!--<div class="form-group "  id="discount_2_max_count">-->
+                        <!--<label class="col-sm-3 control-label">发放数量</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="max_count_2" class="input-sm form-control number" placeholder="发放数量">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+
+
+
+                <!--<div class="hide" id="discount_4">-->
+                    <!--<div class="form-group  " >-->
+                        <!--<label class="col-sm-3 control-label">满</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="min_price_4" class="input-sm form-control number" placeholder="满">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="form-group " >-->
+                        <!--<label class="col-sm-3 control-label">返现</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="cut_price_4" class="input-sm form-control number" placeholder="返现">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+
+                <!--<div class="hide" id="discount_4">-->
+                    <!--<div class="form-group  " >-->
+                        <!--<label class="col-sm-3 control-label">最低使用金额</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="min_price_4" class="input-sm form-control number" placeholder="最低使用金额">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="form-group " >-->
+                        <!--<label class="col-sm-3 control-label">返现金额</label>-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-md-8 ">-->
+                                    <!--<input type="text" name="cut_price_4" class="input-sm form-control number" placeholder="红包金额">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="hide" id="discount_4">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">满</label>
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col-md-8 ">
-                                    <input type="text" name="max_count_2" class="input-sm form-control number" placeholder="发放数量">
+                                    <input type="text" name="min_price_4" class="input-sm form-control number" placeholder="满">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group " id="cut_price_4">
+                        <label class="col-sm-3 control-label">返现</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="cut_price_4" class="input-sm form-control number" placeholder="返现">
                                 </div>
                             </div>
                         </div>
@@ -194,64 +306,28 @@
                 </div>
 
 
-
-                <div class="hide" id="discount_5">
-                    <div class="form-group  " >
-                        <label class="col-sm-3 control-label">最低使用金额</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="min_price_5" class="input-sm form-control number" placeholder="最低使用金额">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group " >
-                        <label class="col-sm-3 control-label">红包金额</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="cut_price_5" class="input-sm form-control number" placeholder="红包金额">
-                                </div>
+                <div class="form-group " >
+                    <label class="col-sm-3 control-label">发放数量</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <input type="text" name="max_count" value="5" class="input-sm form-control number" placeholder="发放数量">
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-                <div class="hide" id="discount_6">
-                    <div class="form-group  " >
-                        <label class="col-sm-3 control-label">最低使用金额</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="min_price_6" class="input-sm form-control number" placeholder="最低使用金额">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group " >
-                        <label class="col-sm-3 control-label">红包金额</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="cut_price_6" class="input-sm form-control number" placeholder="红包金额">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group " >
-                        <label class="col-sm-3 control-label">发放数量</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8 ">
-                                    <input type="text" name="max_count" value="99999" class="input-sm form-control number" placeholder="发放数量">
-                                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 使用规则详情</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                {{HOOKS@adminEdit@1.desc|safe}}
                             </div>
                         </div>
                     </div>
                 </div>
-
 
             </div>
             <div class="modal-footer">
@@ -280,9 +356,8 @@
             $("#discount_2").addClass('hide');
             $("#discount_3").addClass('hide');
             $("#discount_orgin_price").removeClass('hide');
-            $("#min_price_4").addClass('hide');
+            $("#discount_4").addClass('hide');
             $("#discount_5").addClass('hide');
-            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 2){
             //特价商品
             getDishClass();
@@ -290,45 +365,36 @@
             $("#discount_2").removeClass('hide');
             $("#discount_3").addClass('hide');
             $("#discount_orgin_price").removeClass('hide');
+            $("#discount_4").addClass('hide');
             $("#discount_5").addClass('hide');
             $("#discount_6").addClass('hide');
             $("#discount_2_max_count").removeClass('hide');
-            $("#min_price_4").addClass('hide');
         }else if(parseInt(type) === 3){
             //下单立减
             $("#discount_1").addClass('hide');
             $("#discount_2").addClass('hide');
             $("#discount_3").removeClass('hide');
             $("#discount_orgin_price").addClass('hide');
+            $("#discount_4").addClass('hide');
             $("#discount_5").addClass('hide');
-            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 4){
             //赠品优惠
             getDishClass();
             $("#discount_1").addClass('hide');
-            $("#discount_2").removeClass('hide');
+            $("#discount_2").addClass('hide');
             $("#discount_3").addClass('hide');
             $("#discount_orgin_price").addClass('hide');
             $("#discount_2_max_count").addClass('hide');
-            $("#min_price_4").removeClass('hide');
+            $("#discount_4").removeClass('hide');
             $("#discount_5").addClass('hide');
-            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 5){
             //下单返红包
             $("#discount_1").addClass('hide');
             $("#discount_2").addClass('hide');
             $("#discount_3").addClass('hide');
             $("#discount_orgin_price").addClass('hide');
+            $("#discount_4").addClass('hide');
             $("#discount_5").removeClass('hide');
-            $("#discount_6").addClass('hide');
-        }else if(parseInt(type) === 6){
-            //进店领红包
-            $("#discount_1").addClass('hide');
-            $("#discount_2").addClass('hide');
-            $("#discount_3").addClass('hide');
-            $("#discount_orgin_price").addClass('hide');
-            $("#discount_5").addClass('hide');
-            $("#discount_6").removeClass('hide');
         }
     }
     function getDishClass() {
