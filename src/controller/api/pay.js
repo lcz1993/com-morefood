@@ -31,7 +31,8 @@ module.exports = class extends think.cmswing.app {
      * @returns {Promise<*>}
      */
   async indexAction() {
-    const userId = this.getLoginUserId();
+    // const userId = this.getLoginUserId();
+    const userId = this.get('userId');
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
     const cartArr = await this.model('selection').where({user_id: userId, status: 0}).select();
@@ -137,7 +138,10 @@ module.exports = class extends think.cmswing.app {
         is_default: address.is_default
       };
     }
+    const userid = this.getLoginUserId();
+    const list = await this.model('coupon').getcoupon(userid);
     return this.success({
+      coupon: list,
       cartArr: orderList,
       address: address,
       restaurant: restaurant
