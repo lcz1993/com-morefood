@@ -97,6 +97,8 @@ module.exports = class extends think.cmswing.admin {
         return this.fail('添加失败!');
       }
     } else {
+      const id = this.user.restaurant_id;
+      this.assign('data', id);
       this.active = '/admin/discount/index';
       await this.hook('adminEdit', 'desc', '', {$hook_key: 'desc', $hook_type: '1'});
       this.meta_title = '新增优惠券';
@@ -206,6 +208,8 @@ module.exports = class extends think.cmswing.admin {
         default:
           return this.fail('添加失败!');
       }
+      const rid = this.user.restaurant_id;
+      this.assign('list', rid);
       this.assign('data', data);
       this.active = '/admin/discount/index';
       this.meta_title = '编辑优惠券';

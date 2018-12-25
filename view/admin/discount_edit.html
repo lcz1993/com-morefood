@@ -68,16 +68,39 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">使用限制</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                <label>新用户下单</label>
+                                <input type="radio" name="is_show" value="0"{%if data.usage_restriction == 1%}checked="checked"{%endif%}/>
+                                <label>单日跟新数量</label>
+                                <input type="radio" name="is_show" value="1"{%if data.usage_restriction == 2%}checked="checked"{%endif%}/>    <!--默认选中-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-3 control-label">发放平台</label>
                     <div class="col-sm-9">
                         <div class="row">
                             <div class="col-md-8 ">
+                                {%if  list == 0 %}
                                 <label>平台</label>
-                                <input type="radio" name="is_show" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%}/>
+                                <input type="radio" name="is_show" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} />
                                 <label>店铺</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%}/>
+                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} disabled="disabled"/>
                                 <label>个人</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%}/>
+                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
+                                {%endif%}
+                                {%if  list  != 0 %}
+                                <label>平台</label>
+                                <input type="radio" name="is_show" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} disabled="disabled"/>
+                                <label>店铺</label>
+                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} />
+                                <label>个人</label>
+                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
+                                {%endif%}
                             </div>
                         </div>
                     </div>

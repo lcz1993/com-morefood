@@ -68,21 +68,43 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">发放平台</label>
+                    <label class="col-sm-3 control-label">使用限制</label>
                     <div class="col-sm-9">
                         <div class="row">
                             <div class="col-md-8 ">
-                                <label>是</label>
-                                <input type="radio" name="distribution_platform" value="1" checked="checked"/><!--默认选中-->
-                                <label>否</label>
-                                <input type="radio" name="distribution_platform" value="2"  />
-                                <label>否</label>
-                                <input type="radio" name="distribution_platform" value="3"/>
+                                <label>新用户下单</label>
+                                <input type="radio" name="usage_restriction" value="1"/>
+                                <label>单日跟新数量</label>
+                                <input type="radio" name="usage_restriction" value="2" checked="checked" />    <!--默认选中-->
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">发放平台</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-8 ">
+                                {%if data == 0 %}
+                                <label>平台</label>
+                                <input type="radio" name="distribution_platform" value="1" checked="checked"/><!--默认选中-->
+                                <label>店铺</label>
+                                <input type="radio" name="distribution_platform" value="2" disabled="disabled"/>
+                                <label>个人</label>
+                                <input type="radio" name="distribution_platform" value="3" disabled="disabled"/>
+                                {%endif%}
+                                {%if data != 0 %}
+                                <label>平台</label>
+                                <input type="radio" name="distribution_platform" value="1"  disabled="disabled"/>
+                                <label>店铺</label>
+                                <input type="radio" name="distribution_platform" value="2" checked="checked"/>
+                                <label>个人</label>
+                                <input type="radio" name="distribution_platform" value="3" disabled="disabled"/>
+                                {%endif%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">优惠券种类</label>
                     <div class="col-sm-9">
