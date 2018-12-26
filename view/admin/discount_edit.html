@@ -73,9 +73,9 @@
                         <div class="row">
                             <div class="col-md-8 ">
                                 <label>新用户下单</label>
-                                <input type="radio" name="is_show" value="0"{%if data.usage_restriction == 1%}checked="checked"{%endif%}/>
+                                <input type="radio" name="usage_restriction" value="0"{%if data.usage_restriction == 1%}checked="checked"{%endif%}/>
                                 <label>单日跟新数量</label>
-                                <input type="radio" name="is_show" value="1"{%if data.usage_restriction == 2%}checked="checked"{%endif%}/>    <!--默认选中-->
+                                <input type="radio" name="usage_restriction" value="1"{%if data.usage_restriction == 2%}checked="checked"{%endif%}/>    <!--默认选中-->
                             </div>
                         </div>
                     </div>
@@ -87,19 +87,19 @@
                             <div class="col-md-8 ">
                                 {%if  list == 0 %}
                                 <label>平台</label>
-                                <input type="radio" name="is_show" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} />
+                                <input type="radio" name="distribution_platform" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} />
                                 <label>店铺</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} disabled="disabled"/>
+                                <input type="radio" name="distribution_platform" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} disabled="disabled"/>
                                 <label>个人</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
+                                <input type="radio" name="distribution_platform" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
                                 {%endif%}
                                 {%if  list  != 0 %}
                                 <label>平台</label>
-                                <input type="radio" name="is_show" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} disabled="disabled"/>
+                                <input type="radio" name="distribution_platform" value="0"{%if data.distribution_platform == 1%}checked="checked"{%endif%} disabled="disabled"/>
                                 <label>店铺</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} />
+                                <input type="radio" name="distribution_platform" value="1"{%if data.distribution_platform == 2%}checked="checked"{%endif%} />
                                 <label>个人</label>
-                                <input type="radio" name="is_show" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
+                                <input type="radio" name="distribution_platform" value="1"{%if data.distribution_platform == 3%}checked="checked"{%endif%} disabled="disabled"/>
                                 {%endif%}
                             </div>
                         </div>
@@ -215,6 +215,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group " >
+                        <label class="col-sm-3 control-label">每人限制购买次数</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="homebuy"  value="{{data.homebuy}}" class="input-sm form-control number" placeholder="限制数量">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!--<div class="form-group {%if data.type_id != 4 %}hide{%endif%}" id="min_price_4">-->
                         <!--<label class="col-sm-3 control-label">最低消费限制</label>-->
                         <!--<div class="col-sm-9">-->
