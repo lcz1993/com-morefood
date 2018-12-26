@@ -26,6 +26,7 @@ module.exports = class extends think.cmswing.app {
     return this.success();
   }
 
+  // noinspection JSAnnotator
   /**
      * 支付页面初始化
      * @returns {Promise<*>}
@@ -49,6 +50,7 @@ module.exports = class extends think.cmswing.app {
       end_time: ['>', new Date().getTime()]
     }).select();
     const orderList = [];
+    let price = 0;
     for (const food of cartArr) {
       const num = food.cnt_dish;
       let f = await this.model('medu').find(food.dish_id);
@@ -91,6 +93,7 @@ module.exports = class extends think.cmswing.app {
         total_price: totalPrice
       };
       orderList.push(f);
+      price += totalPrice;
     }
     const restaurant = await this.model('restaurant').find(restaurantId);
     let address = {};
@@ -139,9 +142,13 @@ module.exports = class extends think.cmswing.app {
       };
     }
     const userid = this.getLoginUserId();
-    const list = await this.model('coupon').getcoupon(userid);
+    // 获取用户首单优惠信息
+    const coupon = await this.model('discount').getcoupon(userid, price);
+    // 获取用户所以可用的优惠信息
+    const list = await this.model('discount').getList(userid, price);
     return this.success({
-      coupon: list,
+      list: list,
+      coupon: coupon,
       cartArr: orderList,
       address: address,
       restaurant: restaurant
