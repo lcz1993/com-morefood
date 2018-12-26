@@ -1,4 +1,11 @@
 module.exports = class extends think.Model {
+  /**
+     *
+     * @param meduId
+     * @param restaurantId
+     * @param num
+     * @returns {Promise<number>}
+     */
   async useCount(meduId, restaurantId, num) {
     const discountArr = await this.where({
       medu_id: meduId,
