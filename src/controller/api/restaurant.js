@@ -15,12 +15,10 @@ module.exports = class extends think.cmswing.app {
     const a = await this.model('restaurant').find(restaurant_id);
     const is_close = a.is_close;
     if (a.bg_image) {
-      const b = await this.model('ext_attachment_pic').find(a.bg_image);
-      a.bgImage = b.path;
+      a.bgImage = await this.model('ext_attachment_pic').where({id: a.bg_image}).getField('path', true);
     }
     if (a.image) {
-      const c = await this.model('ext_attachment_pic').find(a.image);
-      a.image = c.path;
+      a.image = await this.model('ext_attachment_pic').where({id: a.image}).getField('path', true);
     }
     if (a.shop_image) {
       const imgArr = a.shop_image.split(',');
@@ -48,7 +46,8 @@ module.exports = class extends think.cmswing.app {
       contect_tel: a.contect_tel,
       min_price: a.min_price,
       is_close: a.is_close,
-      is_send: a.is_send
+      is_send: a.is_send,
+      hot_num: a.hot_num
     };
     // 店铺已经打烊≈
     if (is_close == 1) {
@@ -59,61 +58,6 @@ module.exports = class extends think.cmswing.app {
     }
     const dishClassArr = await this.model('dish_class').order('sort ASC').where({restaurant_id: restaurant_id}).select();
     const goods = [];
-    // 先添加单品特价商品
-    const meduIds = await this.model('discount').where({
-      restaurant_id: restaurant_id,
-      is_show: 0,
-      status: 0,
-      type_id: 2,
-      start_time: ['<', new Date().getTime()],
-      end_time: ['>', new Date().getTime()]
-    }).select();
-    if (meduIds.length > 0) {
-      for (const i in meduIds) {
-        const med = meduIds[i];
-        if (med.max_count <= med.use_count) {
-          global.removeByValue(meduIds, med);
-        }
-      }
-      const fs = [];
-      for (const i in meduIds) {
-        const med = meduIds[i];
-        const medu = await this.model('medu').find(med.medu_id);
-        if (medu.dish_picture) {
-          const b = await this.model('ext_attachment_pic').find(medu.dish_picture);
-          medu.dish_picture = b.path;
-        }
-        if (medu.image) {
-          const c = await this.model('ext_attachment_pic').find(medu.image);
-          medu.image = c.path;
-        }
-        const f = {
-          id: medu.id,
-          name: medu.dish_name,
-          price: medu.original_price,
-          oldPrice: medu.old_price,
-          description: medu.description,
-          sellCount: medu.sell_count,
-          Count: 0,
-          rating: medu.rating,
-          info: medu.dish_desc,
-          icon: medu.dish_picture,
-          image: medu.image,
-          desc: medu.dish_desc,
-          is_stop: medu.is_stop,
-          num: '第一份特价'
-        };
-        fs.push(f);
-      }
-      const ag = {
-        id: 0,
-        name: '今日特价',
-        type: -1,
-        desc: '今日特价商品',
-        foods: fs
-      };
-      goods.push(ag);
-    }
     // 再添加正常分类
     for (const dishClass of dishClassArr) {
       const dishClassId = dishClass.id;
@@ -136,56 +80,30 @@ module.exports = class extends think.cmswing.app {
             if (medu.num > 0) {
               num = '剩余' + medu.num;
             } else {
-              medu.is_stop == 1;
+              medu.is_stop == 0;
             }
           }
         } else {
           num = '该商品已下架';
         }
-        if (meduIds.length > 0) {
-          for (const i in meduIds) {
-            const med = meduIds[i];
-            if (med.medu_id != medu.id) {
-              const f = {
-                id: medu.id,
-                name: medu.dish_name,
-                price: medu.original_price ? medu.original_price : '',
-                oldPrice: medu.old_price,
-                description: medu.description,
-                sellCount: medu.sell_count,
-                Count: 0,
-                rating: medu.rating,
-                info: medu.dish_desc,
-                icon: medu.dish_picture,
-                image: medu.image,
-                desc: medu.dish_desc,
-                is_stop: medu.is_stop,
-                is_hot: medu.is_hot,
-                num: num
-              };
-              foods.push(f);
-            }
-          }
-        } else {
-          const f = {
-            id: medu.id,
-            name: medu.dish_name,
-            price: medu.original_price ? medu.original_price : '',
-            oldPrice: medu.old_price,
-            description: medu.description,
-            sellCount: medu.sell_count,
-            Count: 0,
-            rating: medu.rating,
-            info: medu.dish_desc,
-            icon: medu.dish_picture,
-            image: medu.image,
-            desc: medu.dish_desc,
-            is_stop: medu.is_stop,
-            is_hot: medu.is_hot,
-            num: num
-          };
-          foods.push(f);
-        }
+        const f = {
+          id: medu.id,
+          name: medu.dish_name,
+          price: medu.original_price ? medu.original_price : '',
+          oldPrice: medu.old_price,
+          description: medu.description,
+          sellCount: medu.sell_count,
+          Count: 0,
+          rating: medu.rating,
+          info: medu.dish_desc,
+          icon: medu.dish_picture,
+          image: medu.image,
+          desc: medu.dish_desc,
+          is_stop: medu.is_stop,
+          is_hot: medu.is_hot,
+          num: num
+        };
+        foods.push(f);
       }
       const a = {
         id: dishClassId,
@@ -219,7 +137,6 @@ module.exports = class extends think.cmswing.app {
         desc: discountSign[discount.type_id]
       };
       discountArr.push(e);
-
       if (parseInt(discount.is_show) == 0) {
         dis = {
           name: discount.name,
@@ -229,13 +146,22 @@ module.exports = class extends think.cmswing.app {
         };
       }
     }
+    // 获取热销商品
+    let hotGoodsArr = [];
+    if (restaurant.hot_num > 0) {
+      hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id);
+    }
+    // 获取优惠商品
+
+    //  TODO
     const data = {
       is_close: 0,
       discountNum: count,
       discount: dis,
       restaurant: restaurant,
       goods: goods,
-      discountArr: discountArr
+      discountArr: discountArr,
+      hotGoodsArr: hotGoodsArr
     };
     return this.success(data);
   }
