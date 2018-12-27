@@ -84,6 +84,9 @@ module.exports = class extends think.cmswing.admin {
     // 搜索
     if (this.isPost) {
       const data = this.post();
+      if (think.isEmpty(data.num)) {
+        data.num = null;
+      }
       const res = await this.model('medu').add(data);
       if (res) {
         return this.success({name: '添加成功！', url: '/admin/medu/index'});
@@ -125,6 +128,9 @@ module.exports = class extends think.cmswing.admin {
     // 搜索
     if (this.isPost) {
       const data = this.post();
+      if (think.isEmpty(data.num)) {
+        data.num = null;
+      }
       const res = await this.model('medu').update(data);
       if (res) {
         return this.success({name: '修改成功！', url: '/admin/medu/index'});
