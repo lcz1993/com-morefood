@@ -152,7 +152,7 @@ module.exports = class extends think.cmswing.app {
       hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id);
     }
     // 获取优惠商品
-
+    const disGoodsArr = [];
     //  TODO
     const data = {
       is_close: 0,
@@ -161,11 +161,16 @@ module.exports = class extends think.cmswing.app {
       restaurant: restaurant,
       goods: goods,
       discountArr: discountArr,
-      hotGoodsArr: hotGoodsArr
+      hotGoodsArr: hotGoodsArr,
+      disGoodsArr: disGoodsArr
     };
     return this.success(data);
   }
 
+  /**
+     * 返回店铺的list
+     * @returns {Promise<*>}
+     */
   async listAction() {
     const sort_rule = this.post('sort_rule');
     const discountSelect = this.post('discountSelect');
