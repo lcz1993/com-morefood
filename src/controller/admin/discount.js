@@ -87,6 +87,14 @@ module.exports = class extends think.cmswing.admin {
           data.min_price = data.min_price_4;
           data.cut_price = data.cut_price_4;
           break;
+        case 5:
+          data.min_price = data.min_price_5;
+          data.cut_price = data.cut_price_5;
+          break;
+        case 6:
+          data.min_price = data.min_price_6;
+          data.cut_price = data.cut_price_6;
+          break;
         default:
           return this.fail('添加失败!');
       }
@@ -147,6 +155,14 @@ module.exports = class extends think.cmswing.admin {
           data.min_price = data.min_price_4;
           data.cut_price = data.cut_price_4;
           break;
+        case 5:
+          data.min_price = data.min_price_5;
+          data.cut_price = data.cut_price_5;
+          break;
+        case 6:
+          data.min_price = data.min_price_6;
+          data.cut_price = data.cut_price_6;
+          break;
         default:
           return this.fail('添加失败!');
       }
@@ -200,10 +216,6 @@ module.exports = class extends think.cmswing.admin {
         case 6:
           data.min_price_6 = data.min_price;
           data.cut_price_6 = data.cut_price;
-          break;
-        case 7:
-          data.min_price_7 = data.min_price;
-          data.cut_price_7 = data.cut_price;
           break;
         default:
           return this.fail('添加失败!');

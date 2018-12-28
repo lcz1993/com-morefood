@@ -22,7 +22,7 @@
                     <td style="border:1px solid #0a001f;">店家名</td>
                     <td style="border:1px solid #0a001f;">商品名</td>
                     <td style="border:1px solid #0a001f;">购买数量</td>
-                    <td style="border:1px solid #0a001f;">价格</td>
+                    <td style="border:1px solid #0a001f;">单价</td>
                     <td style="border:1px solid #0a001f;">总价格</td>
                 </tr>
                 </thead>
@@ -38,8 +38,19 @@
                     <td style="border:1px solid #0a001f;">{{item.num}}</td>
                     <td style="border:1px solid #0a001f;">{{item.unit_price}}</td>
                     <td style="border:1px solid #0a001f;">{{item.total_price}}</td>
+                    {%set num = num + item.num %}
+                    {%set amount = amount + item.total_price %}
                 </tr>
                 {%endfor%}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>总件数</td>
+                    <td>{{ data.numsum }}</td>
+                    <td>总钱数</td>
+                    <td>{{ data.pricenum }}</td>
+                </tr>
             </table>
         </div>
         <div class="modal-footer">

@@ -124,8 +124,8 @@ module.exports = class extends think.cmswing.app {
         } while (sc.pid != 0);
         address.addr = b + address.addr;
       }
-      console.log(address.addr);
-      console.log(location);
+      // console.log(address.addr);
+      // console.log(location);
       location += address.addr;
       address = {
         id: address.id,
@@ -141,11 +141,13 @@ module.exports = class extends think.cmswing.app {
         is_default: address.is_default
       };
     }
+    // 获取当前登录的用户Id
     const userid = this.getLoginUserId();
     // 获取用户首单优惠信息
-    const coupon = await this.model('discount').getcoupon(userid, price);
+    const coupon = await this.model('discount').getcoupon(userid, price, restaurantId);
     // 获取用户所以可用的优惠信息
-    const list = await this.model('discount').getList(userid, price);
+    const list = await this.model('discount').getList(userid, price, restaurantId);
+    console.log(list);
     return this.success({
       list: list,
       coupon: coupon,

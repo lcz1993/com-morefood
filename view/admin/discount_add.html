@@ -196,7 +196,28 @@
                     </div>
                 </div>
 
-
+                <div class="hide" id="discount_6">
+                    <div class="form-group  " >
+                        <label class="col-sm-3 control-label">满</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="min_price_6" class="input-sm form-control number" placeholder="满">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group " >
+                        <label class="col-sm-3 control-label">减</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-md-8 ">
+                                    <input type="text" name="cut_price_6" class="input-sm form-control number" placeholder="减">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="hide" id="discount_2">
                     <div class="form-group" id="dish_class">
@@ -332,7 +353,7 @@
                         <div class="col-sm-9">
                             <div class="row">
                                 <div class="col-md-8 ">
-                                    <input type="text" name="cut_price_4" class="input-sm form-control number" placeholder="返现">
+                                    <input type="text" name="cashback" class="input-sm form-control number" placeholder="返现">
                                 </div>
                             </div>
                         </div>
@@ -392,6 +413,7 @@
             $("#discount_orgin_price").removeClass('hide');
             $("#discount_4").addClass('hide');
             $("#discount_5").addClass('hide');
+            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 2){
             //特价商品
             getDishClass();
@@ -403,6 +425,7 @@
             $("#discount_5").addClass('hide');
             $("#discount_6").addClass('hide');
             $("#discount_2_max_count").removeClass('hide');
+            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 3){
             //下单立减
             $("#discount_1").addClass('hide');
@@ -411,6 +434,7 @@
             $("#discount_orgin_price").addClass('hide');
             $("#discount_4").addClass('hide');
             $("#discount_5").addClass('hide');
+            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 4){
             //赠品优惠
             getDishClass();
@@ -421,6 +445,7 @@
             $("#discount_2_max_count").addClass('hide');
             $("#discount_4").removeClass('hide');
             $("#discount_5").addClass('hide');
+            $("#discount_6").addClass('hide');
         }else if(parseInt(type) === 5){
             //下单返红包
             $("#discount_1").addClass('hide');
@@ -429,6 +454,17 @@
             $("#discount_orgin_price").addClass('hide');
             $("#discount_4").addClass('hide');
             $("#discount_5").removeClass('hide');
+            $("#discount_6").addClass('hide');
+        }
+        else if(parseInt(type) === 5){
+            //下单返红包
+            $("#discount_1").addClass('hide');
+            $("#discount_2").addClass('hide');
+            $("#discount_3").addClass('hide');
+            $("#discount_orgin_price").addClass('hide');
+            $("#discount_4").addClass('hide');
+            $("#discount_5").addClass('hide');
+            $("#discount_6").removeClass('hide');
         }
     }
     function getDishClass() {

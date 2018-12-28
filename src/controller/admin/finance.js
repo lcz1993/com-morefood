@@ -115,6 +115,8 @@ module.exports = class extends think.cmswing.admin {
 
     const list = await this.model('balance_log').where(map).order('id ASC').select();
     const foodList = [];
+    let numsum = 0;
+    let pricesum = 0;
     let amount = 0;
     for (const i in list) {
       const goods = list[i];
@@ -132,14 +134,19 @@ module.exports = class extends think.cmswing.admin {
 
         const b = {
           title: title,
-          num: qty,
-          total_price: price,
+          num: parseFloat(qty),
+          total_price: parseFloat(price),
           restaurantName: goods.restaurantName,
           username: goods.username,
           time: goods.time,
           unit_price: unit_price
         };
-
+        var num = parseInt(qty);
+        console.log(num);
+        var p = parseFloat(price);
+        console.log(p);
+        numsum = num + numsum;
+        pricesum += p;
         amount += note.price;
         foodList.push(b);
       }
@@ -147,7 +154,9 @@ module.exports = class extends think.cmswing.admin {
     const data = {
       title: '报表统计',
       goodsList: foodList,
-      countprice: amount
+      countprice: amount,
+      numsum: numsum,
+      pricenum: pricesum.toFixed(2)
     };
     this.assign('data', data);
     return this.display();
