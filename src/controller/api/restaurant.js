@@ -150,7 +150,7 @@ module.exports = class extends think.cmswing.app {
       hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id);
     }
     // 获取优惠商品
-    const disGoodsArr = await this.model('discount').getgoodsList(restaurant_id);
+    const disGoodsArr = await this.model('discount').getgoodsList(restaurant_id, this.getLoginUserId());
     const data = {
       is_close: 0,
       discountNum: count,
@@ -337,19 +337,6 @@ module.exports = class extends think.cmswing.app {
     }
     list.data = restaurantList;
     return this.success(list);
-  }
-
-  /**
-     *
-     * @returns {Promise<void>}
-     */
-  async buyAction() {
-    const userId = this.getLoginUserId();
-    const restaurantId = this.get('id');
-    const meduId = this.get('meduId');
-    let status = await think.cache(`wx-u${userId}r${restaurantId}m${meduId}`);
-    status = status || 0;
-    return this.success(status);
   }
 
   /**
