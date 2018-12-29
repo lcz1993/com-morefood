@@ -645,6 +645,18 @@ global.get_nickname = async(uid) => {
   return data;
 };
 /**
+ *根据uid获取用户店铺Id
+ * @param uid 用户id
+ * @returns Promise {*}
+ */
+/* global get_restaurantId */
+global.get_restaurantId = async(uid) => {
+  // console.log(uid);
+  // let data = await think.model('member', think.config("model")).cache(1000).get_nickname(uid);
+  const data = await think.model('cmswing/member').get_restaurantId(uid);
+  return data;
+};
+/**
  *根据id获取微信用户昵称
  * @param id 用户id
  * @returns Promise {*}

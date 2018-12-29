@@ -8,6 +8,11 @@ module.exports = class extends think.cmswing.app {
     const orderList = await this.model('order').getOrderList(userId, currentPage);
     return this.success(orderList);
   }
+
+  /**
+     * 用户取消订单
+     * @returns {Promise<*>}
+     */
   async cancelAction() {
     const userId = this.getLoginUserId();
     const id = this.get('id');

@@ -92,4 +92,14 @@ module.exports = class extends think.Model {
     name = info.username;
     return name;
   }
+  async get_restaurantId(uid) {
+    uid = uid || 0;
+    // TODO 缓存处理后续
+    let restaurant_id;
+    // 设置缓存 key 为 username，有效期为 2 个小时
+    const info = await this.field('restaurant_id').find(uid);
+    // console.log(info);
+    restaurant_id = info.restaurant_id;
+    return restaurant_id;
+  }
 };

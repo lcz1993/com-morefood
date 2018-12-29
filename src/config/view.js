@@ -221,6 +221,14 @@ module.exports = {
         callback(null, data);
       }, true);
       /**
+         *获取用户店铺Id
+         */
+      env.addFilter('get_restaurantId', async(uid, callback) => {
+        const data = await get_restaurantId(uid);
+        console.log(data);
+        callback(null, data);
+      }, true);
+      /**
          * 获取微信用户名称
          */
       env.addFilter('get_wxname', async(uid, callback) => {

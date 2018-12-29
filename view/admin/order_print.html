@@ -27,11 +27,11 @@
                 {%set amount = 0%}
                 {% for item in data.goodsList %}
                 <tr>
-                    <td style="text-align: left;width: 15mm">{{item.title}}</td>
-                    <td style="text-align: left;width: 8mm">{{item.num}}
+                    <td style="text-align: left;width: 15mm; font-size: 1px;">{{item.title}}</td>
+                    <td style="text-align: left;width: 8mm; font-size: 1px;">{{item.num}}
                         {%set num = item.num + num%}</td>
-                    <td style="text-align: left;width: 8mm">{{item.unit_price|formatCurrency}}</td>
-                    <td style="text-align: left;width: 9mm">{{item.total_price|formatCurrency}}
+                    <td style="text-align: left;width: 8mm; font-size: 1px;">{{item.unit_price|formatCurrency}}</td>
+                    <td style="text-align: left;width: 9mm; font-size: 1px;">{{item.total_price|formatCurrency}}
                         {%set amount = item.total_price + amount%}
                     </td>
                 </tr>

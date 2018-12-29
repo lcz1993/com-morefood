@@ -41,6 +41,7 @@
                         <th>地址</th>
                         <th>语言</th>
                         <th>电话</th>
+                        <th>积分</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
@@ -59,6 +60,7 @@
                         <td>{{ item.country }},{{ item.province }},{{ item.city }}</td>
                         <td>{{ item.language }}</td>
                         <td>{{ item.tel }}</td>
+                        <td>{{ item.integral }}</td>
                         <td>
                             <a href="/admin/wxuser/see/?id={{item.id}}" class="text-info"  data-toggle="ajaxModal">查看</a>
                             <!--<a href="/admin/wxuser/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>-->
