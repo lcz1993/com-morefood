@@ -74,7 +74,7 @@ module.exports = class extends think.cmswing.admin {
             original_price: data.medu_origin_price
           };
           await this.model('medu').update(medu);
-          data.max_count = data.max_count_2;
+          // data.max_count = data.max_count_2;
 
           break;
         // 下单立减
@@ -143,7 +143,7 @@ module.exports = class extends think.cmswing.admin {
             original_price: data.medu_origin_price
           };
           await this.model('medu').update(medu);
-          data.max_count = data.max_count_2;
+          // data.max_count = data.max_count_2;
           break;
           // 下单立减
         case 3:
@@ -193,7 +193,7 @@ module.exports = class extends think.cmswing.admin {
           const a = await this.model('medu').field(['original_price', 'dish_class']).find(meduId);
           data.medu_origin_price = a.original_price;
           data.medu_dish_class = a.dish_class;
-          data.max_count_2 = data.max_count;
+          // data.max_count_2 = data.max_count;
           break;
           // 下单立减
         case 3:

@@ -211,10 +211,10 @@ module.exports = class extends think.Model {
      * @param restaurantId
      * @returns {Promise<void>}
      */
-  async getgoodsList(restaurantId) {
-    const goods = await this.where({ type_id: 2, restaurant_id: restaurantId }).select();
+  async getgoodsList(restaurantId, userId) {
+    const discount = await this.where({ type_id: 2, restaurant_id: restaurantId }).select();
     const goodsList = [];
-    for (const g of goods) {
+    for (const g of discount) {
       const m = await this.model('medu').find(g.medu_id);
       const discount = (m.original_price / m.old_price) * 10;
       const dis = discount.toFixed(0);
@@ -238,6 +238,7 @@ module.exports = class extends think.Model {
       } else {
         num = '该商品已下架';
       }
+      const buy_max = discount.homebuy - (await think.cache(`wx-u${userId}r${restaurantId}m${m.id}`)) || 0;
       goodsList.push({
         id: m.id,
         name: m.dish_name,
@@ -254,7 +255,8 @@ module.exports = class extends think.Model {
         is_stop: m.is_stop,
         is_hot: m.is_hot,
         num: num,
-        discount: dis
+        discount: dis,
+        buy_max: buy_max
       });
     }
     return goodsList;
