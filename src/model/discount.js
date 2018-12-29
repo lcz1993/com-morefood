@@ -212,44 +212,50 @@ module.exports = class extends think.Model {
      * @returns {Promise<void>}
      */
   async getgoodsList(restaurantId) {
-    const goods = await this.model({ type_id: 2, restaurant_id: restaurantId }).where().select();
+    const goods = await this.where({ type_id: 2, restaurant_id: restaurantId }).select();
     const goodsList = [];
     for (const g of goods) {
-      const medu = await this.model('medu').where({ id: g.medu_id }).select();
-      for (const m of medu) {
-        const discount = (m.original_price / m.old_price) * 10;
-        const dis = discount.toFixed(1);
-        console.log(discount);
-        const b = {
-          id: g.id,
-          start_time: g.start_time,
-          end_time: g.end_time,
-          status: g.status,
-          type_id: g.type_id,
-          percent: g.percent,
-          cut_price: g.cut_price,
-          min_price: g.min_price,
-          restaurant_id: g.restaurant_id,
-          medu_id: g.medu_id,
-          max_count: g.max_count,
-          pull_count: g.pull_count,
-          use_count: g.use_count,
-          usage_restriction: g.usage_restriction,
-          distribution_platform: g.distribution_platform,
-          discount_id: m.discount_id,
-          dish_name: m.dish_name,
-          old_price: m.old_price,
-          original_price: m.original_price,
-          dish_class: m.dish_class,
-          dish_picture: m.dish_picture,
-          sell_count: m.sell_count,
-          rating: m.rating,
-          image: m.image,
-          num: m.num,
-          discount: dis
-        };
-        goodsList.push(b);
+      const m = await this.model('medu').find(g.medu_id);
+      const discount = (m.original_price / m.old_price) * 10;
+      const dis = discount.toFixed(0);
+      if (m.dish_picture) {
+        m.dish_picture = await this.model('ext_attachment_pic').where({id: m.dish_picture}).getField('path', true);
       }
+      if (m.image) {
+        m.image = await this.model('ext_attachment_pic').where({id: m.image}).getField('path', true);
+      }
+      let num = '';
+      if (m.is_stop == 0) {
+        if (m.num == null) {
+          num = '该商品不限量';
+        } else {
+          if (m.num > 0) {
+            num = '剩余' + m.num;
+          } else {
+            m.is_stop == 0;
+          }
+        }
+      } else {
+        num = '该商品已下架';
+      }
+      goodsList.push({
+        id: m.id,
+        name: m.dish_name,
+        price: m.original_price ? m.original_price : '',
+        oldPrice: m.old_price,
+        description: m.description,
+        sellCount: m.sell_count,
+        Count: 0,
+        rating: m.rating,
+        info: m.dish_desc,
+        icon: m.dish_picture,
+        image: m.image,
+        desc: m.dish_desc,
+        is_stop: m.is_stop,
+        is_hot: m.is_hot,
+        num: num,
+        discount: dis
+      });
     }
     return goodsList;
   }

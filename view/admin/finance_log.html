@@ -116,6 +116,7 @@
 
         $("#print").click(function(){
             var url = $(this).attr('href');
+            url = url.split('?')[0];
             var query  = $('.search-form').find('input').serialize();
             query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
             query = query.replace(/^&/g,'');
@@ -124,6 +125,7 @@
             }else{
                 url += '?' + query;
             }
+            console.log(url);
             $(this).attr('href',url);
         });
 

@@ -65,12 +65,10 @@ module.exports = class extends think.cmswing.app {
       const foods = [];
       for (const medu of meduArr) {
         if (medu.dish_picture) {
-          const b = await this.model('ext_attachment_pic').find(medu.dish_picture);
-          medu.dish_picture = b.path;
+          medu.dish_picture = await this.model('ext_attachment_pic').where({id: medu.dish_picture}).getField('path', true);
         }
         if (medu.image) {
-          const c = await this.model('ext_attachment_pic').find(medu.image);
-          medu.image = c.path;
+          medu.image = await this.model('ext_attachment_pic').where({id: medu.image}).getField('path', true);
         }
         let num = '';
         if (medu.is_stop == 0) {
@@ -152,8 +150,7 @@ module.exports = class extends think.cmswing.app {
       hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id);
     }
     // 获取优惠商品
-    const disGoodsArr = [];
-    //  TODO
+    const disGoodsArr = await this.model('discount').getgoodsList(restaurant_id);
     const data = {
       is_close: 0,
       discountNum: count,
@@ -191,7 +188,7 @@ module.exports = class extends think.cmswing.app {
         user_id: this.getLoginUserId()
       });
     }
-    map.is_close = 0;
+    // map.is_close = 0;
     let sort = '';
     switch (parseInt(sort_rule)) {
       // 综合排序

@@ -85,7 +85,6 @@ module.exports = class extends think.cmswing.admin {
      * 打印报表
      */
   async printAction() {
-    const data1 = this.get();
     const startTime = this.get('startTime');
     const endTime = this.get('endTime');
     const restaurant_id = this.get('restaurant_id');

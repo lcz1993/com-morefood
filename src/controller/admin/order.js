@@ -459,7 +459,7 @@ module.exports = class extends think.cmswing.admin {
       order.print_no = max_no ? parseInt(max_no) + 1 : 0;
       const d = {
         id: order.id,
-        title: '及时雨校园餐饮',
+        title: '报饭咯',
         restaurant_name: restaurant.name,
         order_time: global.dateformat('Y-m-d H:i:s', order.create_time),
         send_time: global.dateformat('Y-m-d H:i:s', order.send_time),
@@ -511,7 +511,7 @@ module.exports = class extends think.cmswing.admin {
     location += a.name;
     location += order.addr;
     const data = {
-      title: '及时雨校园餐饮',
+      title: '报饭咯',
       restaurant_name: restaurant.name,
       order_time: order.create_time,
       send_time: order.send_time,
