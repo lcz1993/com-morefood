@@ -212,12 +212,12 @@ module.exports = class extends think.Model {
      * @returns {Promise<void>}
      */
   async getgoodsList(restaurantId, userId) {
-    const discount = await this.where({ type_id: 2, restaurant_id: restaurantId }).select();
+    const discount = await this.where({ type_id: 2, restaurant_id: restaurantId, start_time: ['<', new Date().getTime()], end_time: ['>', new Date().getTime()] }).select();
     const goodsList = [];
     for (const g of discount) {
       const m = await this.model('medu').find(g.medu_id);
-      const discount = (m.original_price / m.old_price) * 10;
-      const dis = discount.toFixed(0);
+      const d = (m.original_price / m.old_price) * 10;
+      const dis = d.toFixed(0);
       if (m.dish_picture) {
         m.dish_picture = await this.model('ext_attachment_pic').where({id: m.dish_picture}).getField('path', true);
       }
@@ -238,7 +238,8 @@ module.exports = class extends think.Model {
       } else {
         num = '该商品已下架';
       }
-      const buy_max = discount.homebuy - (await think.cache(`wx-u${userId}r${restaurantId}m${m.id}`)) || 0;
+      console.log(await think.cache(`wx-u${userId}r${restaurantId}m${m.id}`));
+      const buy_max = g.homebuy - ((await think.cache(`wx-u${userId}r${restaurantId}m${m.id}`)) || 0);
       goodsList.push({
         id: m.id,
         name: m.dish_name,

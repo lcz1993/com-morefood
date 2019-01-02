@@ -40,17 +40,10 @@ module.exports = class extends think.cmswing.app {
     if (cartArr.length == 0) {
       return this.fail();
     }
-    // 获取每日特价信息
-    const meduIds = await this.model('discount').where({
-      restaurant_id: restaurantId,
-      is_show: 0,
-      status: 0,
-      type_id: 2,
-      start_time: ['<', new Date().getTime()],
-      end_time: ['>', new Date().getTime()]
-    }).select();
     const orderList = [];
     let price = 0;
+    // 获取所有的单品特价商品
+    const disGoodsArr = await this.model('discount').getgoodsList(restaurantId, this.getLoginUserId());
     for (const food of cartArr) {
       const num = food.cnt_dish;
       let f = await this.model('medu').find(food.dish_id);
@@ -59,29 +52,20 @@ module.exports = class extends think.cmswing.app {
         break;
       }
       if (f.dish_picture) {
-        const b = await this.model('ext_attachment_pic').find(f.dish_picture);
-        f.dish_picture = b.path;
+        f.dish_picture = await this.model('ext_attachment_pic').where({id: f.dish_picture}).getField('path', true);
       }
       if (f.image) {
-        const b = await this.model('ext_attachment_pic').find(f.image);
-        f.image = b.path;
+        f.image = await this.model('ext_attachment_pic').where({id: f.image}).getField('path', true);
       }
-      const original_price = f.original_price;
-      const old_price = f.old_price;
-      let totalPrice = 0;
-      if (meduIds.length > 0) {
-        for (const discountId of meduIds) {
-          const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
-          if (discountId.medu_id == food.dish_id && status != 1) {
-            totalPrice = original_price + old_price * (num - 1);
-          // 将用户消费购买特价商品信息保存
-          // await think.cache(`wx-u${userId}r${restaurantId}m${food.dish_id}`, 1);
-          } else {
-            totalPrice = old_price * num;
+      let totalPrice = f.old_price * num;
+      for (const dis of disGoodsArr) {
+        if (dis.id == food.dish_id) {
+          if (dis.buy_max >= food.cnt_dish) {
+            totalPrice = f.original_price * num;
+          } else if (dis.buy_max < food.cnt_dish) {
+            totalPrice = f.original_price * dis.buy_max + f.old_price * (food.cnt_dish - dis.buy_max);
           }
         }
-      } else {
-        totalPrice = old_price * num;
       }
       totalPrice = Math.round(totalPrice * 100) / 100;
       f = {
@@ -89,13 +73,14 @@ module.exports = class extends think.cmswing.app {
         name: f.dish_name,
         num: num,
         image: f.dish_picture,
-        unit_price: old_price,
+        unit_price: food.old_price,
         total_price: totalPrice
       };
       orderList.push(f);
       price += totalPrice;
     }
     const restaurant = await this.model('restaurant').find(restaurantId);
+    // 地址模块
     let address = {};
     if (addressId) {
       address = await this.model('address').find(addressId);
@@ -105,7 +90,6 @@ module.exports = class extends think.cmswing.app {
         address = addressArr[0];
       }
     }
-
     if (JSON.stringify(address) != '{}') {
       let location = '';
       let a = await this.model('area').find(address.province);
@@ -147,7 +131,6 @@ module.exports = class extends think.cmswing.app {
     const coupon = await this.model('discount').getcoupon(userid, price, restaurantId);
     // 获取用户所以可用的优惠信息
     const list = await this.model('discount').getList(userid, price, restaurantId);
-    console.log(list);
     return this.success({
       list: list,
       coupon: coupon,
