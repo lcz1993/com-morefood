@@ -127,13 +127,10 @@ module.exports = class extends think.cmswing.app {
     }
     // 获取当前登录的用户Id
     const userid = this.getLoginUserId();
-    // 获取用户首单优惠信息
-    const coupon = await this.model('discount').getcoupon(userid, price, restaurantId);
     // 获取用户所以可用的优惠信息
-    const list = await this.model('discount').getList(userid, price, restaurantId);
+    const discountList = await this.model('discount').getcoupon(userid, price, restaurantId);
     return this.success({
-      list: list,
-      coupon: coupon,
+      discountList: discountList,
       cartArr: orderList,
       address: address,
       restaurant: restaurant

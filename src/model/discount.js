@@ -85,7 +85,9 @@ module.exports = class extends think.Model {
         shoudan = await this.where({
           type_id: 6,
           start_time: ['<', new Date().getTime()],
-          end_time: ['>', new Date().getTime()]
+          end_time: ['>', new Date().getTime()],
+          distribution_platform: 1,
+          min_price: ['<', price]
         }).select();
       }
       if (!think.isEmpty(shoudan)) {
