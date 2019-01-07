@@ -1,0 +1,93 @@
+{% extends "./inc/base.html" %}
+{% block style %}
+<!--<link rel="stylesheet" href="/static/js/slider/slider.css" type="text/css" />-->
+<link rel="stylesheet" href="/static/admin/js/chosen/chosen.css" type="text/css" />
+<link rel="stylesheet" href="/static/admin/js/datepicker/bootstrap-datetimepicker.min.css" type="text/css">
+<link rel="stylesheet" href="https://www.helloweba.net/demo/timepicker/css/jquery-ui.css" type="text/css">
+<!--<script src="/static/admin/js/jquery.min.js"></script>-->
+{% endblock %}
+{% block content %}
+<section class="vbox">
+    <header class="header bg-light dk">
+        <p>{{controller.meta_title}}</p>
+
+    </header>
+    <section class="scrollable wra§pper">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <section class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="/admin/meal_preference/add" class="form-horizontal" method="post"  data-validate="parsley">
+                            <div class="form-group">
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 提前报饭天数</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-8 ">
+                                            <input type="text" name="advance_days" class="input-sm form-control" placeholder="天数" data-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 提前报饭天数</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-md-8 ">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="discount" id="discount" placeholder="折扣">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group form-submit">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input type="hidden" name="original_price" value="0">
+                                    <input type="hidden" name="sell_count" value="0">
+                                    <input type="hidden" name="rating" value="0">
+                                    <button type="submit" target-form="form-horizontal" class="btn btn-primary ajax-post">保存</button>
+                                    <button type="submit" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block script %}
+<!-- slider -->
+<!--<script src="/static/js/slider/bootstrap-slider.js"></script>-->
+<!-- file input -->
+<script type="text/javascript" src="https://www.helloweba.net/demo/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<script type="text/javascript" src="https://www.helloweba.net/demo/timepicker/js/jquery-ui-slide.min.js"></script>
+<script type="text/javascript" src="https://www.helloweba.net/demo/timepicker/js/jquery-ui-timepicker-addon.js"></script>
+<script>
+
+    $(function () {
+        // $('#test9').datetimepicker({
+        //     showSecond: true,
+        //     showMillisec: true,
+        //     timeFormat: 'hh:mm:ss:l'
+        //
+        // });
+        $('#delivery_time').timepicker({});
+    })
+
+</script>
+{% endblock %}
