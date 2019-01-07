@@ -185,4 +185,21 @@ module.exports = class extends think.cmswing.app {
     const data = disImgPath;
     return this.success(data);
   }
+
+  /**
+     * 小程序公告
+     */
+  async noticeAction() {
+    const isNotice = this.config('setupapp.APP_NOTICE_IS');
+    let img = '', bgImg = '';
+    if (isNotice == 1) {
+      img = this.config('setupapp.APP_NOTICE_BGIMG');
+      img = await global.get_pic(img);
+      bgImg = this.config('setupapp.APP_NOTICE_CONTENT');
+      bgImg = await global.get_pic(bgImg);
+    }
+    return this.success({
+      img: img, bgImg: bgImg
+    });
+  }
 };
