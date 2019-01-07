@@ -61,8 +61,14 @@
                         <td><label class="checkbox m-n i-checks"><input type="checkbox" class="ids" value="{{item.id}}" name="ids" ><i></i></label>
                         </td>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.advance_days }}</td>
-                        <td class="title">{{ item.discount }}</td>
+                        <td>
+                            {%if item.advance_days == 1 %}三小时前
+                            {%elif item.advance_days == 2 %}一天前
+                            {%elif item.advance_days == 3 %}两天前
+                            {%elif item.advance_days == 4 %}三天前
+                            {%endif%}
+                        </td>
+                        <td class="title">{{ item.discount }}%</td>
                         <td class="title">{{ item.restaurant_name }}</td>
                         <td>
                             <a href="/admin/meal_preference/edit/?id={{item.id}}" class="text-info" >编辑</a>

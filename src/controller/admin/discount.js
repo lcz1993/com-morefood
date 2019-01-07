@@ -24,6 +24,15 @@ module.exports = class extends think.cmswing.admin {
     if (this.get('keyword')) {
       map.name = ['like', '%' + this.get('keyword') + '%'];
     }
+    // const discount = await this.model('discount').where({ type_id: 2 }).select();
+    // for (const i of discount) {
+    //   const medu_id = i.medu_id;
+    //   const end = i.end_time;
+    //   const new_time = new Date().getTime();
+    //   if (new_time > end) {
+    //     await this.model('medu').where({ id: medu_id }).update({ original_price: 0 });
+    //   }
+    // }
     try {
       if (parseInt(this.user.restaurant_id) !== 0) {
         map.restaurant_id = this.user.restaurant_id;
@@ -235,6 +244,15 @@ module.exports = class extends think.cmswing.admin {
     const ids = this.para('ids');
     if (think.isEmpty(ids)) {
       return this.fail('参数不能为空!');
+    } else {
+      for (const i in ids) {
+        const a = ids[i];
+        const type_id = await this.model('discount').where({ id: a }).getField('type_id', true);
+        const medu_id = await this.model('discount').where({ id: a }).getField('medu_id', true);
+        if (type_id == 2) {
+          await this.model('medu').where({ id: medu_id }).update({ original_price: 0 });
+        }
+      }
     }
     // 删除话题
     await this.model('discount').where({id: ['IN', ids]}).delete();

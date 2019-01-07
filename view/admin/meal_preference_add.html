@@ -23,10 +23,16 @@
                             <div class="form-group">
 
                                 <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 提前报饭天数</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-9">
                                     <div class="row">
                                         <div class="col-md-8 ">
-                                            <input type="text" name="advance_days" class="input-sm form-control" placeholder="天数" data-required="true">
+                                            <select class="form-control input-sm" name="advance_days" id="type">
+                                                <option value="" selected>-=-请选择-=-</option>
+                                                {% for index, item in config.setupapp.ADVANCE_DAYS%}
+                                                <option value="{{index}}">{{item}}</option>
+                                                {% endfor %}
+                                                <!--<option value="4" >满赠</option>-->
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -35,7 +41,7 @@
 
                             <div class="form-group">
 
-                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 提前报饭天数</label>
+                                <label class="col-sm-2 control-label"><i class="fa fa-asterisk text-danger"></i> 折扣</label>
                                 <div class="col-sm-4">
                                     <div class="row">
                                         <div class="col-md-8 ">
