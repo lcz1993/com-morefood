@@ -4,12 +4,12 @@ module.exports = class extends think.Model {
      * @param id
      * @returns {Promise<*>}
      */
-  async get_hot_goods(id) {
+  async get_hot_goods(id, delivery) {
     const restaurant = await this.find(id);
-    const arr = await this.model('medu').where({restaurant_id: id, num: {'>': 0, '=': null, _logic: 'OR'}}).order('sell_count DESC').limit(restaurant.hot_num).select();
-    let list = [];
+    const arr = await this.model('medu').where({restaurant_id: id, num: {'>': 0, '=': null, _logic: 'OR'}, id: ['IN', delivery.goods_id]}).order('sell_count DESC').limit(restaurant.hot_num).select();
+    const list = [];
     for (const i in arr) {
-      let medu = arr[i];
+      const medu = arr[i];
       if (medu.dish_picture) {
         medu.dish_picture = await this.model('ext_attachment_pic').where({id: medu.dish_picture}).getField('path', true);
       }

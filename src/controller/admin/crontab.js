@@ -121,14 +121,14 @@ module.exports = class extends think.Controller {
       return error.noAction('only invoked in cli mode！');
     }
     const userArr = await this.model('wx_user').select();
-    const restaurantArr = await this.model('restaurant').select();
+    // const restaurantArr = await this.model('restaurant').select();
     const meduArr = await this.model('medu').select();
     for (const user of userArr) {
-      for (const restaurant of restaurantArr) {
-        for (const medu of meduArr) {
-          await think.cache(`wx-u${user.id}r${restaurant.id}m${medu.id}`, null);
-        }
+      // for (const restaurant of restaurantArr) {
+      for (const medu of meduArr) {
+        await think.cache(`wx-u${user.id}m${medu.id}`, 0);
       }
+      // }
     }
 
     // 每天清除购物车

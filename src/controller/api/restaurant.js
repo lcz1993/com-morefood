@@ -9,6 +9,8 @@ module.exports = class extends think.cmswing.app {
      */
   async indexAction() {
     let restaurant_id = this.get('id');
+    const deliveryId = this.get('deliveryId');
+    const delivery = await this.model('delivery_time').find(deliveryId);
     if (!restaurant_id) {
       restaurant_id = 1;
     }
@@ -61,7 +63,7 @@ module.exports = class extends think.cmswing.app {
     // 再添加正常分类
     for (const dishClass of dishClassArr) {
       const dishClassId = dishClass.id;
-      const meduArr = await this.model('medu').where({dish_class: dishClassId}).select();
+      const meduArr = await this.model('medu').where({dish_class: dishClassId, id: ['IN', delivery.goods_id]}).select();
       const foods = [];
       for (const medu of meduArr) {
         if (medu.dish_picture) {
@@ -147,10 +149,18 @@ module.exports = class extends think.cmswing.app {
     // 获取热销商品
     let hotGoodsArr = [];
     if (restaurant.hot_num > 0) {
-      hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id);
+      hotGoodsArr = await this.model('restaurant').get_hot_goods(restaurant_id, delivery);
     }
     // 获取优惠商品
-    const disGoodsArr = await this.model('discount').getgoodsList(restaurant_id, this.getLoginUserId());
+    const disGoodsArr = await this.model('discount').getgoodsList(restaurant_id, this.getLoginUserId(), delivery);
+    for (const item of disGoodsArr) {
+      for (const j in hotGoodsArr) {
+        const jtem = hotGoodsArr[j];
+        if (item.id == jtem.id) {
+          global.removeByValue(hotGoodsArr, jtem);
+        }
+      }
+    }
     const data = {
       is_close: 0,
       discountNum: count,
@@ -347,6 +357,37 @@ module.exports = class extends think.cmswing.app {
     const data = await this.model('medu').find(id);
     data.image = await global.get_pic(data.image);
     data.dish_picture = await global.get_pic(data.dish_picture);
+    return this.success(data);
+  }
+
+  /**
+     * 报饭信息初始化
+     * @returns {Promise<*>}
+     */
+  async reserveAction() {
+    const restaurantId = this.get('id');
+    const reserveList = await this.model('meal_preference').where({restaurant_id: restaurantId}).order('advance_days ASC').select();
+    const arr = await this.model('delivery_time').where({restaurant_id: restaurantId}).select();
+    for (const item of reserveList) {
+      if (item.advance_days == 0) {
+        item.name = '当天';
+      } else if (item.advance_days == 1) {
+        item.name = '提前一天';
+      } else if (item.advance_days == 2) {
+        item.name = '提前两天';
+      } else if (item.advance_days == 3) {
+        item.name = '提前三天';
+      } else {
+        item.name = '提前三天';
+      }
+    }
+    for (const item of arr) {
+      item.hour = item.delivery_time.split(':')[0];
+    }
+    const data = {
+      reserveList: reserveList,
+      deliveryList: arr
+    };
     return this.success(data);
   }
 };

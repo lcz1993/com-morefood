@@ -36,6 +36,10 @@ module.exports = class extends think.cmswing.app {
     const userId = this.get('userId');
     const restaurantId = this.get('restaurantId');
     const addressId = this.get('addressId');
+    const reserveId = this.get('reserveId');
+    const reserve = await this.model('meal_preference').find(reserveId);
+    const deliveryId = this.get('deliveryId');
+    const delivery = await this.model('delivery_time').find(deliveryId);
     const cartArr = await this.model('selection').where({user_id: userId, status: 0}).select();
     if (cartArr.length == 0) {
       return this.fail();
@@ -43,7 +47,7 @@ module.exports = class extends think.cmswing.app {
     const orderList = [];
     let price = 0;
     // 获取所有的单品特价商品
-    const disGoodsArr = await this.model('discount').getgoodsList(restaurantId, this.getLoginUserId());
+    const disGoodsArr = await this.model('discount').getgoodsList(restaurantId, this.getLoginUserId(), delivery);
     for (const food of cartArr) {
       const num = food.cnt_dish;
       let f = await this.model('medu').find(food.dish_id);
@@ -57,27 +61,70 @@ module.exports = class extends think.cmswing.app {
       if (f.image) {
         f.image = await this.model('ext_attachment_pic').where({id: f.image}).getField('path', true);
       }
-      let totalPrice = f.old_price * num;
+      let totalPrice = f.old_price * num, disgoods = {}; ;
       for (const dis of disGoodsArr) {
         if (dis.id == food.dish_id) {
-          if (dis.buy_max >= food.cnt_dish) {
-            totalPrice = f.original_price * num;
-          } else if (dis.buy_max < food.cnt_dish) {
-            totalPrice = f.original_price * dis.buy_max + f.old_price * (food.cnt_dish - dis.buy_max);
-          }
+          disgoods = dis;
         }
       }
-      totalPrice = Math.round(totalPrice * 100) / 100;
-      f = {
-        id: f.id,
-        name: f.dish_name,
-        num: num,
-        image: f.dish_picture,
-        unit_price: food.old_price,
-        total_price: totalPrice
-      };
-      orderList.push(f);
-      price += totalPrice;
+      if (JSON.stringify(disgoods) != '{}' && disgoods.buy_max >= food.cnt_dish) {
+        totalPrice = f.original_price * num;
+        totalPrice = Math.round(totalPrice * 100) / 100;
+        f = {
+          id: f.id,
+          name: f.dish_name,
+          num: num,
+          image: f.dish_picture,
+          unit_price: food.original_price,
+          total_price: totalPrice,
+          type: -1
+        };
+        orderList.push(f);
+        price += totalPrice;
+      } else if (JSON.stringify(disgoods) != '{}' && disgoods.buy_max < food.cnt_dish) {
+        totalPrice = f.original_price * disgoods.buy_max;
+        totalPrice = Math.round(totalPrice * 100) / 100;
+        const fd = f;
+        if (disgoods.buy_max > 0) {
+          f = {
+            id: fd.id,
+            name: fd.dish_name,
+            num: disgoods.buy_max,
+            image: fd.dish_picture,
+            unit_price: food.original_price,
+            total_price: totalPrice,
+            type: -1
+          };
+          orderList.push(f);
+        }
+        // price += totalPrice;
+        totalPrice = fd.old_price * (food.cnt_dish - disgoods.buy_max);
+        totalPrice = Math.round(totalPrice * 100) / 100;
+        f = {
+          id: fd.id,
+          name: fd.dish_name,
+          num: food.cnt_dish - disgoods.buy_max,
+          image: fd.dish_picture,
+          unit_price: food.old_price,
+          total_price: totalPrice,
+          type: 1
+        };
+        orderList.push(f);
+        price += totalPrice;
+      } else {
+        totalPrice = Math.round(totalPrice * 100) / 100;
+        f = {
+          id: f.id,
+          name: f.dish_name,
+          num: num,
+          image: f.dish_picture,
+          unit_price: food.old_price,
+          total_price: totalPrice,
+          type: 1
+        };
+        orderList.push(f);
+        price += totalPrice;
+      }
     }
     const restaurant = await this.model('restaurant').find(restaurantId);
     // 地址模块
@@ -133,7 +180,9 @@ module.exports = class extends think.cmswing.app {
       discountList: discountList,
       cartArr: orderList,
       address: address,
-      restaurant: restaurant
+      restaurant: restaurant,
+      reserve: reserve,
+      delivery: delivery
     });
   }
   /**
@@ -234,6 +283,15 @@ module.exports = class extends think.cmswing.app {
     const restaurant = await this.model('restaurant').find(order.restaurant_id);
     order.patable_freight = restaurant.send_money;
     order.real_freight = order.sendMoney;
+    // 配送时间
+    const d = new Date();
+    const timeArr = sendTime.split(/\s|-|:/);
+    d.setMonth(timeArr[0]);
+    d.setDate(timeArr[1]);
+    d.setHours(timeArr[2]);
+    d.setMinutes(timeArr[3]);
+    d.setSeconds(0);
+    order.send_time = d.getTime();
     let res = '';
     if (!order.id) {
       order.id = null;
@@ -259,10 +317,12 @@ module.exports = class extends think.cmswing.app {
           end_time: ['>', new Date().getTime()]
         }).select();
         for (const discountId of meduIds) {
-          const status = await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`);
-          if (discountId.medu_id == f.id && status != 1) {
+          // const status = await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`);
+          // 如果是特价商品
+          if (discountId.medu_id == f.id && orderFood.type == -1) {
+            const num = await think.cache(`wx-u${userId}m${discountId.medu_id}`) || 0;
             // 将用户消费购买特价商品信息保存
-            await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`, 1);
+            await think.cache(`wx-u${userId}m${discountId.medu_id}`, orderFood.num + num);
           }
         }
 
@@ -499,7 +559,7 @@ module.exports = class extends think.cmswing.app {
       let totalPrice = 0;
       if (meduIds.length > 0) {
         for (const discountId of meduIds) {
-          const status = await think.cache(`wx-u${userId}r${restaurantId}m${discountId.medu_id}`);
+          const status = await think.cache(`wx-u${userId}m${discountId.medu_id}`);
           if (discountId.medu_id == food.dish_id && status != 1) {
             totalPrice = original_price + old_price * (num - 1);
             // 将用户消费购买特价商品信息保存
@@ -569,11 +629,12 @@ module.exports = class extends think.cmswing.app {
           start_time: ['<', new Date().getTime()],
           end_time: ['>', new Date().getTime()]
         }).select();
+        // TODO
         for (const discountId of meduIds) {
-          const status = await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`);
+          const status = await think.cache(`wx-u${userId}m${discountId.medu_id}`);
           if (discountId.medu_id == f.id && status != 1) {
             // 将用户消费购买特价商品信息保存
-            await think.cache(`wx-u${userId}r${order.restaurant_id}m${discountId.medu_id}`, 1);
+            await think.cache(`wx-u${userId}m${discountId.medu_id}`, 1);
           }
         }
 
