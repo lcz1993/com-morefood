@@ -32,6 +32,7 @@ module.exports = class extends think.cmswing.admin {
       comment.content = Buffer.from(comment.content, 'base64').toString();
       comment.restaurantName = restaurantName;
       comment.nickname = nickname;
+      comment.add_time = comment.add_time * 1000;
       if (comment.status == 1) {
         const imgList = [];
         const imgArr = await this.model('comment_picture').where({comment_id: comment.id}).select();

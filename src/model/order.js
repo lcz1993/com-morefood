@@ -59,7 +59,6 @@ module.exports = class extends think.Model {
       // handleOption.pay = true;
       // handleOption.return = true;
       handleOption.buy = true;
-      handleOption.delivery = true;
     }
 
     // 如果订单已经支付，且已经收货，则可完成交易、评论和再次购买
@@ -71,8 +70,8 @@ module.exports = class extends think.Model {
 
     // 如果订单已经评论，且已经收货，则可完成交易和再次购买
     if (orderInfo.status === 5) {
-      handleOption.delete = true;
       handleOption.buy = true;
+      handleOption.delivery = true;
     }
 
     return handleOption;

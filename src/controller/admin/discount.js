@@ -117,7 +117,7 @@ module.exports = class extends think.cmswing.admin {
       const id = this.user.restaurant_id;
       this.assign('data', id);
       this.active = '/admin/discount/index';
-      await this.hook('adminEdit', 'desc', '', {$hook_key: 'desc', $hook_type: '1'});
+      await this.hook('adminEdit', 'desc', '', {$hook_key: 'desc', $hook_type: '1__100'});
       this.meta_title = '新增优惠券';
       return this.display();
     }
@@ -184,7 +184,7 @@ module.exports = class extends think.cmswing.admin {
     } else {
       const id = await this.get('id');
       const data = await this.model('discount').find(id);
-      await this.hook('adminEdit', 'desc', data.desc, {$hook_key: 'desc', $hook_type: '1'});
+      await this.hook('adminEdit', 'desc', data.desc, {$hook_key: 'desc', $hook_type: '1__100'});
       data.start_time = global.dateformat('Y-m-d H:i:s', data.start_time);
       data.end_time = global.dateformat('Y-m-d H:i:s', data.end_time);
       const type_id = parseInt(data.type_id);

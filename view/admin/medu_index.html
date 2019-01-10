@@ -58,9 +58,9 @@
                         <th>ID</th>
                         <th>店铺</th>
                         <th>商品名称</th>
-                        <th>原价</th>
-                        <th>价格</th>
-                        <th>简介</th>
+                        <th>单价</th>
+                        <!--<th>价格</th>-->
+                        <!--<th>简介</th>-->
                         <th>所属类别</th>
                         <th>图片</th>
                         <th>暂停出售</th>
@@ -76,8 +76,8 @@
                         <td>{{ item.restaurant.name }}</td>
                         <td>{{ item.dish_name }}</td>
                         <td>{{ item.old_price }}</td>
-                        <td>{{ item.original_price }}</td>
-                        <td>{{ item.dish_desc }}</td>
+                        <!--<td>{{ item.original_price }}</td>-->
+                        <!--<td>{{ item.dish_desc }}</td>-->
                         <td>{{ item.dish_class.name }}</td>
                         <td>
                             <img src="{{ item.dish_picture|get_pic('m=1,w=200,h=200')}}" height="60">

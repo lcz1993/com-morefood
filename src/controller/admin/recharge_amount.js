@@ -57,7 +57,7 @@ module.exports = class extends think.cmswing.admin {
       }
     } else {
       this.meta_title = '充值金额添加';
-      await this.hook('adminEdit', 'commodity_details', '', {$hook_key: 'commodity_details', $hook_type: '1'});
+      await this.hook('adminEdit', 'commodity_details', '', {$hook_key: 'commodity_details', $hook_type: '1__100'});
       return this.display();
     }
   }
@@ -79,7 +79,7 @@ module.exports = class extends think.cmswing.admin {
     } else {
       const id = this.get('id');
       const data = await this.model('recharge_amount').find(id);
-      await this.hook('adminEdit', 'commodity_details', data.commodity_details, {$hook_key: 'commodity_details', $hook_type: '1'});
+      await this.hook('adminEdit', 'commodity_details', data.commodity_details, {$hook_key: 'commodity_details', $hook_type: '1__100'});
       this.assign('data', data);
       this.meta_title = '编辑';
       return this.display();

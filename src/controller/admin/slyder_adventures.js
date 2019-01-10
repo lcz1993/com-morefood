@@ -18,7 +18,7 @@ module.exports = class extends think.cmswing.admin {
     this.assign('pagerData', html); // 分页展示使用
     this.assign('data', data);
     this.meta_title = '抽奖设置管理';
-    await this.hook('adminEdit', 'activity_rules', data.activity_rules, {$hook_key: 'activity_rules', $hook_type: '1'});
+    await this.hook('adminEdit', 'activity_rules', data.activity_rules, {$hook_key: 'activity_rules', $hook_type: '1__100'});
     return this.display();
   }
 

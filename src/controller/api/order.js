@@ -52,7 +52,7 @@ module.exports = class extends think.cmswing.app {
       restaurantLogo = c.path;
     }
     const sendTime = global.dateformat('Y-m-d H:i:s', order.send_time);
-    const payTime = global.dateformat('Y-m-d H:i:s', order.pay_time);
+    const payTime = global.dateformat('Y-m-d H:i:s', order.pay_time || order.create_time);
     let addressMsg = '';
     let a = await this.model('area').field(['name']).find(order.province);
     addressMsg += a.name;
@@ -103,7 +103,7 @@ module.exports = class extends think.cmswing.app {
       order_no: order.order_no,
       payTime: payTime,
       payment: order.payment,
-      user_remark: order.user_remark
+      user_remark: order.user_remark,
     };
     return this.success(data);
   }

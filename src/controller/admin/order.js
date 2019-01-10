@@ -16,18 +16,18 @@ module.exports = class extends think.cmswing.admin {
   async listAction() {
     const status = this.get('status');
     const restaurant_id = this.get('restaurant_id');
-    const restautantId = this.user.restaurant_id;
-    const restautant = await this.model('restaurant').find(restautantId);
-    this.assign('restautant', restautant);
+    const restaurantId = this.user.restaurant_id;
+    const restaurant = await this.model('restaurant').find(restaurantId);
+    this.assign('restaurant', restaurant);
 
     const map = {};
     let restaurantArr = [];
     if (!think.isEmpty(restaurant_id)) {
       map.restaurant_id = restaurant_id;
     }
-    if (restautantId != 0) {
-      map.restaurant_id = restautantId;
-      restaurantArr = await this.model('restaurant').where({id: restautantId}).select();
+    if (restaurantId != 0) {
+      map.restaurant_id = restaurantId;
+      restaurantArr = await this.model('restaurant').where({id: restaurantId}).select();
     } else {
       restaurantArr = await this.model('restaurant').select();
     }
