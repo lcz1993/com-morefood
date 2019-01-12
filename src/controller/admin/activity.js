@@ -57,10 +57,11 @@ module.exports = class extends think.cmswing.admin {
       map.start_time = start_time;
       map.end_time = end_time;
       map.create_time = Date.parse(new Date());
+      console.log(Date.parse(new Date()));
       map.times = data.times;
       map.member_id = this.user.uid;
       map.activity_rules = data.activity_rules;
-      if (start_time == Date.parse(new Date()) || start_time < Date.parse(new Date()) > end_time) {
+      if (start_time < Date.parse(new Date()) > end_time) {
         map.status = 0;
       } else if (new Date(data.end_time.replace(/-/g, '/')).getTime() < Date.parse(new Date())) {
         map.status = 1;

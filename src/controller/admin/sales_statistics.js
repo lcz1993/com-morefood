@@ -41,7 +41,7 @@ module.exports = class extends think.cmswing.admin {
         ' AND `status` = 4';
     const restaurantId = this.get('restaurant_id') || (this.user.restaurant_id == 0 ? '' : this.user.restaurant_id);
     if (!think.isEmpty(restaurantId)) {
-      where += ' AND a.restaurant_id == ' + restaurantId;
+      where += ' AND a.restaurant_id = ' + restaurantId;
     }
     let list = [];
     list = await this.model('order').alias('a')

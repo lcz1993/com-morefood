@@ -69,6 +69,7 @@ module.exports = class extends think.cmswing.admin {
       const user = await this.model('wx_user').field('nickname').find(item.user_id);
       item.username = user.nickname;
       const note = JSON.parse(item.note);
+      console.log(note);
       const foodArr = note.foodList;
       let str = '';
       for (const i in foodArr) {

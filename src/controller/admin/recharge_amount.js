@@ -70,7 +70,7 @@ module.exports = class extends think.cmswing.admin {
       map.donation_amount = data.donation_amount;
       map.update_time = Date.parse(new Date());
       map.commodity_details = data.commodity_details;
-      const res = await this.model('recharge_amount').update(map);
+      const res = await this.model('recharge_amount').where({ id: data.id }).update(map);
       if (res) {
         return this.success({name: '修改成功！'});
       } else {

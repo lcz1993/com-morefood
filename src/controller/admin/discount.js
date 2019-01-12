@@ -89,7 +89,7 @@ module.exports = class extends think.cmswing.admin {
         // 下单立减
         case 3:
           data.min_price = data.min_price_3;
-          data.cut_price = data.cut_price_3;
+          data.gift_goods = data.gift_goods;
           break;
         // 赠品优惠
         case 4:
@@ -157,7 +157,7 @@ module.exports = class extends think.cmswing.admin {
           // 下单立减
         case 3:
           data.min_price = data.min_price_3;
-          data.cut_price = data.cut_price_3;
+          data.gift_goods = data.gift_goods;
           break;
           // 赠品优惠
         case 4:
@@ -207,7 +207,7 @@ module.exports = class extends think.cmswing.admin {
           // 下单立减
         case 3:
           data.min_price_3 = data.min_price;
-          data.cut_price_3 = data.cut_price;
+          data.gift_goods = data.gift_goods;
           break;
           // 赠品优惠
         case 4:

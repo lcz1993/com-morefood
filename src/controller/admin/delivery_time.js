@@ -13,10 +13,9 @@ module.exports = class extends think.cmswing.admin {
 
   // 配送时间段管理的数据查询
   async indexAction() {
-    let str = '';
-    let str1 = '';
     const list = await this.model('delivery_time').page(this.get('page') || 1, 20).order('id ASC').countSelect();
     for (const item in list.data) {
+      let str = '';
       const i = list.data[item];
       const s = i.goods_id.split(',');
       for (const b in s) {
@@ -24,13 +23,11 @@ module.exports = class extends think.cmswing.admin {
         const goods = await this.model('medu').where({id: c}).select();
         for (const g of goods) {
           str += g.dish_name + ',';
-          str1 += g.image + ',';
           const d = {
             id: i.id,
             delivery_time: i.delivery_time,
             percent: i.percent,
-            goods_name: str,
-            goods_image: str1
+            goods_name: str
           };
           list.data[item] = d;
         }
@@ -47,10 +44,8 @@ module.exports = class extends think.cmswing.admin {
     const restaurant_id = this.user.restaurant_id;
     if (this.isPost) {
       const data = this.post();
-      console.log(data);
       const b = data.goods_id;
       const a = b.toString();
-      console.log(a);
       const map = {};
       map.delivery_time = data.delivery_time;
       map.goods_id = a;
@@ -71,8 +66,7 @@ module.exports = class extends think.cmswing.admin {
             medu_id: i.id,
             medu_name: i.name,
             goods_id: a.id,
-            goods_name: a.dish_name,
-            goods_image: a.image
+            goods_name: a.dish_name
           });
         }
         i.goods = goods;
@@ -87,16 +81,14 @@ module.exports = class extends think.cmswing.admin {
   async editAction() {
     const restaurant_id = this.user.restaurant_id;
     if (this.isPost) {
+      const map = {};
       const data = this.post();
-      console.log(data);
       const b = data.goods_id;
       const a = b.toString();
-      console.log(a);
-      const map = {};
       map.delivery_time = data.delivery_time;
       map.goods_id = a;
       map.restaurant_id = restaurant_id;
-      const res = await this.model('school').update(map);
+      const res = await this.model('delivery_time').where({ id: data.id }).update(map);
       if (res) {
         return this.success({name: '修改成功！', url: '/admin/delivery_time/index'});
       } else {
@@ -123,7 +115,6 @@ module.exports = class extends think.cmswing.admin {
               medu_name: i.name,
               goods_id: a.id,
               goods_name: a.dish_name,
-              goods_image: a.image,
               check: 1
             });
           } else {
@@ -132,17 +123,9 @@ module.exports = class extends think.cmswing.admin {
               medu_name: i.name,
               goods_id: a.id,
               goods_name: a.dish_name,
-              goods_image: a.image,
               check: 0
             });
           }
-          // goods.push({
-          //   medu_id: i.id,
-          //   medu_name: i.name,
-          //   goods_id: a.id,
-          //   goods_name: a.dish_name,
-          //   goods_image: a.image
-          // });
         }
         i.goods = goods;
         goods = [];

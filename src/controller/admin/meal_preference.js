@@ -56,7 +56,7 @@ module.exports = class extends think.cmswing.admin {
       const data = this.post();
       const res = await this.model('meal_preference').update(data);
       if (res) {
-        return this.success({name: '修改成功！'});
+        return this.success({name: '修改成功！', url: '/admin/meal_preference/index'});
       } else {
         return this.fail('修改失败！');
       }

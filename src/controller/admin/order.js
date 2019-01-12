@@ -411,10 +411,17 @@ module.exports = class extends think.cmswing.admin {
      */
   async getorderAction() {
     // 审核提示
+    const start = new Date();
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+    const todayStartTime = Date.parse(start) / 1;
+    const thirtyTime_later = todayStartTime + 1800000;
     const notifications = {};
     notifications.count = 0;
     notifications.data = [];
-    const a = await this.model('order').where({status: 2, restaurant_id: this.user.restaurant_id}).countSelect();
+    const a = await this.model('order').where({status: 2, restaurant_id: this.user.restaurant_id, send_time: ['<', thirtyTime_later]}).countSelect();
     const approval = a.count;
     if (approval > 0) {
       notifications.count = notifications.count + Number(approval);
@@ -598,5 +605,18 @@ module.exports = class extends think.cmswing.admin {
       }
     }
     return this.success({name: '发货成功!'});
+  }
+
+  async pAction() {
+    // const id = this.get('id');
+    // const order = await this.model('order').where({ status: 2 }).select();
+    const start = new Date();
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+    const todayStartTime = Date.parse(start) / 1;
+    const thirtyTime_later = todayStartTime + 1800000;
+    const order = await this.model('order').where({ status: 2, send_time: ['<', thirtyTime_later] }).select();
   }
 };

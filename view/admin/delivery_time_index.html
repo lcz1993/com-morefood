@@ -51,7 +51,6 @@
                         <a>
                             <th>时间段</th></a>
                         <th>商品名称</th>
-                        <th>商品图片</th>
                         <th style="width:130px;">操作</th>
                     </tr>
                     </thead>
@@ -63,7 +62,6 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.delivery_time }}</td>
                         <td class="title">{{ item.goods_name }}</td>
-                        <td class="title">{{ item.goods_image }}</td>
                         <td>
                             <a href="/admin/delivery_time/edit/?id={{item.id}}" class="text-info" >编辑</a>
                             <a href="/admin/delivery_time/del/?ids={{item.id}}" class="text-info ajax-get confirm" >删除</a>
